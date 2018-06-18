@@ -211,7 +211,7 @@ public class Deque<Item> implements Iterable<Item> {
                 }
             }
 
-        }catch (NoSuchElementException e){
+        }catch (NoSuchElementException e) {
             StdOut.println(e);
         }
     }
