@@ -1,15 +1,16 @@
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
-
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
  *
  * A randomized queue is similar to a stack or queue, except that the item removed is chosen
  * uniformly at random from items in the data structure.
  */
+
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
+
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
