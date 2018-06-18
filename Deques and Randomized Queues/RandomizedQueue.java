@@ -1,7 +1,7 @@
 import java.util.Iterator;
 
 /**
- * Created by Philip Ivanov
+ * Created by Philip Ivanov (https://github.com/personalaccount)
  *
  * A randomized queue is similar to a stack or queue, except that the item removed is chosen
  * uniformly at random from items in the data structure.
