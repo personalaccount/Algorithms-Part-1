@@ -14,6 +14,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     }
 
+    // Nested inner class that defines a node.
+    private class Node {
+        Item item;
+        Node next;
+    }
+
     // is the randomized queue empty?
     public boolean isEmpty() {
         boolean empty = (size() == 0 );
