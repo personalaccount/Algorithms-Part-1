@@ -103,6 +103,8 @@ public class Deque<Item> implements Iterable<Item> {
         if (headOfDeque.next != null) {
             headOfDeque = headOfDeque.next;
             headOfDeque.previous = null;
+        } else {
+            headOfDeque = null;
         }
 
         dequeSize--;
@@ -121,6 +123,8 @@ public class Deque<Item> implements Iterable<Item> {
         if (endOfDeque.previous != null) {
             endOfDeque = endOfDeque.previous;
             endOfDeque.next = null;
+        } else {
+            endOfDeque = null;
         }
 
         dequeSize--;
