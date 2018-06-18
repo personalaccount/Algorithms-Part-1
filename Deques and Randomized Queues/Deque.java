@@ -24,11 +24,7 @@ public class Deque<Item> implements Iterable<Item> {
     // Construct an empty deque.
     public Deque() {
         headOfDeque = new Node();
-        headOfDeque.next = null;
-        headOfDeque.previous = null;
-
         endOfDeque = headOfDeque;
-
         dequeSize = 0;
     }
 
@@ -40,15 +36,15 @@ public class Deque<Item> implements Iterable<Item> {
     // Return the number of items on the deque.
     public int size() { return dequeSize; }
 
-    private void checkForNullArgument (Item item) {
+    private void verifyItemIsNotNull(Item item) {
         if (item == null) throw new IllegalArgumentException();
     }
 
     // Add the item to the front.
     public void addFirst(Item item) {
-        checkForNullArgument(item);
+        verifyItemIsNotNull(item);
 
-        // If this is the first entry, then fill out the item property of the only empty node
+        // If deque is empty, then fill out the item field of the empty node
         if (isEmpty()) {
             headOfDeque.item = item;
         } else {
@@ -60,7 +56,7 @@ public class Deque<Item> implements Iterable<Item> {
             headOfDeque.item = item;
             headOfDeque.next = previousHeadOfDeck;
 
-            // Maintain a backlink for removeLast
+            // Maintain a backtrack link for removeLast
             previousHeadOfDeck.previous = headOfDeque;
         }
 
@@ -69,7 +65,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // Add the item to the end.
     public void addLast(Item item) {
-        checkForNullArgument(item);
+        verifyItemIsNotNull(item);
 
         // If this is the first entry, then fill out the item property of the only empty node
         if (isEmpty()) {
@@ -104,9 +100,12 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException();
 
+        // Set the item to be returned to the item field of the first node
         Item item = headOfDeque.item;
-        headOfDeque = headOfDeque.next;
-        if (headOfDeque != null) {
+
+        // If the next node exists, point headOfDeque to it and set its previous to null
+        if (headOfDeque.next != null) {
+            headOfDeque = headOfDeque.next;
             headOfDeque.previous = null;
         } else {
             resetOnEmpty();
@@ -121,9 +120,17 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeLast() {
         if (isEmpty()) throw new NoSuchElementException();
 
+        // Set the item to be returned to the item field of the last node
         Item item = endOfDeque.item;
-        endOfDeque = endOfDeque.previous;
-        endOfDeque.next = null;
+
+        // If previous node exists, then point endOfDeque to it and set its next to null
+        if (endOfDeque.previous != null) {
+            endOfDeque = endOfDeque.previous;
+            endOfDeque.next = null;
+        }else{
+            resetOnEmpty();
+        }
+
         dequeSize--;
 
         return item;
@@ -151,7 +158,7 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String args[]) {
 
         // Create an empty deque, fill it with ints from 1 to 10 and print it out
-        Deque<Integer> dInts = new Deque<Integer>();
+        Deque<Integer> dInts = new Deque<>();
 
         StdOut.println("\nTest exception on addFirst:");
         try {
@@ -167,32 +174,37 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.println(e);
         }
 
-        StdOut.println("\nAdd integers ranging from 10 to 0 to the end of the deque");
-        for (int i = 10; i >= 0; --i ) { dInts.addLast(i); }
-        for (int item : dInts) { StdOut.print(item + ","); }
+        StdOut.println("\nTest adding: ");
 
-        StdOut.println("\nAdd integers ranging from 9 to 0 to the front of the deque");
-        for (int i = 9; i >= 0; --i ) { dInts.addFirst(i); }
-        for (int item : dInts) { StdOut.print(item + ","); }
+        int testSize = 10;
+        StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
+        for (int i = testSize; i >= 0; --i ) { dInts.addLast(i); }
+        for (int item : dInts) { StdOut.print(item + " "); }
 
-        StdOut.println("\nRemove first 10 items");
-        for (int i = 0; i < 10; i++ ) { dInts.removeFirst(); }
-        for (int item : dInts) { StdOut.print(item + ","); }
+        StdOut.println("\nAdd integers ranging from " + (testSize - 1) + " to 0 to the front of the deque");
+        for (int i = testSize-1; i >= 0; --i ) { dInts.addFirst(i); }
+        for (int item : dInts) { StdOut.print(item + " "); }
 
-        StdOut.println("\nRemove last 3 items");
-        for (int i = 0; i < 3; i++ ) { dInts.removeLast(); }
-        for (int item : dInts) { StdOut.print(item + ","); }
+        StdOut.println("\nTest removing: ");
 
-        StdOut.println("\nRemove last 3 items");
-        for (int i = 0; i < 3; i++ ) { dInts.removeLast(); }
-        for (int item : dInts) { StdOut.print(item + ","); }
-
-        StdOut.println("\nRemove first 10 items");
         try {
 
-            for (int i = 0; i < 10; i++) {
+            for (int i=1; i < (testSize/2); i++) {
+                StdOut.println("\nRemove first " + i + " items");
                 dInts.removeFirst();
+                for (int item : dInts) {
+                    StdOut.print(item + " ");
+                }
             }
+
+            for (int i=1; i < (testSize/2); i++) {
+                StdOut.println("\nRemove last " + i + " items");
+                dInts.removeLast();
+                for (int item : dInts) {
+                    StdOut.print(item + ",");
+                }
+            }
+
         }catch (NoSuchElementException e){
             for (int item : dInts) { StdOut.print(item + ","); }
         }
