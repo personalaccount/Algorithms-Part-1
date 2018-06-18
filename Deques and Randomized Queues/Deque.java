@@ -54,10 +54,10 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty()) {
             headOfDeque.item = item;
         } else {
-            // Create a link that points to the current head of deque
+            // Save a link to the current head of deque
             Node previousHeadOfDeck = headOfDeque;
 
-            // Point headOfDeque to a new Node and set it's values
+            // Create a new Node and set it's values
             headOfDeque = new Node();
             headOfDeque.item = item;
             headOfDeque.next = previousHeadOfDeck;
@@ -172,7 +172,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("\nTest adding: ");
 
-        int testSize = 4;
+        int testSize = 23;
         StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
         for (int i = testSize; i >= 0; --i ) { dInts.addLast(i); }
         for (int item : dInts) { StdOut.print(item + " "); }
@@ -183,28 +183,28 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("\n\nTest removing: ");
 
-        StdOut.println("\nRemove first: " + dInts.removeFirst());
-        for (int item : dInts) {
-            StdOut.print(item + " ");
-        }
-
-        StdOut.println("\nRemove last: " + dInts.removeLast());
-        for (int item : dInts) {
-            StdOut.print(item + " ");
-        }
-
         try {
 
-            for (int i=1; i < (testSize/2); i++) {
-                StdOut.println("\nRemove first " + i + " items");
+            StdOut.println("\nRemove first item: " + dInts.removeFirst());
+            for (int item : dInts) {
+                StdOut.print(item + " ");
+            }
+
+            StdOut.println("\nRemove last item: " + dInts.removeLast());
+            for (int item : dInts) {
+                StdOut.print(item + " ");
+            }
+
+            for (int i=1; i <= (testSize); i++) {
+                StdOut.println("\nRemove " + i + " items from head of deque");
                 for(int j = 0; j < i; j++) { dInts.removeFirst(); }
                 for (int item : dInts) {
                     StdOut.print(item + " ");
                 }
             }
 
-            for (int i=1; i < (testSize/2); i++) {
-                StdOut.println("\nRemove last " + i + " items");
+            for (int i=1; i <= (testSize); i++) {
+                StdOut.println("\nRemove " + i + " items from end of deque");
                 for(int j = 0; j < i; j++) { dInts.removeLast(); }
                 for (int item : dInts) {
                     StdOut.print(item + " ");
@@ -213,7 +213,6 @@ public class Deque<Item> implements Iterable<Item> {
 
         }catch (NoSuchElementException e){
             StdOut.println(e);
-            for (int item : dInts) { StdOut.print(item + " "); }
         }
     }
 
