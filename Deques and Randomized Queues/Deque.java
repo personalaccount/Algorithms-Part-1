@@ -172,7 +172,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("\nTest adding: ");
 
-        int testSize = 10;
+        int testSize = 3;
         StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
         for (int i = testSize; i >= 0; --i ) { dInts.addLast(i); }
         for (int item : dInts) { StdOut.print(item + " "); }
