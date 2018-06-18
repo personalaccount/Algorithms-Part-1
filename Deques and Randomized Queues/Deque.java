@@ -178,11 +178,11 @@ public class Deque<Item> implements Iterable<Item> {
 //            StdOut.println(e);
 //        }
 
-        StdOut.println("\nAdd integers starting from 10 to 0 to the end of the deque");
+        StdOut.println("\nAdd integers ranging from 10 to 0 to the end of the deque");
         for (int i = 10; i >= 0; --i ) { dInts.addLast(i); }
         for (int item : dInts) { StdOut.print(item + ","); }
 
-        StdOut.println("\nAdd integers starting from 9 to 0 to the front of the deque");
+        StdOut.println("\nAdd integers ranging from 9 to 0 to the front of the deque");
         for (int i = 9; i >= 0; --i ) { dInts.addFirst(i); }
         for (int item : dInts) { StdOut.print(item + ","); }
 
