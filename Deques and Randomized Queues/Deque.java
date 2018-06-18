@@ -167,17 +167,6 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.println(e);
         }
 
-//        StdOut.println("\nTest exception on removeFirst:");
-//        try {
-//            dInts.addLast(1);
-//            dInts.addLast(2);
-//            dInts.removeLast();
-//            dInts.removeLast();
-//            dInts.removeLast();
-//        }catch (NoSuchElementException e){
-//            StdOut.println(e);
-//        }
-
         StdOut.println("\nAdd integers ranging from 10 to 0 to the end of the deque");
         for (int i = 10; i >= 0; --i ) { dInts.addLast(i); }
         for (int item : dInts) { StdOut.print(item + ","); }
