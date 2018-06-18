@@ -1,5 +1,5 @@
 /**
- * Created by Philip Ivanov
+ * Created by Philip Ivanov (https://github.com/personalaccount)
  */
 
 import edu.princeton.cs.algs4.StdOut;
