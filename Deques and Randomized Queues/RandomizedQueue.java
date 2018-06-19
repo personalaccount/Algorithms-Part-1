@@ -165,9 +165,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // unit testing (optional)
     public static void main(String[] args) {
 
-        // Create an empty randomized queue
+        /* @Test Create an empty randomized queue */
         RandomizedQueue<Integer> ranInts = new RandomizedQueue<>();
 
+        /* @Test */
         StdOut.println("\nTest exception on enqueue:");
         try {
             ranInts.enqueue(null);
@@ -177,11 +178,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         StdOut.println("\nTest adding: ");
 
+        /* @Test */
         int testSize = 23;
         StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
         for (int i = testSize; i >= 0; --i ) { ranInts.enqueue(i); }
         for (int item : ranInts) { StdOut.print(item + " "); }
 
+        /* @Test */
         StdOut.println("\nTest sampling: " + ranInts.sample());
 
 
@@ -189,12 +192,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         try {
 
+            /* @Test */
             StdOut.println("\nRemove single item: " + ranInts.dequeue());
             for (int item : ranInts) {
                 StdOut.print(item + " ");
             }
 
-
+            /* @Test */
             for (int i=1; i <= (testSize/2); i++) {
                 StdOut.println("\nRemove " + i + " items from head of deque");
                 for(int j = 0; j < i; j++) { ranInts.dequeue(); }
