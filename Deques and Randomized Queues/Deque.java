@@ -155,6 +155,16 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
+    public void printNodes() {
+        if(size() <= 0) throw new NoSuchElementException("Queue is empty");
+
+        Node current = headOfDeque;
+        while(current != null) {
+            StdOut.print(current.item + " ");
+            current = current.next;
+        }
+    }    
+
     public static void main(String[] args) {
 
         // Create an empty deque, fill it with ints from 1 to 10 and print it out
@@ -181,32 +191,32 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
         for (int i = testSize; i >= 0; --i) dInts.addLast(i);
-        for (int item : dInts) StdOut.print(item + " ");
+        dInts.printNodes();
 
         StdOut.println("\nAdd integers ranging from " + (testSize - 1) + " to 0 to the front of the deque");
         for (int i = testSize-1; i >= 0; --i) dInts.addFirst(i);
-        for (int item : dInts) StdOut.print(item + " ");
+        dInts.printNodes();
 
         StdOut.println("\n\nTest removing: ");
 
         try {
 
             StdOut.println("\nRemove first item: " + dInts.removeFirst());
-            for (int item : dInts) StdOut.print(item + " ");
+            dInts.printNodes();
 
             StdOut.println("\nRemove last item: " + dInts.removeLast());
-            for (int item : dInts) StdOut.print(item + " ");
+            dInts.printNodes();
 
             for (int i = 1; i <= (testSize); i++) {
                 StdOut.println("\nRemove " + i + " items from head of deque");
                 for (int j = 0; j < i; j++) dInts.removeFirst();
-                for (int item : dInts) StdOut.print(item + " ");
+                dInts.printNodes();
             }
 
             for (int i = 1; i <= (testSize); i++) {
                 StdOut.println("\nRemove " + i + " items from end of deque");
                 for (int j = 0; j < i; j++) dInts.removeLast();
-                for (int item : dInts) StdOut.print(item + " ");
+                dInts.printNodes();
             }
 
         }
