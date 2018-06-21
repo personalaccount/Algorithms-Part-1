@@ -143,7 +143,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
 
-            for (int i = 0; i < StdRandom.uniform(0,numberOfNodes); i++) current = current.next;
+            for (int i = 0; i < StdRandom.uniform(0, numberOfNodes); i++) current = current.next;
 
             Item item = current.item;
             current = current.next;

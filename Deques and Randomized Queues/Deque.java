@@ -26,7 +26,7 @@ public class Deque<Item> implements Iterable<Item> {
         resetDeque();
     }
 
-    private void resetDeque(){
+    private void resetDeque() {
         headOfDeque = new Node();
         endOfDeque = headOfDeque;
     }
