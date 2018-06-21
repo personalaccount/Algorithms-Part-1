@@ -31,7 +31,7 @@ public class Deque<Item> implements Iterable<Item> {
     public boolean isEmpty() {
         boolean empty = (size() == 0);
 
-        if (headOfDeque == null) {
+        if (empty) {
             headOfDeque = new Node();
             endOfDeque = headOfDeque;
         }
