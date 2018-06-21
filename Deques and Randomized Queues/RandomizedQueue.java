@@ -131,7 +131,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
 
-        return new randomOrderIterator();
+        return new RandomOrderIterator();
     }
 
     // Inner class describing the required iterator
@@ -148,7 +148,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    private class randomOrderIterator implements Iterator<Item> {
+    private class RandomOrderIterator implements Iterator<Item> {
         private Node current = head;
         public boolean hasNext() { return current != null; }
         public void remove() { throw new UnsupportedOperationException(); }
@@ -168,10 +168,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void printNodes() {
-        if(size() <= 0) throw new NoSuchElementException("Queue is empty");
+        if (size() <= 0) throw new NoSuchElementException("Queue is empty");
 
         Node current = head;
-        while(current != null) {
+        while (current != null) {
             StdOut.print(current.item + " ");
             current = current.next;
         }
@@ -200,7 +200,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);
             ranInts.enqueue(i);
-            if(i > 1) StdOut.print(",");
+            if (i > 1) StdOut.print(",");
         }
         StdOut.println("\nConstituting nodes: ");
         ranInts.printNodes();

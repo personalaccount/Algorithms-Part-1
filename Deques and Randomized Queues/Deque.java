@@ -156,10 +156,10 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void printNodes() {
-        if(size() <= 0) throw new NoSuchElementException("Queue is empty");
+        if (size() <= 0) throw new NoSuchElementException("Queue is empty");
 
         Node current = headOfDeque;
-        while(current != null) {
+        while (current != null) {
             StdOut.print(current.item + " ");
             current = current.next;
         }
