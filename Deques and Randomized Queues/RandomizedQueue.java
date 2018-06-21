@@ -137,7 +137,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         private Node current = head;
 
-        public boolean hasNext() { return current != null; }
+        // include current.item check to account for the requirement to start with an empty queue
+        public boolean hasNext() { return (current != null && current.item != null); }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
