@@ -145,7 +145,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             // if there are more nodes than one, then return a random node
             if (size() > 1) {
-                int randomNumber = StdRandom.uniform(1, numberOfNodes);
+                int randomNumber = StdRandom.uniform(1, size());
                 for (int i = 1; i < randomNumber; i++) current = current.next;
             }
 
@@ -153,7 +153,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    public void printNodes() {
+    private void printNodes() {
         if (size() <= 0) throw new NoSuchElementException("Queue is empty");
 
         Node current = head;
@@ -181,7 +181,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.print("\nTest adding: ");
 
         /* @Test */
-        int testSeed = 1;
+        int testSeed = 5;
         StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the end of the deque");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);

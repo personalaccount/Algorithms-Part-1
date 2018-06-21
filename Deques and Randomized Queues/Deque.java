@@ -155,7 +155,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    public void printNodes() {
+    private void printNodes() {
         if (size() <= 0) throw new NoSuchElementException("Queue is empty");
 
         Node current = headOfDeque;
