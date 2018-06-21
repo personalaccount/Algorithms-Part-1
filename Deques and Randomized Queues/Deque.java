@@ -133,7 +133,9 @@ public class Deque<Item> implements Iterable<Item> {
     // Inner class describing the required iterator
     private class ListIterator implements Iterator<Item> {
         private Node current = headOfDeque;
-        public boolean hasNext() { return (current != null); }
+
+        // include current.item check to account for the requirement to start with an empty queue
+        public boolean hasNext() { return (current != null && current.item != null); }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
@@ -153,7 +155,7 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.print(current.item + " ");
             current = current.next;
         }
-    }    
+    }
 
     public static void main(String[] args) {
 

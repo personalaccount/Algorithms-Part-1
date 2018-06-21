@@ -130,25 +130,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-
         return new RandomOrderIterator();
     }
 
     private class RandomOrderIterator implements Iterator<Item> {
+
         private Node current = head;
-        public boolean hasNext() { return current.item != null; }
+
+        public boolean hasNext() { return current != null; }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
-            Item item = current.item;
 
-            // if there are more nodes than one, then return a random node
-            if (size() > 1) {
-                int randomNumber = StdRandom.uniform(1, size());
-                for (int i = 1; i < randomNumber; i++) current = current.next;
-                item = current.item;
-            }
+            for (int i = 0; i < StdRandom.uniform(0,numberOfNodes); i++) current = current.next;
+
+            Item item = current.item;
+            current = current.next;
 
             return item;
         }
