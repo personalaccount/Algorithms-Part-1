@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 public class Deque<Item> implements Iterable<Item> {
 
     private Node headOfDeque, endOfDeque; // Links to head and end nodes of the deque.
-    private int dequeSize; // Number of items in the deque.
+    private int dequeSize = 0; // Number of items in the deque.
 
     // Nested inner class that defines a node.
     private class Node {
@@ -22,16 +22,13 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // Construct an empty deque.
-    public Deque() {
-        dequeSize = 0;
-        isEmpty();
-    }
+    public Deque() { isEmpty(); }
 
     // Is the deque empty?
     public boolean isEmpty() {
         boolean empty = (size() == 0);
 
-        if (empty) {
+        if(headOfDeque == null) {
             headOfDeque = new Node();
             endOfDeque = headOfDeque;
         }
@@ -82,7 +79,7 @@ public class Deque<Item> implements Iterable<Item> {
             // Create a variable that points to the end of deque.
             Node previousEndOfDeck = endOfDeque;
 
-            // Point endofDeque to a new node and set the values
+            // Point endOfDeque to a new node and set the values
             endOfDeque = new Node();
             endOfDeque.item = item;
             endOfDeque.next = null;
@@ -94,6 +91,11 @@ public class Deque<Item> implements Iterable<Item> {
         dequeSize++;
     }
 
+    private void emptyDeque() {
+        headOfDeque = null;
+        endOfDeque = null;
+    }
+
     // remove and return the item from the front
     public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException();
@@ -101,13 +103,13 @@ public class Deque<Item> implements Iterable<Item> {
         // Set the item to be returned to the item field of the first node
         Item item = headOfDeque.item;
 
-        // If the next node exists, point headOfDeque to it and set its previous to null
-        if (headOfDeque.next != null) {
+        // Check to see if this is the last node and set both head and end to null
+        if (size() == 1) {
+            emptyDeque();
+        }
+        else { // reassign head
             headOfDeque = headOfDeque.next;
             headOfDeque.previous = null;
-        }
-        else {
-            headOfDeque = null;
         }
 
         dequeSize--;
@@ -122,13 +124,13 @@ public class Deque<Item> implements Iterable<Item> {
         // Set the item to be returned to the item field of the last node
         Item item = endOfDeque.item;
 
-        // If previous node exists, then point endOfDeque to it and set its next to null
-        if (endOfDeque.previous != null) {
+        // Check to see if this is the last node and set both head and end to null
+        if (size() == 1) {
+            emptyDeque();
+        }
+        else {// reassign endOfDeque
             endOfDeque = endOfDeque.previous;
             endOfDeque.next = null;
-        }
-        else {
-            endOfDeque = null;
         }
 
         dequeSize--;
