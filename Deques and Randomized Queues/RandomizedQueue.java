@@ -147,9 +147,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (size() > 1) {
                 int randomNumber = StdRandom.uniform(1, size());
                 for (int i = 1; i < randomNumber; i++) current = current.next;
+                item = current.item;
             }
 
-            return current.item;
+            return item;
         }
     }
 
