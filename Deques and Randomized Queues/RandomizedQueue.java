@@ -136,7 +136,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomOrderIterator implements Iterator<Item> {
         private Node current = head;
-        public boolean hasNext() { return current != null; }
+        public boolean hasNext() { return current.item != null; }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
@@ -182,7 +182,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.print("\nTest adding: ");
 
         /* @Test */
-        int testSeed = 5;
+        int testSeed = 10;
         StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the end of the deque");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);

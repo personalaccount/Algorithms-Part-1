@@ -22,47 +22,43 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // Construct an empty deque.
-    public Deque() { isEmpty(); }
+    public Deque() {
+        resetDeque();
+    }
+
+    private void resetDeque(){
+        headOfDeque = new Node();
+        endOfDeque = headOfDeque;
+    }
 
     // Is the deque empty?
-    public boolean isEmpty() {
-        boolean empty = (size() == 0);
-
-        if(headOfDeque == null) {
-            headOfDeque = new Node();
-            endOfDeque = headOfDeque;
-        }
-
-        return empty;
-    }
+    public boolean isEmpty() { return (dequeSize == 0); }
 
     // Return the number of items on the deque.
     public int size() { return dequeSize; }
 
+    private boolean lastNode() { return (dequeSize == 1); }
     private void verifyItemIsNotNull(Item item) {
         if (item == null) throw new IllegalArgumentException();
     }
 
-    // Add the item to the front.
+    // Add an item to the front.
     public void addFirst(Item item) {
         verifyItemIsNotNull(item);
 
-        // If deque is empty, then fill out the item field of the empty node
-        if (isEmpty()) {
-            headOfDeque.item = item;
-        }
-        else {
-            // Save a link to the current head of deque
+        // If deque is not empty, then link a new node and point headOfDeque to it
+        if (!isEmpty()) {
             Node previousHeadOfDeck = headOfDeque;
 
             // Create a new Node and set it's values
             headOfDeque = new Node();
-            headOfDeque.item = item;
             headOfDeque.next = previousHeadOfDeck;
 
             // Maintain a backtrack link for removeLast
             previousHeadOfDeck.previous = headOfDeque;
         }
+        // assign the value to the head node item
+        headOfDeque.item = item;
 
         dequeSize++;
     }
@@ -71,29 +67,20 @@ public class Deque<Item> implements Iterable<Item> {
     public void addLast(Item item) {
         verifyItemIsNotNull(item);
 
-        // If this is the first entry, then fill out the item property of the only empty node
-        if (isEmpty()) {
-            endOfDeque.item = item;
-        }
-        else {
+        // If deque is not empty, then link a new node and point endOfDeque to it
+        if (!isEmpty()) {
             // Create a variable that points to the end of deque.
             Node previousEndOfDeck = endOfDeque;
 
             // Point endOfDeque to a new node and set the values
             endOfDeque = new Node();
-            endOfDeque.item = item;
             endOfDeque.next = null;
             endOfDeque.previous = previousEndOfDeck;
 
             previousEndOfDeck.next = endOfDeque;
         }
-
+        endOfDeque.item = item;
         dequeSize++;
-    }
-
-    private void emptyDeque() {
-        headOfDeque = null;
-        endOfDeque = null;
     }
 
     // remove and return the item from the front
@@ -103,9 +90,9 @@ public class Deque<Item> implements Iterable<Item> {
         // Set the item to be returned to the item field of the first node
         Item item = headOfDeque.item;
 
-        // Check to see if this is the last node and set both head and end to null
-        if (size() == 1) {
-            emptyDeque();
+        // If this is the last node - reset deque.
+        if (lastNode()) {
+            resetDeque();
         }
         else { // reassign head
             headOfDeque = headOfDeque.next;
@@ -125,10 +112,10 @@ public class Deque<Item> implements Iterable<Item> {
         Item item = endOfDeque.item;
 
         // Check to see if this is the last node and set both head and end to null
-        if (size() == 1) {
-            emptyDeque();
+        if (lastNode()) {
+            resetDeque();
         }
-        else {// reassign endOfDeque
+        else { // reassign endOfDeque
             endOfDeque = endOfDeque.previous;
             endOfDeque.next = null;
         }
@@ -140,13 +127,13 @@ public class Deque<Item> implements Iterable<Item> {
 
     // Return an iterator over items in order from front to end
     public Iterator<Item> iterator() {
-        return new FrontToEndIterator();
+        return new ListIterator();
     }
 
     // Inner class describing the required iterator
-    private class FrontToEndIterator implements Iterator<Item> {
+    private class ListIterator implements Iterator<Item> {
         private Node current = headOfDeque;
-        public boolean hasNext() { return current != null; }
+        public boolean hasNext() { return (current != null); }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
@@ -160,6 +147,7 @@ public class Deque<Item> implements Iterable<Item> {
     private void printNodes() {
         if (size() <= 0) throw new NoSuchElementException("Queue is empty");
 
+//        while (iterator().hasNext()) StdOut.print(iterator().next() + "  ");
         Node current = headOfDeque;
         while (current != null) {
             StdOut.print(current.item + " ");
@@ -189,11 +177,11 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         StdOut.println("\nTest adding: ");
-        int testSize = 23;
+        int testSize = 3;
 
         StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
         for (int i = testSize; i >= 0; --i) dInts.addLast(i);
-        dInts.printNodes();
+        for (int i : dInts) StdOut.print(i + " ");
 
         StdOut.println("\nAdd integers ranging from " + (testSize - 1) + " to 0 to the front of the deque");
         for (int i = testSize-1; i >= 0; --i) dInts.addFirst(i);
