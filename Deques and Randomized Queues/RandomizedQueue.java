@@ -181,7 +181,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.print("\nTest adding: ");
 
         /* @Test */
-        int testSeed = 44;
+        int testSeed = 1;
         StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the end of the deque");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);
