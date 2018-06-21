@@ -5,7 +5,6 @@
  * uniformly at random from items in the data structure.
  */
 
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdOut;
@@ -126,26 +125,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return a random item (but do not remove it)
     public Item sample() {
         if (isEmpty()) throw new NoSuchElementException();
-
-        Node current = head;
-        Item item = current.item;
-
-        if (size() > 1) {
-            // create a random counter
-            int randCount = StdRandom.uniform(1, numberOfNodes);
-            // follow the next link to the random node
-            for (int i = 1; i < randCount; i++) current = current.next;
-
-            // updated the item
-            item = current.item;
-        }
-
-        return item;
+        return iterator().next();
     }
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-        return new FrontToEndIterator();
+
+        return new randomOrderIterator();
     }
 
     // Inner class describing the required iterator
@@ -159,6 +145,35 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             Item item = current.item;
             current = current.next;
             return item;
+        }
+    }
+
+    private class randomOrderIterator implements Iterator<Item> {
+        private Node current = head;
+        public boolean hasNext() { return current != null; }
+        public void remove() { throw new UnsupportedOperationException(); }
+
+        public Item next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            Item item = current.item;
+
+            // if there are more nodes than one, then return a random node
+            if (size() > 1) {
+                int randomNumber = StdRandom.uniform(1, numberOfNodes);
+                for (int i = 1; i < randomNumber; i++) current = current.next;
+            }
+
+            return current.item;
+        }
+    }
+
+    public void printNodes() {
+        if(size() <= 0) throw new NoSuchElementException("Queue is empty");
+
+        Node current = head;
+        while(current != null) {
+            StdOut.print(current.item + " ");
+            current = current.next;
         }
     }
 
@@ -177,33 +192,39 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             StdOut.println(e);
         }
 
-        StdOut.println("\nTest adding: ");
+        StdOut.print("\nTest adding: ");
 
         /* @Test */
-        int testSize = 23;
-        StdOut.println("\nAdd integers ranging from " + testSize + " to 0 to the end of the deque");
-        for (int i = testSize; i >= 0; --i) ranInts.enqueue(i);
-        for (int item : ranInts) StdOut.print(item + " ");
-
-        /* @Test */
-        StdOut.println("\nTest sampling: " + ranInts.sample());
-
-
-        StdOut.println("\nTest removing: ");
+        int testSeed = 44;
+        StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the end of the deque");
+        for (int i = testSeed; i > 0; --i) {
+            StdOut.print(i);
+            ranInts.enqueue(i);
+            if(i > 1) StdOut.print(",");
+        }
+        StdOut.println("\nConstituting nodes: ");
+        ranInts.printNodes();
 
         try {
 
             /* @Test */
-            StdOut.println("\nRemove single item: " + ranInts.dequeue());
-            for (int item : ranInts) {
-                StdOut.print(item + " ");
-            }
+            StdOut.println("\n\nTest sampling: " + ranInts.sample());
+            StdOut.println("Constituting nodes: ");
+            ranInts.printNodes();
+
+            StdOut.println("\n\nTest removing: ");
 
             /* @Test */
-            for (int i = 1; i <= (testSize/2); i++) {
-                StdOut.println("\nRemove " + i + " items from head of deque");
-                for (int j = 0; j < i; j++) ranInts.dequeue();
-                for (int item : ranInts) StdOut.print(item + " ");
+            StdOut.println("Remove single item: " + ranInts.dequeue());
+            StdOut.println("Constituting nodes: ");
+            ranInts.printNodes();
+
+//            /* @Test */
+            for (int i = 1; i <= (testSeed/2); i++) {
+                StdOut.print("\nRemove " + i + " items: ");
+                for (int j = 0; j < i; j++) StdOut.print(ranInts.dequeue() + " ");
+                StdOut.println("\nConstituting nodes: ");
+                ranInts.printNodes();
             }
         }
         catch (NoSuchElementException e) {
