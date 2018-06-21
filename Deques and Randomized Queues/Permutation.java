@@ -8,19 +8,7 @@ import java.util.NoSuchElementException;
  */
 public class Permutation {
     public static void main(String[] args) {
-        int k;
-        try {
-            k = Integer.parseInt(args[0]);
-            if (k <= 0) throw new IllegalArgumentException();
-        }
-        catch (IndexOutOfBoundsException e) {
-            StdOut.println("k is not set, setting k to 3");
-            k = 3;
-        }
-        catch (IllegalArgumentException e) {
-            StdOut.println("k has to be > 0, setting k to 3");
-            k = 3;
-        }
+        int k = Integer.parseInt(args[0]);
 
         RandomizedQueue<String> sequenceOfStrings = new RandomizedQueue<>();
 
