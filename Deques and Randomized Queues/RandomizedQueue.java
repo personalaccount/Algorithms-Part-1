@@ -14,12 +14,11 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Node head; // Link to head of queue.
-    private int numberOfNodes;  // Number of nodes in the deque.
+    private int numberOfNodes = 0;  // Number of nodes in the deque.
 
 
     // construct an empty randomized queue
     public RandomizedQueue() {
-        numberOfNodes = 0;
         isEmpty();
     }
 
@@ -30,13 +29,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private Node previous;
     }
 
-    // is the randomized queue empty?
+    // if the randomized queue empty, construct an empty queue
     public boolean isEmpty() {
-        boolean empty = (size() == 0);
-
         if (head == null) head = new Node();
 
-        return empty;
+        return (size() == 0);
     }
 
     // return the number of items on the randomized queue
@@ -75,36 +72,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Node current = head;
         Item item = current.item;
 
-        if (size() <= 1) {
+        if (size() <= 1) { // If this is the last node - reset head.
             head = null;
         }
         else { // there are at least two nodes in the queue
 
-            // create a random counter
-            int randCount = StdRandom.uniform(1, numberOfNodes);
-            // follow the next link to the random node
-            for (int i = 1; i < randCount; i++) {
-                current = current.next;
-            }
-            // updated the item
+            for (int i = 1; i < StdRandom.uniform(1, numberOfNodes); i++) current = current.next;
+
             item = current.item;
-
-            /**
-             * Now deque the node and link the queue back.
-             * Prior to doing so, check to see if the node is in the beginning or the end of the queue,
-             * since these are the two special cases.
-             */
-
 
             //  when it's the first node reset the head to the next node
             if (current.previous == null) {
                 head = current.next;
                 head.previous = null;
-
             }
             else if (current.next == null) { // when it's the last node reassign the end to the one before it and remove it
-                Node beforeCurrent = current.previous;
-                beforeCurrent.next = null;
+                Node newEnd = current.previous;
+                newEnd.next = null;
             }
             else {
 
@@ -115,7 +99,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 beforeCurrent.next = afterCurrent;
                 afterCurrent.previous = beforeCurrent;
             }
-
         }
 
         numberOfNodes--;
@@ -133,21 +116,44 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomOrderIterator();
     }
 
+    /*
+     iterator implementation must support operations next() and hasNext() in constant worst-case time; and construction in linear time;
+     */
     private class RandomOrderIterator implements Iterator<Item> {
 
         private Node current = head;
+        private int[] nodeOrder;  // holds the order of nodes
+        private int pointer = 0; // Pointer to the current element in the nodeOrder array
+
+        public RandomOrderIterator() {
+
+            if (size() > 1) {
+               nodeOrder = new int[numberOfNodes];
+
+                // Fill out the sequence of next operations
+                for (int i = 0; i < numberOfNodes; i++) {
+                    nodeOrder[i] = i;
+                }
+
+                StdRandom.shuffle(nodeOrder);
+            }
+
+        }
 
         // include current.item check to account for the requirement to start with an empty queue
-        public boolean hasNext() { return (current != null && current.item != null); }
+        public boolean hasNext() { return (current != null && current.item != null && (pointer < size())); }
         public void remove() { throw new UnsupportedOperationException(); }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
+//            if (pointer == numberOfNodes) throw new NoSuchElementException();
 
-            for (int i = 0; i < StdRandom.uniform(0, numberOfNodes); i++) current = current.next;
-
+            // Start from the beginning
+            current = head;
+            for (int i = 0; i < nodeOrder[pointer]; i++) current = current.next;
             Item item = current.item;
-            current = current.next;
+
+            pointer++;
 
             return item;
         }
@@ -181,24 +187,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.print("\nTest adding: ");
 
         /* @Test */
-        int testSeed = 10;
-        StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the start of randomized queue");
+        int testSeed = 14;
+        StdOut.println("\nAdd integers ranging from " + testSeed + " to 1 to the head of randomized queue.");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);
             ranInts.enqueue(i);
-            if (i > 1) StdOut.print(",");
+            if (i > 1) StdOut.print(", ");
         }
-        StdOut.println("\nConstituting nodes: ");
-        ranInts.printNodes();
-
-        StdOut.println(ranInts.iterator().next());
 
         try {
 
             /* @Test */
             StdOut.println("\n\nTest sampling: " + ranInts.sample());
-            StdOut.println("Constituting nodes: ");
-            ranInts.printNodes();
+
+
+            /* @Test */
+            StdOut.println("\nTest iterator 1: ");
+            Iterator<Integer> ranQIt1 = ranInts.iterator();
+            while (ranQIt1.hasNext()) { StdOut.print(ranQIt1.next() + " "); }
+
+            /* @Test */
+            StdOut.println("\nTest iterator 2: ");
+            Iterator<Integer> ranQIt2 = ranInts.iterator();
+            while (ranQIt2.hasNext()) { StdOut.print(ranQIt2.next() + " "); }
+
+            StdOut.println("\nForeach loop iterator 3 test: ");
+            for(int i : ranInts) { StdOut.print(i + " "); }
+
 
             StdOut.println("\n\nTest removing: ");
 
