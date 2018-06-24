@@ -182,7 +182,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         /* @Test */
         int testSeed = 10;
-        StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the end of the deque");
+        StdOut.println("\nAdd integers ranging from " + testSeed + " to 0 to the start of randomized queue");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);
             ranInts.enqueue(i);
@@ -190,6 +190,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
         StdOut.println("\nConstituting nodes: ");
         ranInts.printNodes();
+
+        StdOut.println(ranInts.iterator().next());
 
         try {
 
