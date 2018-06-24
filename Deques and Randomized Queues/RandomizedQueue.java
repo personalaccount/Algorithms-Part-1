@@ -76,31 +76,30 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             head = null;
         }
         else { // there are at least two nodes in the queue
-            int randomNode = StdRandom.uniform(1, numberOfNodes);
+            int randomNode = StdRandom.uniform(1, numberOfNodes + 1);
 
-            if (randomNode > 1) {
-                for (int i = 1; i < randomNode; i++) current = current.next;
+            for (int i = 1; i < randomNode; i++) current = current.next;
 
-                item = current.item;
+            item = current.item;
 
-                //  when it's the first node reset the head to the next node
-                if (current.previous == null) {
-                    head = current.next;
-                    head.previous = null;
-                }
-                else if (current.next == null) { // when it's the last node reassign the end to the one before it and remove it
-                    Node newEnd = current.previous;
-                    newEnd.next = null;
-                }
-                else {
-                    // node is somewhere in between, so link the two adjacent nodes together
-                    Node beforeCurrent = current.previous;
-                    Node afterCurrent = current.next;
-
-                    beforeCurrent.next = afterCurrent;
-                    afterCurrent.previous = beforeCurrent;
-                }
+            //  when it's the first node reset the head to the next node
+            if (current.previous == null) {
+                head = current.next;
+                head.previous = null;
             }
+            else if (current.next == null) { // when it's the last node reassign the end to the one before it and remove it
+                Node newEnd = current.previous;
+                newEnd.next = null;
+            }
+            else {
+                // node is somewhere in between, so link the two adjacent nodes together
+                Node beforeCurrent = current.previous;
+                Node afterCurrent = current.next;
+
+                beforeCurrent.next = afterCurrent;
+                afterCurrent.previous = beforeCurrent;
+            }
+
         }
 
         numberOfNodes--;
@@ -143,7 +142,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
                 // Fill out the sequence of next operations
                 for (int i = 0; i < numberOfNodes; i++) {
-                    nodeOrder[i] = i;
+                    nodeOrder[i] = i + 1;
                 }
 
                 StdRandom.shuffle(nodeOrder);
@@ -160,7 +159,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             // Start from the beginning
             current = head;
-            for (int i = 0; i < nodeOrder[pointer]; i++) current = current.next;
+            for (int i = 1; i < nodeOrder[pointer]; i++) current = current.next;
             Item item = current.item;
 
             pointer++;
