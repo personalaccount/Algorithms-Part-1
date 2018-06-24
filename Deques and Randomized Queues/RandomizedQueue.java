@@ -78,27 +78,28 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         else { // there are at least two nodes in the queue
             int randomNode = StdRandom.uniform(1, numberOfNodes);
 
-            for (int i = 1; i < randomNode; i++) current = current.next;
+            if (randomNode > 1) {
+                for (int i = 1; i < randomNode; i++) current = current.next;
 
-            item = current.item;
+                item = current.item;
 
-            //  when it's the first node reset the head to the next node
-            if (current.previous == null) {
-                head = current.next;
-                head.previous = null;
-            }
-            else if (current.next == null) { // when it's the last node reassign the end to the one before it and remove it
-                Node newEnd = current.previous;
-                newEnd.next = null;
-            }
-            else {
+                //  when it's the first node reset the head to the next node
+                if (current.previous == null) {
+                    head = current.next;
+                    head.previous = null;
+                }
+                else if (current.next == null) { // when it's the last node reassign the end to the one before it and remove it
+                    Node newEnd = current.previous;
+                    newEnd.next = null;
+                }
+                else {
+                    // node is somewhere in between, so link the two adjacent nodes together
+                    Node beforeCurrent = current.previous;
+                    Node afterCurrent = current.next;
 
-                // node is somewhere in between, so link the two adjacent nodes together
-                Node beforeCurrent = current.previous;
-                Node afterCurrent = current.next;
-
-                beforeCurrent.next = afterCurrent;
-                afterCurrent.previous = beforeCurrent;
+                    beforeCurrent.next = afterCurrent;
+                    afterCurrent.previous = beforeCurrent;
+                }
             }
         }
 
@@ -109,8 +110,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return a random item (but do not remove it)
     public Item sample() {
         if (isEmpty()) throw new NoSuchElementException();
-        return iterator().next();
+
+        Node current = head;
+        int randomNode = StdRandom.uniform(1, numberOfNodes + 1);
+
+        if (randomNode > 1) {
+            for (int i = 1; i < randomNode; i++) current = current.next;
+        }
+
+        return current.item;
     }
+
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
@@ -147,7 +157,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
-//            if (pointer == numberOfNodes) throw new NoSuchElementException();
 
             // Start from the beginning
             current = head;
@@ -256,7 +265,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int n = 1000;
 
         for (int i = 0; i < n; i++) {
-            double ranInt = StdRandom.uniform(0.1,1.0);
+            double ranInt = StdRandom.uniform(0.1, 1.0);
             if (ranInt > 0.8) {
                 rq.enqueue(i);
                 StdOut.println("Enque: [" + i + "]");
@@ -264,7 +273,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             else if (ranInt > 0.5) {
                 try {
                     StdOut.println("Sample: [" + rq.sample() + "]");
-                } catch (NoSuchElementException e) {
+                }
+                catch (NoSuchElementException e) {
                     StdOut.println(e);
                 }
             }
