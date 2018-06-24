@@ -127,8 +127,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public RandomOrderIterator() {
 
-            if (size() > 1) {
-               nodeOrder = new int[numberOfNodes];
+            if (size() >= 1) {
+                nodeOrder = new int[numberOfNodes];
 
                 // Fill out the sequence of next operations
                 for (int i = 0; i < numberOfNodes; i++) {
@@ -188,7 +188,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         /* @Test */
         int testSeed = 14;
-        StdOut.println("\nAdd integers ranging from " + testSeed + " to 1 to the head of randomized queue.");
+        StdOut.println("\nAdd integers ranging from " + testSeed + " to 1");
         for (int i = testSeed; i > 0; --i) {
             StdOut.print(i);
             ranInts.enqueue(i);
@@ -204,15 +204,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             /* @Test */
             StdOut.println("\nTest iterator 1: ");
             Iterator<Integer> ranQIt1 = ranInts.iterator();
-            while (ranQIt1.hasNext()) { StdOut.print(ranQIt1.next() + " "); }
+            while (ranQIt1.hasNext()) {
+                StdOut.print(ranQIt1.next() + " ");
+            }
 
             /* @Test */
             StdOut.println("\nTest iterator 2: ");
             Iterator<Integer> ranQIt2 = ranInts.iterator();
-            while (ranQIt2.hasNext()) { StdOut.print(ranQIt2.next() + " "); }
+            while (ranQIt2.hasNext()) {
+                StdOut.print(ranQIt2.next() + " ");
+            }
 
             StdOut.println("\nForeach loop iterator 3 test: ");
-            for(int i : ranInts) { StdOut.print(i + " "); }
+            for (int i : ranInts) {
+                StdOut.print(i + " ");
+            }
 
 
             StdOut.println("\n\nTest removing: ");
@@ -222,22 +228,50 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             StdOut.println("Constituting nodes: ");
             ranInts.printNodes();
 
-//            /* @Test */
+            /* @Test */
             for (int i = 1; i <= (testSeed/2); i++) {
                 StdOut.print("\nRemove " + i + " items: ");
                 for (int j = 0; j < i; j++) StdOut.print(ranInts.dequeue() + " ");
                 if (i % 2 == 0) {
                     StdOut.println("\nConstituting nodes: ");
                     ranInts.printNodes();
-                } else {
+                }
+                else {
                     StdOut.println("\nForeach loop iterator test: ");
-                    for(int k : ranInts) { StdOut.print(k + " "); }
+                    for (int k : ranInts) {
+                        StdOut.print(k + " ");
+                    }
                 }
             }
         }
         catch (NoSuchElementException e) {
             StdOut.println(e);
         }
+
+        /* @Test */
+        StdOut.println("\nCheck random calls to enqueue(), sample(), and size()");
+
+        RandomizedQueue<Integer> rq = new RandomizedQueue<>();
+        int n = 1000;
+
+        for (int i = 0; i < n; i++) {
+            double ranInt = StdRandom.uniform(0.1,1.0);
+            if (ranInt > 0.8) {
+                rq.enqueue(i);
+                StdOut.println("Enque: [" + i + "]");
+            }
+            else if (ranInt > 0.5) {
+                try {
+                    StdOut.println("Sample: [" + rq.sample() + "]");
+                } catch (NoSuchElementException e) {
+                    StdOut.println(e);
+                }
+            }
+            else {
+                StdOut.println("Size: " + rq.size());
+            }
+        }
+
 
     }
 }
