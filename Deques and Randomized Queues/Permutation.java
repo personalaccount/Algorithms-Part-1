@@ -14,7 +14,7 @@ public class Permutation {
 
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
-            if (!item.equals(" ")) sequenceOfStrings.enqueue(item);
+            if (!" ".equals(item)) sequenceOfStrings.enqueue(item);
         }
 
         for (int i = 0; i < k; i++) {

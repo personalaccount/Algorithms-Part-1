@@ -229,7 +229,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 StdOut.print(i + " ");
             }
 
-
             StdOut.println("\n\nTest removing: ");
 
             /* @Test */
@@ -241,16 +240,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             for (int i = 1; i <= (testSeed/2); i++) {
                 StdOut.print("\nRemove " + i + " items: ");
                 for (int j = 0; j < i; j++) StdOut.print(ranInts.dequeue() + " ");
-                if (i % 2 == 0) {
-                    StdOut.println("\nConstituting nodes: ");
-                    ranInts.printNodes();
-                }
-                else {
-                    StdOut.println("\nForeach loop iterator test: ");
-                    for (int k : ranInts) {
-                        StdOut.print(k + " ");
-                    }
-                }
+                StdOut.println("\nConstituting nodes: ");
+                ranInts.printNodes();
             }
         }
         catch (NoSuchElementException e) {
@@ -281,7 +272,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 StdOut.println("Size: " + rq.size());
             }
         }
-
 
     }
 }
