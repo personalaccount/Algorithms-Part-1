@@ -76,8 +76,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             head = null;
         }
         else { // there are at least two nodes in the queue
+            int randomNode = StdRandom.uniform(1, numberOfNodes);
 
-            for (int i = 1; i < StdRandom.uniform(1, numberOfNodes); i++) current = current.next;
+            for (int i = 1; i < randomNode; i++) current = current.next;
 
             item = current.item;
 
