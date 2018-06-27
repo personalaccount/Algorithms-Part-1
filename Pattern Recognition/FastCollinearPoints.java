@@ -1,5 +1,6 @@
 /**
- * Created by admin on 6/27/18.
+ * Created by Philip Ivanov (https://github.com/personalaccount)
+ *
  */
 public class FastCollinearPoints {
 
