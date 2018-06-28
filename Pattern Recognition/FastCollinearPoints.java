@@ -17,4 +17,8 @@ public class FastCollinearPoints {
     public LineSegment[] segments() {
 
     }
+
+    public static void Main (String[] args) {
+
+    }
 }
