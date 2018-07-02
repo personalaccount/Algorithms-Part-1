@@ -72,7 +72,12 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        if (y < that.y) return -1;
+        if (y > that.y) return +1;
+        // otherwise y's are equal
+        if (x < that.x) return -1;
+        if (x > that.x) return +1;
+        return 0;
     }
 
     /**
