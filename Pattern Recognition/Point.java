@@ -101,6 +101,11 @@ public class Point implements Comparable<Point> {
         /* YOUR CODE HERE */
     }
 
+    // Define a nested class that implements the Comparator interface
+    private static class BySlope implements Comparator<Point>
+    {
+
+    }
 
     /**
      * Returns a string representation of this point.
