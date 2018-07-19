@@ -104,10 +104,16 @@ public class Point implements Comparable<Point> {
     }
 
     // Define a nested class that implements the Comparator interface
-    private static class BySlope implements Comparator<Point>
+    private class BySlope implements Comparator<Point>
     {
-        public int compare(Point a, Point b){
-            return 0;
+        public int compare(Point q1, Point q2){
+            double dy1 = q1.y - y;
+            double dy2 = b.y - y;
+
+            if (dy1 == 0 && dy2 == 0) {
+                else if (dy1 >= 0 && dy2 < 0) return -1;
+                else if (dy2 >= 0 && dy1 < 0) return +1;
+                else return -ccw(Point.this, q1, q2);
         }
     }
 
