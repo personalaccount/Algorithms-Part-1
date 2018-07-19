@@ -99,13 +99,16 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
+
         /* YOUR CODE HERE */
     }
 
     // Define a nested class that implements the Comparator interface
     private static class BySlope implements Comparator<Point>
     {
-
+        public int compare(Point a, Point b){
+            return 0;
+        }
     }
 
     /**
