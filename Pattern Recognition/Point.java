@@ -12,7 +12,7 @@ public class Point implements Comparable<Point> {
 
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
-    public static final Comparator<Point> BY_SLOPE = new BySlope();
+    public final Comparator<Point> BY_SLOPE = new SlopeOrder();
 
     /**
      * Initializes a new point.
@@ -101,14 +101,17 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
 
         /* YOUR CODE HERE */
+        return
+        //returns a Comparator Object
     }
 
     // Define a nested class that implements the Comparator interface
-    private class BySlope implements Comparator<Point>
+    private class SlopeOrder implements Comparator<Point>
     {
         public int compare(Point q1, Point q2){
+            if slopeTo(q1) >
             double dy1 = q1.y - y;
-            double dy2 = b.y - y;
+            double dy2 = q2.y - y;
 
             if (dy1 == 0 && dy2 == 0) {
                 else if (dy1 >= 0 && dy2 < 0) return -1;
