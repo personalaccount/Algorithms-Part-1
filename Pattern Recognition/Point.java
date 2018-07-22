@@ -58,14 +58,14 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
 
-        if (compareTo(that) != 0) {
-            double dx = that.x - x;
+        if (this != that) {
+            double dX = that.x - x;
             double dY = that.y - y;
 
             if (dY == 0) return 0.0;
-            if (dx == 0) return Double.POSITIVE_INFINITY;
+            if (dX == 0) return Double.POSITIVE_INFINITY;
 
-            return (that.y - y) / (that.x - x);
+            return dY / dX;
         }
 
         return Double.NEGATIVE_INFINITY;
@@ -137,7 +137,9 @@ public class Point implements Comparable<Point> {
         StdOut.println("Create three points: ");
         Point[] points = {new Point(0,0), new Point(3,0), new Point(3,3)};
 
-        for(Point p : points){ StdOut.print(p.toString()); }
+        for(Point p : points){
+            StdOut.print(p.toString());
+        }
 
     }
 }
