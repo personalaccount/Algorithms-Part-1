@@ -98,16 +98,25 @@ public class Point implements Comparable<Point> {
      *
      * @return the Comparator that defines this ordering on points
      */
-    public Comparator<Point> slopeOrder(Point q1, Point q2) {
+    public Comparator<Point> slopeOrder() {
 
-        /* YOUR CODE HERE */
         return new SlopeOrder();
-        //returns a Comparator Object
     }
 
     // Define a nested inner class that implements the Comparator interface
     private class SlopeOrder implements Comparator<Point> {
+
         public int compare(Point q1, Point q2) {
+
+            /*  To avoid potential complications with integer overflow or floating-point precision,
+                assert that the constructor arguments x and y are each between 0 and 32,767.
+             */
+
+            assert (q1.x >= 0);
+            assert (q1.y <= 32767);
+            assert (q2.x >= 0);
+            assert (q2.y <= 32767);
+
             double slopeq1 = slopeTo(q1);
             double slopeq2 = slopeTo(q2);
 
@@ -135,10 +144,15 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
 
         StdOut.println("Create three points: ");
-        Point[] points = {new Point(0,0), new Point(3,0), new Point(3,3)};
+        Point[] points = {new Point(1,1), new Point(3,2), new Point(4,4)};
 
-        for(Point p : points){
-            StdOut.print(p.toString());
+        for(int i = 0; i < points.length; i++) {
+            StdOut.println("Point " + (i + 1) + ": " + points[i].toString());
+        }
+
+        StdOut.println("Comparing points 2 & 3 by slope to point 1:");
+        if (points[0].slopeOrder().compare(points[1],points[2]) > 0 ) {
+            StdOut.println("2 is greater");
         }
 
     }
