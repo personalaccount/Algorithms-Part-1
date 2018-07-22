@@ -10,15 +10,15 @@ public class FastCollinearPoints {
 
     // the number of line segments
     public int numberOfSegments() {
-
+        return 0;
     }
 
     // the line segments
     public LineSegment[] segments() {
-
+        return null;
     }
 
     public static void Main (String[] args) {
-
+        // Test client
     }
 }

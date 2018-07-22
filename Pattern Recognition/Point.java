@@ -133,7 +133,16 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        StdOut.println("Launching Point");
+
+        StdOut.println("Create three points");
+
+        // Create a point at 0,0
+        Point p1 = new Point(0,0);
+        StdOut.print(p1.toString());
+
+        Point p2 = new Point(0,3);
+        Point p3 = new Point(3,3);
+
         /* YOUR CODE HERE */
     }
 }
