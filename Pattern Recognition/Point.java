@@ -134,10 +134,10 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
 
-        StdOut.println("Create three points");
+        StdOut.println("Create three points: ");
         Point[] points = {new Point(0,0), new Point(3,0), new Point(3,3)};
 
         for(Point p : points){ StdOut.print(p.toString()); }
-        
+
     }
 }
