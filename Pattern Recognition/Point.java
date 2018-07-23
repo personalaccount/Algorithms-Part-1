@@ -144,14 +144,14 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
 
         StdOut.println("Create three points: ");
-        Point[] points = {new Point(1,1), new Point(3,2), new Point(4,4)};
+        Point[] points = {new Point(1,1), new Point(1,4), new Point(4,4)};
 
-        for(int i = 0; i < points.length; i++) {
+        for (int i = 0; i < points.length; i++) {
             StdOut.println("Point " + (i + 1) + ": " + points[i].toString());
         }
 
         StdOut.println("Comparing points 2 & 3 by slope to point 1:");
-        if (points[0].slopeOrder().compare(points[1],points[2]) > 0 ) {
+        if (points[0].slopeOrder().compare(points[1],points[2]) == 0 ) {
             StdOut.println("2 is greater");
         }
 
