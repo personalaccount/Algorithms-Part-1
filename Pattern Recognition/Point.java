@@ -150,7 +150,18 @@ public class Point implements Comparable<Point> {
             StdOut.println("Point " + (i + 1) + ": " + points[i].toString());
         }
 
-        StdOut.println("Comparing points 2 & 3 by slope to point 1:");
+        StdOut.println("\nCompare slopes: ");
+        for (int i = 0; i < points.length; i++) {
+            for (int j = 1; i < points.length; j++) {
+                try {
+                    StdOut.println(points[i].toString() + " slope to " + points[i + j].toString() + " = " + points[i].slopeTo(points[i + j]));
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    break;
+                }
+            }
+        }
+
+        StdOut.println("\nComparing points 2 & 3 by slope to point 1:");
         if (points[0].slopeOrder().compare(points[1],points[2]) == 0 ) {
             StdOut.println("2 is greater");
         }
