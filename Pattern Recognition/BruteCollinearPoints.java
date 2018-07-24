@@ -27,15 +27,18 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] points) {
         if (points == null || points.length < 4) throw new IllegalArgumentException();
 
+        // Sort points using the type's natural order to check for duplicates
         Arrays.sort(points, 0, points.length);
+
+        /* examine 4 points at a time and check whether the three slopes
+            between p and q, between p and r, and between p and s are all equal
+         */
 
         for (int i = 0; i <= points.length - 4; i++) {
             if (points[i] == null) throw new IllegalArgumentException();
-
-
-            /* examine 4 points at a time and check whether the three slopes
-                between p and q, between p and r, and between p and s are all equal
-             */
+            if (points[i].slopeTo(points[i]) == points[i].slopeTo(points[i+1]) && points[i].slopeTo(points[i+2]) == points[i].slopeTo(points[i+3]) ) {
+                lineSegments[numberOfSegments] = new LineSegment(points[i],points[i+3]);
+            }
         }
 
     }
