@@ -25,7 +25,11 @@ public class BruteCollinearPoints {
      */
 
     public BruteCollinearPoints(Point[] points) {
-        if (points == null || points.length < 4) throw new IllegalArgumentException();
+        int totalPoints = points.length;
+        if (points == null || totalPoints < 4) throw new IllegalArgumentException();
+
+        // Initialize LineSegments array, which can be at most half the length of points (two points per segment)
+        lineSegments = new LineSegment[totalPoints/2];
 
         // Sort points using the type's natural order to check for duplicates
         Arrays.sort(points, 0, points.length);
