@@ -28,20 +28,26 @@ public class BruteCollinearPoints {
         int totalPoints = points.length;
         if (points == null || totalPoints < 4) throw new IllegalArgumentException();
 
-        // Initialize LineSegments array, which can be at most half the length of points (two points per segment)
+        // Initialize LineSegments array, which can be at most half the length of points array (two points per segment)
         lineSegments = new LineSegment[totalPoints/2];
 
         // Sort points using the type's natural order to check for duplicates
-        Arrays.sort(points, 0, points.length);
+        Arrays.sort(points, 0, totalPoints);
 
         /* examine 4 points at a time and check whether the three slopes
             between p and q, between p and r, and between p and s are all equal
          */
 
-        for (int i = 0; i <= points.length - 4; i++) {
+        for (int i = 0; i <= totalPoints - 4; i++) {
+            // make sure the point is not null
             if (points[i] == null) throw new IllegalArgumentException();
+
+            // check it it's a duplicate
+            if (i < totalPoints && points[i] == points[i+1]) throw new IllegalArgumentException();
+
             if (points[i].slopeTo(points[i]) == points[i].slopeTo(points[i+1]) && points[i].slopeTo(points[i+2]) == points[i].slopeTo(points[i+3]) ) {
                 lineSegments[numberOfSegments] = new LineSegment(points[i],points[i+3]);
+                numberOfSegments++;
             }
         }
 
