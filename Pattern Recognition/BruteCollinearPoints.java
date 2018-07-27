@@ -1,3 +1,7 @@
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Arrays;
 
 /**
@@ -30,12 +34,11 @@ public class BruteCollinearPoints {
         // Initialize LineSegments array, which can be at most half the length of points array (two points per segment)
         lineSegments = new LineSegment[totalPoints/2];
 
-        // Sort points using the type's natural order to check for duplicates
-        Arrays.sort(points, 0, totalPoints);
-
         /* examine 4 points at a time and check whether the three slopes
             between p and q, between p and r, and between p and s are all equal
          */
+
+//        Arrays.sort(points);
 
         for (int i = 0; i <= totalPoints - 4; i++) {
             // make sure the point is not null
@@ -61,5 +64,35 @@ public class BruteCollinearPoints {
     public LineSegment[] segments() {
         if (numberOfSegments() == 0) return null;
         return lineSegments;
+    }
+
+    public static void main(String[] args) {
+
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+//        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
     }
 }
