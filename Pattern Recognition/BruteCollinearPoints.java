@@ -15,7 +15,6 @@ public class BruteCollinearPoints {
 
     private int numberOfSegments = 0;
     private LineSegment[] lineSegments;
-    private Point previousPoint = null; // Aux. variable to check for argument uniqueness
 
     // finds all line segments containing 4 points
 
