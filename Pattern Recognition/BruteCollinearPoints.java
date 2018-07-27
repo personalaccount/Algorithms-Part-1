@@ -2,6 +2,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Arrays;
+
 /**
  * Examines 4 points at a time and checks whether they all lie on the same line segment,
  * returning all such line segments.
@@ -29,12 +31,16 @@ public class BruteCollinearPoints {
         int totalPoints = points.length;
         if (points == null || totalPoints < 4) throw new IllegalArgumentException();
 
-        // Initialize LineSegments array, which can be at most half the length of points array (two points per segment)
-        lineSegments = new LineSegment[totalPoints/2];
+        /*  The nubmer of segments is always assumed to be 1, because:
+            "For simplicity, we will not supply any input to BruteCollinearPoints that has 5 or more collinear points."
+         */
+        lineSegments = new LineSegment[1];
 
         /* examine 4 points at a time and check whether the three slopes
            between p and q, between p and r, and between p and s are all equal
          */
+
+        Arrays.sort(points);
 
         double targetSlope;
 
@@ -46,14 +52,15 @@ public class BruteCollinearPoints {
 
                     for (int s = r + 1; s < totalPoints; s++) {
 
+                        if (numberOfSegments > 0) break;
+
                         if (points[q] == null || points[p] == null || points[r] == null || points[s] == null) throw new IllegalArgumentException();
                         if (points[q] == points[p] || points[q] == points[r] || points[q] == points[s]) throw new IllegalArgumentException();
 
                         targetSlope = points[q].slopeTo(points[p]);
                         if (points[q].slopeTo(points[r]) == targetSlope) {
                             if (points[q].slopeTo(points[s]) == targetSlope) {
-                                // All 4 slopes are on the same line.
-
+                                lineSegments[numberOfSegments++] = new LineSegment(points[p], points[s]);
                             }
                         }
                     }
@@ -95,6 +102,7 @@ public class BruteCollinearPoints {
         // print and draw the line segments
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
         if (collinear.numberOfSegments() > 0 ) {
+            StdOut.println(collinear.numberOfSegments());
             for (LineSegment segment : collinear.segments()) {
                 StdOut.println(segment);
                 segment.draw();
