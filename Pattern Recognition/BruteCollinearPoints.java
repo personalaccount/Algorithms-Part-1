@@ -35,10 +35,10 @@ public class BruteCollinearPoints {
         lineSegments = new LineSegment[totalPoints/2];
 
         /* examine 4 points at a time and check whether the three slopes
-            between p and q, between p and r, and between p and s are all equal
+           between p and q, between p and r, and between p and s are all equal
          */
 
-//        Arrays.sort(points);
+        Arrays.sort(points);
 
         for (int i = 0; i <= totalPoints - 4; i++) {
             // make sure the point is not null
@@ -47,7 +47,7 @@ public class BruteCollinearPoints {
             // check it it's a duplicate
             if (i < totalPoints && points[i] == points[i+1]) throw new IllegalArgumentException();
 
-            if (points[i].slopeTo(points[i]) == points[i].slopeTo(points[i+1]) && points[i].slopeTo(points[i+2]) == points[i].slopeTo(points[i+3]) ) {
+            if (points[i].slopeTo(points[i+1]) == points[i].slopeTo(points[i+2]) && points[i].slopeTo(points[i+2]) == points[i].slopeTo(points[i+3]) ) {
                 lineSegments[numberOfSegments] = new LineSegment(points[i],points[i+3]);
                 numberOfSegments++;
             }
@@ -69,7 +69,7 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In(args[0]);
+        In in = new In("test-samples/input6-pr.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -88,11 +88,15 @@ public class BruteCollinearPoints {
         StdDraw.show();
 
         // print and draw the line segments
-        FastCollinearPoints collinear = new FastCollinearPoints(points);
-        for (LineSegment segment : collinear.segments()) {
-            StdOut.println(segment);
-            segment.draw();
+        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        if (collinear.numberOfSegments() > 0 ) {
+            for (LineSegment segment : collinear.segments()) {
+                StdOut.println(segment);
+                segment.draw();
+            }
+            StdDraw.show();
+        } else {
+            StdOut.println("No linesegments found");
         }
-        StdDraw.show();
     }
 }
