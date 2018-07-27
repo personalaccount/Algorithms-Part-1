@@ -18,7 +18,7 @@ public class FastCollinearPoints {
         return null;
     }
 
-    public static void Main (String[] args) {
+    public static void main (String[] args) {
         // Test client
     }
 }

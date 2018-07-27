@@ -58,17 +58,15 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
 
-        if (this != that) {
-            double dX = that.x - x;
-            double dY = that.y - y;
+        if (this.x == that.x && this.y == that.y) return Double.NEGATIVE_INFINITY; // Point is itself
 
-            if (dY == 0) return 0.0; // Vertical
-            if (dX == 0) return Double.POSITIVE_INFINITY; // Horizontal
+        double dY = that.y - y;
+        double dX = that.x - x;
 
-            return dY / dX;
-        }
+        if (dY == 0) return +0.0; // Vertical
+        if (dX == 0) return Double.POSITIVE_INFINITY; // Horizontal
 
-        return Double.NEGATIVE_INFINITY; // Point is itself
+        return dY / dX;
     }
 
     /**
@@ -143,8 +141,14 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
 
+        StdOut.println("Create two points: ");
+        Point p = new Point(378, 396);
+        Point q = new Point(378, 396);
+
+        StdOut.println(p.slopeTo(q));
+
         StdOut.println("Create three points: ");
-        Point[] points = {new Point(1,1), new Point(1,4), new Point(4,4)};
+        Point[] points = {new Point(1, 1), new Point(1, 4), new Point(4, 4)};
 
         for (int i = 0; i < points.length; i++) {
             StdOut.println("Point " + (i + 1) + ": " + points[i].toString());
@@ -154,15 +158,16 @@ public class Point implements Comparable<Point> {
         for (int i = 0; i < points.length; i++) {
             for (int j = 1; i < points.length; j++) {
                 try {
-                    StdOut.println(points[i].toString() + " slope to " + points[i + j].toString() + " = " + points[i].slopeTo(points[i + j]));
-                } catch (ArrayIndexOutOfBoundsException e) {
+                    StdOut.println(points[i].toString() + " / " + points[i + j].toString() + " = " + points[i].slopeTo(points[i + j]));
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
                     break;
                 }
             }
         }
 
         StdOut.println("\nComparing points 2 & 3 by slope to point 1:");
-        if (points[0].slopeOrder().compare(points[1],points[2]) == 0 ) {
+        if (points[0].slopeOrder().compare(points[1], points[2]) == 0 ) {
             StdOut.println("2 is greater");
         }
 

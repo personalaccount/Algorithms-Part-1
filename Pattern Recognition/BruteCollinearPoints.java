@@ -31,10 +31,9 @@ public class BruteCollinearPoints {
         int totalPoints = points.length;
         if (points == null || totalPoints < 4) throw new IllegalArgumentException();
 
-        /*  The nubmer of segments is always assumed to be 1, because:
-            "For simplicity, we will not supply any input to BruteCollinearPoints that has 5 or more collinear points."
-         */
-        lineSegments = new LineSegment[1];
+        // Array containing line segments (at most half the total number of points)
+
+        lineSegments = new LineSegment[totalPoints/2];
 
         /* examine 4 points at a time and check whether the three slopes
            between p and q, between p and r, and between p and s are all equal
@@ -75,7 +74,6 @@ public class BruteCollinearPoints {
 
     // the line segments, should include each line segment containing 4 points exactly once
     public LineSegment[] segments() {
-        if (numberOfSegments() == 0) return null;
         return lineSegments;
     }
 
@@ -101,14 +99,15 @@ public class BruteCollinearPoints {
 
         // print and draw the line segments
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-        if (collinear.numberOfSegments() > 0 ) {
+        if (collinear.numberOfSegments() > 0) {
             StdOut.println(collinear.numberOfSegments());
             for (LineSegment segment : collinear.segments()) {
                 StdOut.println(segment);
                 segment.draw();
             }
             StdDraw.show();
-        } else {
+        }
+        else {
             StdOut.println("No linesegments found");
         }
     }
