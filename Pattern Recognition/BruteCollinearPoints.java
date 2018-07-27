@@ -2,8 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.Arrays;
-
 /**
  * Examines 4 points at a time and checks whether they all lie on the same line segment,
  * returning all such line segments.
@@ -38,27 +36,35 @@ public class BruteCollinearPoints {
            between p and q, between p and r, and between p and s are all equal
          */
 
-        Arrays.sort(points);
+        double targetSlope;
 
-        for (int i = 0; i <= totalPoints - 4; i++) {
-            // make sure the point is not null
-            if (points[i] == null) throw new IllegalArgumentException();
+        for (int p = 0; p < totalPoints - 4; p++) {
 
-            // check it it's a duplicate
-            if (i < totalPoints && points[i] == points[i+1]) throw new IllegalArgumentException();
+            for (int q = p + 1; q < totalPoints; q++) {
 
-            if (points[i].slopeTo(points[i+1]) == points[i].slopeTo(points[i+2]) && points[i].slopeTo(points[i+2]) == points[i].slopeTo(points[i+3]) ) {
-                lineSegments[numberOfSegments] = new LineSegment(points[i],points[i+3]);
-                numberOfSegments++;
+                for (int r = q + 1; r < totalPoints; r++) {
+
+                    for (int s = r + 1; s < totalPoints; s++) {
+
+                        if (points[q] == null || points[p] == null || points[r] == null || points[s] == null) throw new IllegalArgumentException();
+                        if (points[q] == points[p] || points[q] == points[r] || points[q] == points[s]) throw new IllegalArgumentException();
+
+                        targetSlope = points[q].slopeTo(points[p]);
+                        if (points[q].slopeTo(points[r]) == targetSlope) {
+                            if (points[q].slopeTo(points[s]) == targetSlope) {
+                                // All 4 slopes are on the same line.
+
+                            }
+                        }
+                    }
+                }
             }
         }
 
     }
 
     // the number of line segments
-    public int numberOfSegments() {
-        return numberOfSegments;
-    }
+    public int numberOfSegments() { return numberOfSegments; }
 
     // the line segments, should include each line segment containing 4 points exactly once
     public LineSegment[] segments() {
@@ -79,7 +85,6 @@ public class BruteCollinearPoints {
         }
 
         // draw the points
-//        StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
         for (Point p : points) {
