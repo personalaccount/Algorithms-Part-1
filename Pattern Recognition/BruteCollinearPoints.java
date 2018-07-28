@@ -37,7 +37,7 @@ public class BruteCollinearPoints {
             this.points[i] = inputArr[i];
         }
 
-        lineSegments = new LineSegment[totalPoints/2];
+        lineSegments = new LineSegment[totalPoints];
 
         /* Examine 4 points at a time and check whether the three slopes
            between p and q, between p and r, and between p and s are all equal.
@@ -45,15 +45,13 @@ public class BruteCollinearPoints {
 
         Arrays.sort(points);
 
-        Point segmentStart;
-        Point segmentEnd;
+        Point segmentStart = null;
+        Point segmentEnd = null;
 
-        // Break at -4 since there are no subsequent points after that threshold.
-        for (int p = 0; p < totalPoints - 4; p++) {
+        // Break at -3 since there are no subsequent points from the first one after that threshold.
+        for (int p = 0; p < totalPoints - 3; p++) {
 
-            // Initialize segment
             segmentStart = points[p];
-            segmentEnd = null;
 
             for (int q = p + 1; q < totalPoints; q++) {
                 if (segmentStart == null) break;
@@ -62,14 +60,23 @@ public class BruteCollinearPoints {
                     for (int s = r + 1; s < totalPoints; s++) {
 
                         if (pointsAlign(new int[]{p, q, r, s})) {
-                            segmentEnd = points[s];
+                            lineSegments[numberOfSegments++] = new LineSegment(points[p], points[s]);
+                            segmentStart = null;
+                            break;
+//                            if (numberOfSegments == 0) {
+//                                segmentEnd = points[s];
+//                                lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
+//                            }
+//                            else if (numberOfSegments > 0) {
+//                                if (points[p] == segmentStart && points[s] == segmentEnd) {
+//                                    continue;
+//                                }
+//                                else {
+//                                    segmentEnd = points[s];
+//                                    lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
+//                                }
+//                            }
                         }
-
-                    }
-                    if (segmentEnd != null) {
-                        lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
-                        // break outer loop hack
-                        segmentStart = null;
                     }
                 }
             }
@@ -115,7 +122,7 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input80.txt");
+        In in = new In("collinear-testing/equidistant.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
