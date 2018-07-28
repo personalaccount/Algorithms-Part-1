@@ -18,50 +18,58 @@ import java.util.Arrays;
 public class BruteCollinearPoints {
 
     private int numberOfSegments = 0;
+    private Point[] points;
     private LineSegment[] lineSegments;
 
-    // finds all line segments containing 4 points
-
-    /*
-        Throw a java.lang.IllegalArgumentException if the argument to the constructor is null,
+    /*  Constructor throws a java.lang.IllegalArgumentException if the argument to the constructor is null,
         if any point in the array is null, or if the argument to the constructor contains a repeated point.
      */
 
-    public BruteCollinearPoints(Point[] points) {
-        int totalPoints = points.length;
-        if (points == null || totalPoints < 4) throw new IllegalArgumentException();
+    public BruteCollinearPoints(Point[] inputArr) {
+        if (inputArr == null) throw new IllegalArgumentException();
 
-        // Array containing line segments (at most half the total number of points)
+        int totalPoints = inputArr.length;
+        if (totalPoints < 4) throw new IllegalArgumentException();
+
+        // a defensive copy of the object referenced by the parameter variable since Point is mutable.
+        this.points = new Point[totalPoints];
+        for (int i = 0; i < totalPoints; i++) {
+            this.points[i] = inputArr[i];
+        }
 
         lineSegments = new LineSegment[totalPoints/2];
 
-        /* examine 4 points at a time and check whether the three slopes
-           between p and q, between p and r, and between p and s are all equal
+        /* Examine 4 points at a time and check whether the three slopes
+           between p and q, between p and r, and between p and s are all equal.
          */
 
         Arrays.sort(points);
 
-        double targetSlope;
+        Point segmentStart;
+        Point segmentEnd;
 
+        // Break at -4 since there are no subsequent points after that threshold.
         for (int p = 0; p < totalPoints - 4; p++) {
 
+            // Initialize segment
+            segmentStart = points[p];
+            segmentEnd = null;
+
             for (int q = p + 1; q < totalPoints; q++) {
-
+                if (segmentStart == null) break;
                 for (int r = q + 1; r < totalPoints; r++) {
-
+                    if (segmentStart == null) break;
                     for (int s = r + 1; s < totalPoints; s++) {
 
-                        if (numberOfSegments > 0) break;
-
-                        if (points[q] == null || points[p] == null || points[r] == null || points[s] == null) throw new IllegalArgumentException();
-                        if (points[q] == points[p] || points[q] == points[r] || points[q] == points[s]) throw new IllegalArgumentException();
-
-                        targetSlope = points[q].slopeTo(points[p]);
-                        if (points[q].slopeTo(points[r]) == targetSlope) {
-                            if (points[q].slopeTo(points[s]) == targetSlope) {
-                                lineSegments[numberOfSegments++] = new LineSegment(points[p], points[s]);
-                            }
+                        if (pointsAlign(new int[]{p, q, r, s})) {
+                            segmentEnd = points[s];
                         }
+
+                    }
+                    if (segmentEnd != null) {
+                        lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
+                        // break outer loop hack
+                        segmentStart = null;
                     }
                 }
             }
@@ -69,18 +77,45 @@ public class BruteCollinearPoints {
 
     }
 
+    // Check if points align.
+    private boolean pointsAlign(int[] pk) {
+
+        for (int i = 0; i < pk.length; i++) {
+            // Make sure none of the points are null
+            if (points[pk[i]] == null) throw new IllegalArgumentException();
+
+            if (i > 0) {
+                // Starting from the second point, make sure none of the points match
+                if (points[pk[0]].slopeTo(points[pk[i]]) == Double.NEGATIVE_INFINITY) throw new IllegalArgumentException();
+
+                // Start comparing points starting from the third
+                if (i > 1) {
+                    if (Double.compare(points[pk[0]].slopeTo(points[pk[i]]), points[pk[0]].slopeTo(points[pk[1]])) != 0) return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
     // the number of line segments
     public int numberOfSegments() { return numberOfSegments; }
 
     // the line segments, should include each line segment containing 4 points exactly once
     public LineSegment[] segments() {
-        return lineSegments;
+        LineSegment[] segments = new LineSegment[numberOfSegments];
+
+        for (int i = 0; i < numberOfSegments; i++) {
+            segments[i] = lineSegments[i];
+        }
+
+        return segments;
     }
 
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("test-samples/input6-pr.txt");
+        In in = new In("collinear-testing/input80.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

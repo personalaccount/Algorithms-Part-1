@@ -111,9 +111,9 @@ public class Point implements Comparable<Point> {
              */
 
             assert (q1.x >= 0);
-            assert (q1.y <= 32767);
+//            assert (q1.y <= 32767);
             assert (q2.x >= 0);
-            assert (q2.y <= 32767);
+//            assert (q2.y <= 32767);
 
             double slopeq1 = slopeTo(q1);
             double slopeq2 = slopeTo(q2);
@@ -167,7 +167,7 @@ public class Point implements Comparable<Point> {
         }
 
         StdOut.println("\nComparing points 2 & 3 by slope to point 1:");
-        if (points[0].slopeOrder().compare(points[1], points[2]) == 0 ) {
+        if (points[0].slopeOrder().compare(points[1], points[2]) == 0) {
             StdOut.println("2 is greater");
         }
 
