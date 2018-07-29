@@ -29,7 +29,6 @@ public class BruteCollinearPoints {
         if (inputArr == null) throw new IllegalArgumentException();
 
         int totalPoints = inputArr.length;
-        if (totalPoints < 4) throw new IllegalArgumentException();
 
         // a defensive copy of the object referenced by the parameter variable since Point is mutable.
         this.points = new Point[totalPoints];
@@ -46,36 +45,15 @@ public class BruteCollinearPoints {
         Arrays.sort(points);
 
         Point segmentStart = null;
-        Point segmentEnd = null;
 
         // Break at -3 since there are no subsequent points from the first one after that threshold.
         for (int p = 0; p < totalPoints - 3; p++) {
-
-            segmentStart = points[p];
-
             for (int q = p + 1; q < totalPoints; q++) {
-                if (segmentStart == null) break;
                 for (int r = q + 1; r < totalPoints; r++) {
-                    if (segmentStart == null) break;
                     for (int s = r + 1; s < totalPoints; s++) {
-
                         if (pointsAlign(new int[]{p, q, r, s})) {
                             lineSegments[numberOfSegments++] = new LineSegment(points[p], points[s]);
-                            segmentStart = null;
                             break;
-//                            if (numberOfSegments == 0) {
-//                                segmentEnd = points[s];
-//                                lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
-//                            }
-//                            else if (numberOfSegments > 0) {
-//                                if (points[p] == segmentStart && points[s] == segmentEnd) {
-//                                    continue;
-//                                }
-//                                else {
-//                                    segmentEnd = points[s];
-//                                    lineSegments[numberOfSegments++] = new LineSegment(segmentStart, segmentEnd);
-//                                }
-//                            }
                         }
                     }
                 }
@@ -84,18 +62,18 @@ public class BruteCollinearPoints {
 
     }
 
-    // Check if points align.
+    // Traverses through each of the 4 points, checking for nullness and alignment.
     private boolean pointsAlign(int[] pk) {
 
         for (int i = 0; i < pk.length; i++) {
             // Make sure none of the points are null
             if (points[pk[i]] == null) throw new IllegalArgumentException();
 
+            // Starting from the second point, make sure none of the points match to the first one
             if (i > 0) {
-                // Starting from the second point, make sure none of the points match
                 if (points[pk[0]].slopeTo(points[pk[i]]) == Double.NEGATIVE_INFINITY) throw new IllegalArgumentException();
 
-                // Start comparing points starting from the third
+                // Start comparing slopes starting from the third point
                 if (i > 1) {
                     if (Double.compare(points[pk[0]].slopeTo(points[pk[i]]), points[pk[0]].slopeTo(points[pk[1]])) != 0) return false;
                 }
@@ -122,7 +100,7 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/equidistant.txt");
+        In in = new In("collinear-testing/input20.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -148,9 +126,6 @@ public class BruteCollinearPoints {
                 segment.draw();
             }
             StdDraw.show();
-        }
-        else {
-            StdOut.println("No linesegments found");
         }
     }
 }
