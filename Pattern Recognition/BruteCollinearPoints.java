@@ -2,7 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
 /**
@@ -42,7 +41,7 @@ public class BruteCollinearPoints {
 
             // Sort array using Insertion sort and check for duplicates while doing so
             points[i] = inputArr[i];
-            for(int j = i; j > 0; j--){
+            for (int j = i; j > 0; j--) {
                 if (points[j].compareTo(points[j-1]) < 0) {
                     // exchange (points j, j-1)
                     Point swap = points[j-1];
