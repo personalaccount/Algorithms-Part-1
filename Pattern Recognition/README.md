@@ -58,6 +58,6 @@ The method segments() should include each line segment containing 4 points exact
 
 
 
--
+ :fa-star
 This assignment was developed by Kevin Wayne.
 Copyright © 2005.
