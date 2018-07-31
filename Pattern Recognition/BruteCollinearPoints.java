@@ -82,17 +82,12 @@ public class BruteCollinearPoints {
 
     }
 
-    // Traverses through each of the 4 points, checking for nullness and alignment.
+    // Traverses through each of the 4 points, checking alignment.
     private boolean pointsAlign(int[] pk) {
 
-        for (int i = 1; i < pk.length; i++) {
-            // Starting with the second point, compare each point to the first one, to check for duplicates
-            if (points[pk[0]].compareTo(points[pk[i]]) == 0) throw new IllegalArgumentException();
-
+        for (int i = 2; i < pk.length; i++) {
             // Start comparing slopes starting from the third point
-            if (i > 1) {
-                if (Double.compare(points[pk[0]].slopeTo(points[pk[1]]), points[pk[0]].slopeTo(points[pk[i]])) != 0) return false;
-            }
+            if (Double.compare(points[pk[0]].slopeTo(points[pk[1]]), points[pk[0]].slopeTo(points[pk[i]])) != 0) return false;
         }
         return true;
     }
@@ -114,7 +109,7 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/equidistant.txt");
+        In in = new In("collinear-testing/input80.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
