@@ -10,6 +10,7 @@ public class FastCollinearPoints {
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
         if (inputArr == null) throw new IllegalArgumentException();
+
     }
 
     // the number of line segments
@@ -27,6 +28,8 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
+        Point[] $arr = new Point[{}];
+        FastCollinearPoints fp = new FastCollinearPoints($arr);
         // Test client
     }
 }
