@@ -15,6 +15,8 @@ public class FastCollinearPoints {
     public FastCollinearPoints(Point[] inputArr) {
         if (inputArr == null) throw new IllegalArgumentException();
 
+
+
     }
 
     // the number of line segments
