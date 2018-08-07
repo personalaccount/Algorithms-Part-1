@@ -16,7 +16,6 @@ public class FastCollinearPoints {
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
         if (inputArr == null) throw new IllegalArgumentException();
-        inputArr[0].slopeOrder();
     }
 
     // the number of line segments
@@ -35,7 +34,7 @@ public class FastCollinearPoints {
 
     public static void main(String[] args) {
         // read the n points from a file
-        In in = new In("collinear-testing/input20.txt");
+        In in = new In("collinear-testing/input9.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -44,7 +43,15 @@ public class FastCollinearPoints {
             points[i] = new Point(x, y);
         }
 
+        for (int i = 0; i < points.length; i++) {
+            StdOut.println("\n" + points[i] + ":" );
+            Arrays.sort(points, points[i].SLOPE_ORDER);
 
+            for (int j = i; j < points.length - 1; j++) {
+                StdOut.println(points[j + 1] + ": slope = " + points[j].slopeTo(points[j+1]));
+            }
+
+        }
 
     }
 

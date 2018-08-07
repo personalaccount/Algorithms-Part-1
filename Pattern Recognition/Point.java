@@ -13,6 +13,7 @@ public class Point implements Comparable<Point> {
 
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
+    public final Comparator<Point> SLOPE_ORDER = new SlopeOrder();
 
     /**
      * Initializes a new point.
@@ -106,20 +107,11 @@ public class Point implements Comparable<Point> {
 
         public int compare(Point q1, Point q2) {
 
-            /*  To avoid potential complications with integer overflow or floating-point precision,
-                assert that the constructor arguments x and y are each between 0 and 32,767.
-             */
+            double slopeToQ1 = slopeTo(q1);
+            double slopeToQ2 = slopeTo(q2);
 
-            assert (q1.x >= 0);
-//            assert (q1.y <= 32767);
-            assert (q2.x >= 0);
-//            assert (q2.y <= 32767);
-
-            double slopeq1 = slopeTo(q1);
-            double slopeq2 = slopeTo(q2);
-
-            if (slopeq1 > slopeq2) return +1;
-            if (slopeq1 < slopeq2) return -1;
+            if (slopeToQ1 > slopeToQ2) return +1;
+            if (slopeToQ1 < slopeToQ2) return -1;
             return 0;
         }
     }
