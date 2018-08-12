@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
@@ -12,10 +13,38 @@ public class FastCollinearPoints {
 
     private int numberOfSegments = 0;
     private LineSegment[] lineSegments;
+    private Point[] points;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
+
         if (inputArr == null) throw new IllegalArgumentException();
+
+        int totalPoints = inputArr.length;
+
+        lineSegments = new LineSegment[totalPoints];
+
+        for (int i = 0; i < totalPoints; i++) {
+
+            // Sort the points according to the slopes they make with p.
+            Arrays.sort(inputArr, inputArr[i].SLOPE_ORDER);
+
+            // Array is now sorted, therefore target slope will always be between the first and the second entries
+            double targetSlope = inputArr[0].slopeTo(inputArr[1]);
+
+            /*  Check if any 3 (or more) adjacent points in the sorted order have equal slopes with respect to p.
+                If so, these points, together with p, are collinear.
+              */
+            int j = 2;
+            for (; j < totalPoints; j++) {
+                if (Double.compare(targetSlope, inputArr[0].slopeTo(inputArr[j])) != 0) break;
+            }
+
+            if ( j >= 3) {
+                lineSegments[numberOfSegments] = new LineSegment(inputArr[0], inputArr[j-1]);
+                numberOfSegments++;
+            }
+        }
     }
 
     // the number of line segments
@@ -38,50 +67,38 @@ public class FastCollinearPoints {
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
-            int x = in.readInt();
-            int y = in.readInt();
-            points[i] = new Point(x, y);
-        }
-
-
-        for (int i = 0; i < points.length; i++) {
-            StdOut.println("\nComparing " + points[i] + ":" );
-            Arrays.sort(points, points[i].SLOPE_ORDER);
-
-            for (int j = 1; j < points.length; j++) {
-               StdOut.println(points[j] + ": slope = " + points[i].slopeTo(points[j]));
+            try {
+                int x = in.readInt();
+                int y = in.readInt();
+                points[i] = new Point(x, y);
             }
-
-        }
-
-    }
-
-    public static void main2(String[] args) {
-        // read the n points from a file
-        In in = new In("collinear-testing/input20.txt");
-        int n = in.readInt();
-        Point[] points = new Point[n];
-        for (int i = 0; i < n; i++) {
-            int x = in.readInt();
-            int y = in.readInt();
-            points[i] = new Point(x, y);
+            catch (InputMismatchException e) {
+                points[i] = null;
+            }
         }
 
         // draw the points
-//        StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
         StdDraw.setYscale(0, 32768);
         for (Point p : points) {
-            p.draw();
+            try {
+                p.draw();
+            }
+            catch (NullPointerException e) {
+                // Encountered a null point, skip
+            }
         }
         StdDraw.show();
 
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
-        for (LineSegment segment : collinear.segments()) {
-            StdOut.println(segment);
-            segment.draw();
+        if (collinear.numberOfSegments() > 0) {
+            StdOut.println(collinear.numberOfSegments());
+            for (LineSegment segment : collinear.segments()) {
+                StdOut.println(segment);
+                segment.draw();
+            }
+            StdDraw.show();
         }
-        StdDraw.show();
     }
 }
