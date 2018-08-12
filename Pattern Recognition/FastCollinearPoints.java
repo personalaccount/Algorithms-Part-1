@@ -43,12 +43,13 @@ public class FastCollinearPoints {
             points[i] = new Point(x, y);
         }
 
+
         for (int i = 0; i < points.length; i++) {
             StdOut.println("\nComparing " + points[i] + ":" );
             Arrays.sort(points, points[i].SLOPE_ORDER);
 
-            for (int j = 0; j < points.length; j++) {
-                if ( j != i) StdOut.println(points[j] + ": slope = " + points[i].slopeTo(points[j]));
+            for (int j = 1; j < points.length; j++) {
+               StdOut.println(points[j] + ": slope = " + points[i].slopeTo(points[j]));
             }
 
         }
