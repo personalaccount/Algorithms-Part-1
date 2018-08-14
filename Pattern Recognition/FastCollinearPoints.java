@@ -47,6 +47,28 @@ public class FastCollinearPoints {
         }
     }
 
+
+    private static void merge(Comparable[] a, Comparable[] aux, int lo, int mid, int hi) {
+
+        for (int k = lo; k <= hi; k++) {
+            aux[k] = a[k];
+        }
+
+        // copy
+        int i = lo, j = mid+1;
+        for (int k = lo; k <= hi; k++)
+        {
+            if      (i > mid) a[k] = aux[j++];
+            else if (j > hi)
+            else if (less(aux[j], aux[i]))
+        else                           a[k] = aux[i++];
+        }
+        merge
+        a[k] = aux[j++];
+        a[k] = aux[i++];
+        assert isSorted(a, lo, hi);     // postcondition: a[lo..hi] sorted
+    }
+
     // the number of line segments
     public int numberOfSegments() {
         return numberOfSegments;
@@ -62,8 +84,9 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
+
         // read the n points from a file
-        In in = new In("collinear-testing/input9.txt");
+        In in = new In("collinear-testing/input20.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
