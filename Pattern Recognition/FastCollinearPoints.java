@@ -13,7 +13,7 @@ public class FastCollinearPoints {
 
     private int numberOfSegments = 0;
     private LineSegment[] lineSegments;
-    private Point[] points;
+//    private Point[] points;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
@@ -26,8 +26,10 @@ public class FastCollinearPoints {
 
         for (int i = 0; i < totalPoints; i++) {
 
+            if (inputArr[i] == null) throw new IllegalArgumentException();
+
             // Sort the points according to the slopes they make with p.
-            Arrays.sort(inputArr, inputArr[i].SLOPE_ORDER);
+            Arrays.sort(inputArr, inputArr[i].slopeOrder());
 
             // Array is now sorted, therefore target slope will always be between the first and the second entries
             double targetSlope = inputArr[0].slopeTo(inputArr[1]);
@@ -40,33 +42,11 @@ public class FastCollinearPoints {
                 if (Double.compare(targetSlope, inputArr[0].slopeTo(inputArr[j])) != 0) break;
             }
 
-            if ( j >= 3) {
+            if (j >= 3) {
                 lineSegments[numberOfSegments] = new LineSegment(inputArr[0], inputArr[j-1]);
                 numberOfSegments++;
             }
         }
-    }
-
-
-    private static void merge(Comparable[] a, Comparable[] aux, int lo, int mid, int hi) {
-
-        for (int k = lo; k <= hi; k++) {
-            aux[k] = a[k];
-        }
-
-        // copy
-        int i = lo, j = mid+1;
-        for (int k = lo; k <= hi; k++)
-        {
-            if      (i > mid) a[k] = aux[j++];
-            else if (j > hi)
-            else if (less(aux[j], aux[i]))
-        else                           a[k] = aux[i++];
-        }
-        merge
-        a[k] = aux[j++];
-        a[k] = aux[i++];
-        assert isSorted(a, lo, hi);     // postcondition: a[lo..hi] sorted
     }
 
     // the number of line segments
