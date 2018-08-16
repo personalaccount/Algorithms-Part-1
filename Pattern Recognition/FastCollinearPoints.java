@@ -26,7 +26,7 @@ public class FastCollinearPoints {
 
         for (int i = 0; i < totalPoints; i++) {
 
-            if (inputArr[i] == null) throw new IllegalArgumentException();
+//            if (inputArr[i] == null) throw new IllegalArgumentException();
 
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, inputArr[i].slopeOrder());
@@ -37,9 +37,10 @@ public class FastCollinearPoints {
             /*  Check if any 3 (or more) adjacent points in the sorted order have equal slopes with respect to p.
                 If so, these points, together with p, are collinear.
               */
-            int j = 2;
-            for (; j < totalPoints; j++) {
-                if (Double.compare(targetSlope, inputArr[0].slopeTo(inputArr[j])) != 0) break;
+            int j;
+            for (j = 2; j < totalPoints; j++) {
+                Double nextPointSlope = inputArr[0].slopeTo(inputArr[j]);
+                if (Double.compare(targetSlope, nextPointSlope) != 0) break;
             }
 
             if (j >= 3) {
@@ -66,7 +67,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input20.txt");
+        In in = new In("collinear-testing/input8.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
