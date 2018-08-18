@@ -26,7 +26,7 @@ public class FastCollinearPoints {
 
         for (int i = 0; i < totalPoints; i++) {
 
-//            if (inputArr[i] == null) throw new IllegalArgumentException();
+            if (inputArr[i] == null) throw new IllegalArgumentException();
 
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, inputArr[i].slopeOrder());
