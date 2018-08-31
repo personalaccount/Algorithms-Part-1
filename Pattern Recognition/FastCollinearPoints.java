@@ -22,7 +22,7 @@ public class FastCollinearPoints {
 
         int totalPoints = inputArr.length;
 
-        lineSegments = new LineSegment[totalPoints];
+        lineSegments = new LineSegment[totalPoints*totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
 
@@ -38,21 +38,33 @@ public class FastCollinearPoints {
                 StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
             }
 
-            // Start from the beginning and find the starting point of a segment, which is this one.
-            int j = 0;
-            while (targetPoint.slopeTo(inputArr[j]) != Double.NEGATIVE_INFINITY) j++;
+            // Sorted array starts with the point having the lowest slope to the target one - the point itself (NEGATIVE_INFINITY)
 
-            double targetSlope = targetPoint.slopeTo(inputArr[++j]);
+            int count = 0; // Count the number of points in the segment
 
-            int k = 1;
-            for (; k + j < totalPoints; k++) {
-                Double nextPointSlope = targetPoint.slopeTo(inputArr[k + j]);
-                if (Double.compare(targetSlope, nextPointSlope) != 0) break;
+            // Start searching for a matching slope pair from the third element
+            int j = 2;
+            for (; j < totalPoints; j++) {
+                if (Double.compare(inputArr[j-1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0 ) break;
             }
 
-            if (k >= 3) {
-                lineSegments[numberOfSegments] = new LineSegment(targetPoint, inputArr[k]);
-                numberOfSegments++;
+            // Found the first matching pair of slopes (2 points in the segment)
+            count = 2;
+            Double targetSlope = inputArr[j].slopeTo(targetPoint);
+
+            // Continue looking for more points with the same slope
+            int k = j + 1; // Start from the next item in the array
+
+            for (; k < totalPoints; k++) {
+                if (Double.compare(inputArr[k].slopeTo(targetPoint), targetSlope) != 0) break;
+                count++;
+            }
+
+            StdOut.println(count);
+            // There are no more points with a matching slope. Count the total points and add a segment if over 3
+            if (count >= 3) {
+                Point segmentEnd = inputArr[k - 1];
+                lineSegments[this.numberOfSegments++] = new LineSegment(targetPoint, segmentEnd);
             }
         }
     }
@@ -104,7 +116,7 @@ public class FastCollinearPoints {
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         if (collinear.numberOfSegments() > 0) {
-            StdOut.println(collinear.numberOfSegments());
+            StdOut.println("Total number of segments: " + collinear.numberOfSegments());
             for (LineSegment segment : collinear.segments()) {
                 StdOut.println(segment);
                 segment.draw();
