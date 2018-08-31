@@ -34,7 +34,7 @@ public class FastCollinearPoints {
             Arrays.sort(inputArr, targetPoint.slopeOrder());
 
             StdOut.println("\nOrder for " + targetPoint);
-            for(Point q: inputArr) {
+            for (Point q: inputArr) {
                 StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
             }
 
@@ -45,11 +45,11 @@ public class FastCollinearPoints {
             // Start searching for a matching slope pair from the third element
             int j = 2;
             for (; j < totalPoints;) {
-                if (Double.compare(inputArr[j-1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0 ) {
+                if (Double.compare(inputArr[j-1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0) {
 
                     // Found the first matching pair of slopes (2 points in the segment)
                     count = 2;
-                    Double targetSlope = inputArr[j].slopeTo(targetPoint);
+                    double targetSlope = inputArr[j].slopeTo(targetPoint);
 
                     // Continue looking for more points with the same slope
                     int k = j + 1; // Start from the next item in the array
@@ -67,7 +67,8 @@ public class FastCollinearPoints {
                     }
 
                     j = k;
-                } else{
+                }
+                else {
                     j++;
                 }
             }
@@ -126,7 +127,8 @@ public class FastCollinearPoints {
                 try {
                     StdOut.println(segment);
                     segment.draw();
-                } catch (NullPointerException e) {
+                }
+                catch (NullPointerException e) {
                     break;
                 }
             }
