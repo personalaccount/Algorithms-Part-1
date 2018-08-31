@@ -28,23 +28,30 @@ public class FastCollinearPoints {
 
             if (inputArr[i] == null) throw new IllegalArgumentException();
 
+            Point targetPoint = inputArr[i];
+
             // Sort the points according to the slopes they make with p.
-            Arrays.sort(inputArr, inputArr[i].slopeOrder());
+            Arrays.sort(inputArr, targetPoint.slopeOrder());
 
-            // Array is now sorted, therefore target slope will always be between the first and the second entries
-            double targetSlope = inputArr[0].slopeTo(inputArr[1]);
+            StdOut.println("\nOrder for " + targetPoint);
+            for(Point q: inputArr) {
+                StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
+            }
 
-            /*  Check if any 3 (or more) adjacent points in the sorted order have equal slopes with respect to p.
-                If so, these points, together with p, are collinear.
-              */
-            int j;
-            for (j = 2; j < totalPoints; j++) {
-                Double nextPointSlope = inputArr[0].slopeTo(inputArr[j]);
+            // Start from the beginning and find the starting point of a segment, which is this one.
+            int j = 0;
+            while (targetPoint.slopeTo(inputArr[j]) != Double.NEGATIVE_INFINITY) j++;
+
+            double targetSlope = targetPoint.slopeTo(inputArr[++j]);
+
+            int k = 1;
+            for (; k + j < totalPoints; k++) {
+                Double nextPointSlope = targetPoint.slopeTo(inputArr[k + j]);
                 if (Double.compare(targetSlope, nextPointSlope) != 0) break;
             }
 
-            if (j >= 3) {
-                lineSegments[numberOfSegments] = new LineSegment(inputArr[0], inputArr[j-1]);
+            if (k >= 3) {
+                lineSegments[numberOfSegments] = new LineSegment(targetPoint, inputArr[k]);
                 numberOfSegments++;
             }
         }
