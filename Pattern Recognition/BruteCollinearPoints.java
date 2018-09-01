@@ -34,7 +34,7 @@ public class BruteCollinearPoints {
            While creating a copy of the array sort it and check for nulls and duplicates
          */
 
-        this.points = new Point[totalPoints];
+        points = new Point[totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
             if (inputArr[i] == null) throw new IllegalArgumentException();
