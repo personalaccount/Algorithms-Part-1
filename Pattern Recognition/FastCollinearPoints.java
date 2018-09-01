@@ -10,8 +10,8 @@ import java.util.InputMismatchException;
 public class FastCollinearPoints {
 
     private int numberOfSegments = 0;
-    private Point[] segmentHeads;
-    private Point[] segmentTails;
+    private final Point[] segmentHeads;
+    private final Point[] segmentTails;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
@@ -67,7 +67,7 @@ public class FastCollinearPoints {
 
             // Start searching for a matching slope pair from the third element
             int j = 2;
-            for (; j < totalPoints;) {
+            while (j < totalPoints) {
                 if (Double.compare(inputArr[j - 1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0) {
 
                     // Found two adjacent points with the matching slope.
@@ -156,7 +156,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input400.txt");
+        In in = new In("collinear-testing/input80.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

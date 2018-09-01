@@ -7,19 +7,19 @@ import java.util.InputMismatchException;
 /**
  * Examines 4 points at a time and checks whether they all lie on the same line segment,
  * returning all such line segments.
- *
+ * <p>
  * The 4 points p, q, r, and s are collinear if three slopes
  * between p and q, between p and r, and between p and s are all equal.
- *
+ * <p>
  * Created by Philip Ivanov (https://github.com/personalaccount)
  */
 
 
 public class BruteCollinearPoints {
 
-    private int numberOfSegments = 0;
-    private Point[] points;
-    private LineSegment[] lineSegments;
+    private int numberOfSegments;
+    private final Point[] points;
+    private final LineSegment[] lineSegments;
 
     /*  Constructor throws a java.lang.IllegalArgumentException if the argument to the constructor is null,
         if any point in the array is null, or if the argument to the constructor contains a repeated point.
@@ -42,13 +42,13 @@ public class BruteCollinearPoints {
             // Sort array using Insertion sort and check for duplicates while doing so
             points[i] = inputArr[i];
             for (int j = i; j > 0; j--) {
-                if (points[j].compareTo(points[j-1]) < 0) {
+                if (points[j].compareTo(points[j - 1]) < 0) {
                     // exchange (points j, j-1)
-                    Point swap = points[j-1];
-                    points[j-1] = points[j];
+                    Point swap = points[j - 1];
+                    points[j - 1] = points[j];
                     points[j] = swap;
                 }
-                else if (points[j].compareTo(points[j-1]) == 0) {
+                else if (points[j].compareTo(points[j - 1]) == 0) {
                     // the two points are equal
                     throw new IllegalArgumentException();
                 }
@@ -61,6 +61,7 @@ public class BruteCollinearPoints {
 
 
         lineSegments = new LineSegment[totalPoints];
+        numberOfSegments = 0;
 
         /* Examine 4 points at a time and check whether the three slopes
            between p and q, between p and r, and between p and s are all equal.
@@ -87,13 +88,16 @@ public class BruteCollinearPoints {
 
         for (int i = 2; i < pk.length; i++) {
             // Start comparing slopes starting from the third point
-            if (Double.compare(points[pk[0]].slopeTo(points[pk[1]]), points[pk[0]].slopeTo(points[pk[i]])) != 0) return false;
+            if (Double.compare(points[pk[0]].slopeTo(points[pk[1]]), points[pk[0]].slopeTo(points[pk[i]])) != 0)
+                return false;
         }
         return true;
     }
 
     // the number of line segments
-    public int numberOfSegments() { return numberOfSegments; }
+    public int numberOfSegments() {
+        return numberOfSegments;
+    }
 
     // the line segments, should include each line segment containing 4 points exactly once
     public LineSegment[] segments() {
