@@ -1,7 +1,5 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
-// import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -12,7 +10,6 @@ import java.util.InputMismatchException;
 public class FastCollinearPoints {
 
     private int numberOfSegments = 0;
-    private Point[] points;
     private Point[] segmentHeads;
     private Point[] segmentTails;
 
@@ -26,7 +23,7 @@ public class FastCollinearPoints {
         segmentHeads = new Point[totalPoints];
         segmentTails = new Point[totalPoints];
 
-        points = new Point[totalPoints];
+        Point [] points = new Point[totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
             if (inputArr[i] == null) throw new IllegalArgumentException();
@@ -60,17 +57,17 @@ public class FastCollinearPoints {
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
 
-            StdOut.println("\nPoints sorted according to the slopes they make with " + targetPoint);
-            for (Point q : inputArr) {
-                StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
-            }
+//            StdOut.println("\nPoints sorted according to the slopes they make with " + targetPoint);
+//            for (Point q : inputArr) {
+//                StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
+//            }
 
             // Sorted array starts with the point having the lowest slope to the target one - the point itself (NEGATIVE_INFINITY)
             int count = 0; // Count the number of points in the segment
 
             // Start searching for a matching slope pair from the third element
             int j = 2;
-            for (; j < totalPoints; ) {
+            for (; j < totalPoints;) {
                 if (Double.compare(inputArr[j - 1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0) {
 
                     // Found two adjacent points with the matching slope.
@@ -159,7 +156,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input40.txt");
+        In in = new In("collinear-testing/input400.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -189,10 +186,10 @@ public class FastCollinearPoints {
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         if (collinear.numberOfSegments() > 0) {
-            StdOut.println("Total number of segments: " + collinear.numberOfSegments());
+//            StdOut.println("Total number of segments: " + collinear.numberOfSegments());
             for (LineSegment segment : collinear.segments()) {
                 try {
-                    StdOut.println(segment);
+//                    StdOut.println(segment);
                     segment.draw();
                 }
                 catch (NullPointerException e) {
