@@ -15,7 +15,6 @@ public class FastCollinearPoints {
     private Point[] points;
     private Point[] segmentHeads;
     private Point[] segmentTails;
-    private LineSegment[] lineSegments;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] inputArr) {
@@ -24,7 +23,8 @@ public class FastCollinearPoints {
 
         int totalPoints = inputArr.length;
 
-        lineSegments = new LineSegment[totalPoints];
+        segmentHeads = new Point[totalPoints];
+        segmentTails = new Point[totalPoints];
 
         points = new Point[totalPoints];
 
@@ -66,7 +66,6 @@ public class FastCollinearPoints {
             }
 
             // Sorted array starts with the point having the lowest slope to the target one - the point itself (NEGATIVE_INFINITY)
-
             int count = 0; // Count the number of points in the segment
 
             // Start searching for a matching slope pair from the third element
@@ -104,7 +103,7 @@ public class FastCollinearPoints {
                     }
 
                     // There are no more points with a matching slope. Count the total points and add a segment if over 3
-                    if (count >= 3) {
+                    if (count >= 3 && segmentIsUnique(segmentStart, segmentEnd)) {
                         segmentHeads[numberOfSegments] = segmentStart;
                         segmentTails[numberOfSegments] = segmentEnd;
                         numberOfSegments++;
@@ -130,6 +129,19 @@ public class FastCollinearPoints {
         return false;
     }
 
+    private boolean segmentIsUnique(Point segmentStart, Point segmentEnd) {
+        if (numberOfSegments > 0) {
+            for (int i = 0; i < numberOfSegments; i++) {
+                if (segmentHeads[i].compareTo(segmentStart) == 0) {
+                    if (segmentTails[i].compareTo(segmentEnd) == 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     // the number of line segments
     public int numberOfSegments() {
         return numberOfSegments;
@@ -147,7 +159,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input8.txt");
+        In in = new In("collinear-testing/input40.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
