@@ -20,7 +20,7 @@ public class FastCollinearPoints {
 
         int totalPoints = originalInputArr.length;
 
-        if (totalPoints < 3) return;
+        if (totalPoints < 1) return;
 
         Point[] points = new Point[totalPoints];
         Point[] inputArr = new Point[totalPoints];
