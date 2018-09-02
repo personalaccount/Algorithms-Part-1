@@ -10,49 +10,34 @@ import java.util.InputMismatchException;
 public class FastCollinearPoints {
 
     private int numberOfSegments;
-    private final Point[] segmentHeads;
-    private final Point[] segmentTails;
+    private Point[] segmentHeads;
+    private Point[] segmentTails;
 
     // finds all line segments containing 4 or more points
-    public FastCollinearPoints(Point[] inputArr) {
+    public FastCollinearPoints(Point[] originalInputArr) {
 
-        if (inputArr == null) throw new IllegalArgumentException();
+        if (originalInputArr == null) throw new IllegalArgumentException();
 
-        int totalPoints = inputArr.length;
+        int totalPoints = originalInputArr.length;
+
+        if (totalPoints < 3) return;
 
         Point[] points = new Point[totalPoints];
+        Point[] inputArr = new Point[totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
-            if (inputArr[i] == null) throw new IllegalArgumentException();
+            if (originalInputArr[i] == null) throw new IllegalArgumentException();
 
-            // Sort array using Insertion sort and check for duplicates while doing so
-            points[i] = inputArr[i];
-            for (int j = i; j > 0; j--) {
-                if (points[j].compareTo(points[j - 1]) < 0) {
-                    // exchange (points j, j-1)
-                    Point swap = points[j - 1];
-                    points[j - 1] = points[j];
-                    points[j] = swap;
-                }
-                else if (points[j].compareTo(points[j - 1]) == 0) {
-                    // the two points are equal
-                    throw new IllegalArgumentException();
-                }
-                else {
-                    break;
-                }
-            }
+            points[i] = originalInputArr[i];
+            inputArr[i] = originalInputArr[i];
         }
 
         numberOfSegments = 0;
 
-        segmentHeads = new Point[totalPoints];
-        segmentTails = new Point[totalPoints];
+        segmentHeads = new Point[2];
+        segmentTails = new Point[2];
 
         for (int i = 0; i < totalPoints; i++) {
-
-            // Skip to the next point if this one is part of an existing segment
-            if (withinExistingSegments(points[i])) continue;
 
             Point targetPoint = points[i];
 
@@ -61,11 +46,7 @@ public class FastCollinearPoints {
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
 
-//            StdOut.println("\nPoints sorted according to the slopes they make with " + targetPoint);
-//            for (Point q : inputArr) {
-//                StdOut.println("The slope " + q + " makes with " + targetPoint + " = " + q.slopeTo(targetPoint));
-//            }
-
+            if (inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
             // Sorted array always start with a point that has the lowest slope to the targetPoint - itself (NEGATIVE_INFINITY)
 
             // Therefore, search for a matching slope pair starting from the third element
@@ -86,7 +67,7 @@ public class FastCollinearPoints {
                         segmentStart = targetPoint;
                     }
 
-                    // Increment the number of points in the segment, which now contains targetPoint and inputArr[j-1]
+                    // Increment the counter of points in the segment, which now contains targetPoint and inputArr[j-1]
                     count = 2;
 
                     double targetSlope = targetPoint.slopeTo(inputArr[j - 1]);
@@ -107,8 +88,15 @@ public class FastCollinearPoints {
 
                     // There are no more points with a matching slope. Count the total points and add a segment if over 4
                     if (count >= 4 && segmentIsUnique(segmentStart, segmentEnd)) {
+
+                        // Resize arrays if it has reached the limit of capacity
+                        if (numberOfSegments == segmentHeads.length) {
+                            resize(numberOfSegments * 2);
+                        }
+
                         segmentHeads[numberOfSegments] = segmentStart;
                         segmentTails[numberOfSegments] = segmentEnd;
+
                         numberOfSegments++;
                     }
 
@@ -125,16 +113,7 @@ public class FastCollinearPoints {
         }
     }
 
-    // Checks if the given point belongs to any of the existing segments
-    private boolean withinExistingSegments(Point p) {
-        if (numberOfSegments > 0) {
-            for (int i = 0; i < numberOfSegments; i++) {
-                if (p.slopeOrder().compare(segmentHeads[i], segmentTails[i]) == 0) return true;
-            }
-        }
-        return false;
-    }
-
+    // Checks if the segment is unique
     private boolean segmentIsUnique(Point segmentStart, Point segmentEnd) {
         if (numberOfSegments > 0) {
             for (int i = 0; i < numberOfSegments; i++) {
@@ -146,6 +125,20 @@ public class FastCollinearPoints {
             }
         }
         return true;
+    }
+
+    // resizing the segments array
+    private void resize(int capacity) {
+        Point[] copyHeads = new Point[capacity];
+        Point[] copyTails = new Point[capacity];
+
+        for (int i = 0; i < numberOfSegments; i++) {
+            copyHeads[i] = segmentHeads[i];
+            copyTails[i] = segmentTails[i];
+        }
+
+        segmentHeads = copyHeads;
+        segmentTails = copyTails;
     }
 
     // the number of line segments
@@ -165,7 +158,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/rs1423.txt");
+        In in = new In("collinear-testing/nulltest2.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -187,7 +180,7 @@ public class FastCollinearPoints {
                 p.draw();
             }
             catch (NullPointerException e) {
-                // Encountered a null point, skip
+                // Encountered a null point - skip
             }
         }
         StdDraw.show();
@@ -195,10 +188,8 @@ public class FastCollinearPoints {
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         if (collinear.numberOfSegments() > 0) {
-//            StdOut.println("Total number of segments: " + collinear.numberOfSegments());
             for (LineSegment segment : collinear.segments()) {
                 try {
-//                    StdOut.println(segment);
                     segment.draw();
                 }
                 catch (NullPointerException e) {
