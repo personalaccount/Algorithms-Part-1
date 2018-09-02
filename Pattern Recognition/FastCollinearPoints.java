@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -32,6 +33,7 @@ public class FastCollinearPoints {
             inputArr[i] = originalInputArr[i];
         }
 
+        Arrays.sort(points);
         numberOfSegments = 0;
 
         segmentHeads = new Point[2];
@@ -46,7 +48,7 @@ public class FastCollinearPoints {
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
 
-            if (inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
+            if (totalPoints > 1 && inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
             // Sorted array always start with a point that has the lowest slope to the targetPoint - itself (NEGATIVE_INFINITY)
 
             // Therefore, search for a matching slope pair starting from the third element
@@ -158,7 +160,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/nulltest2.txt");
+        In in = new In("collinear-testing/input8.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -189,6 +191,7 @@ public class FastCollinearPoints {
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         if (collinear.numberOfSegments() > 0) {
             for (LineSegment segment : collinear.segments()) {
+                StdOut.println(segment);
                 try {
                     segment.draw();
                 }
@@ -198,5 +201,22 @@ public class FastCollinearPoints {
             }
             StdDraw.show();
         }
+
+        points[0] = new Point(6000, 7000);
+        points[1] = new Point(6000, 7000);
+        points[2] = new Point(6000, 7000);
+        points[3] = new Point(6000, 7000);
+        points[4] = new Point(6000, 7000);
+
+        StdOut.println("2nd call");
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+        }
+
+        points = null;
+
+        StdOut.println("3nd call");
+        StdOut.println(collinear.segments()[0]);
+        StdOut.println(collinear.segments()[1]);
     }
 }
