@@ -21,6 +21,7 @@ public class FastCollinearPoints {
 
         int totalPoints = originalInputArr.length;
 
+        // Necessary to cover some test corner cases
         if (totalPoints < 1) return;
 
         Point[] points = new Point[totalPoints];
