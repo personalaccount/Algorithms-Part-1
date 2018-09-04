@@ -33,7 +33,10 @@ public class FastCollinearPoints {
             inputArr[i] = originalInputArr[i];
         }
 
+        if (totalPoints < 4) return;
+
         Arrays.sort(points);
+
         numberOfSegments = 0;
 
         segmentHeads = new Point[2];
@@ -48,10 +51,11 @@ public class FastCollinearPoints {
             // Sort the points according to the slopes they make with p.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
 
-            if (totalPoints > 1 && inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
             // Sorted array always start with a point that has the lowest slope to the targetPoint - itself (NEGATIVE_INFINITY)
+            // If there is a duplicate it will appear on the second position in the sorted array
+            if (totalPoints > 1 && inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
 
-            // Therefore, search for a matching slope pair starting from the third element
+            // Search for a matching slope pair starting from the third position
             int j = 2;
             while (j < totalPoints) {
                 if (Double.compare(inputArr[j - 1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0) {
@@ -80,16 +84,17 @@ public class FastCollinearPoints {
                         // Break out of the loop the moment a mismatching slope is detected
                         if (Double.compare(inputArr[k].slopeTo(targetPoint), targetSlope) != 0) break;
 
-                        // Swap with segmentEnd if the encountered matching point is larger
+                        // Set to segmentEnd if the encountered matching point is larger
                         if (segmentEnd.compareTo(inputArr[k]) < 0) segmentEnd = inputArr[k];
 
-                        // Swap with segmentStart if the encountered matching point is smaller
+                        // Set to segmentStart if the encountered matching point is smaller
                         if (segmentStart.compareTo(inputArr[k]) > 0) segmentStart = inputArr[k];
+
                         count++;
                     }
 
                     // There are no more points with a matching slope. Count the total points and add a segment if over 4
-                    if (count >= 4 && segmentIsUnique(segmentStart, segmentEnd)) {
+                    if (count > 3 && segmentIsUnique(segmentStart, segmentEnd)) {
 
                         // Resize arrays if it has reached the limit of capacity
                         if (numberOfSegments == segmentHeads.length) {
@@ -118,16 +123,19 @@ public class FastCollinearPoints {
     // Checks if the segment is unique
     private boolean segmentIsUnique(Point segmentStart, Point segmentEnd) {
         if (numberOfSegments > 0) {
-            for (int i = 0; i < numberOfSegments; i++) {
-                if (segmentHeads[i].compareTo(segmentStart) == 0) {
-                    if (segmentTails[i].compareTo(segmentEnd) == 0) {
-                        return false;
-                    }
+            int last = numberOfSegments - 1;
+            // if the largest segmentHead so far is greater than the one being checked, then it's a duplicate
+            if (segmentHeads[last].compareTo(segmentStart) > 0) {
+                return false;
+            }
+            else if (segmentHeads[last].compareTo(segmentStart) == 0) { // if the heads are equal compare tails
+                if (segmentTails[last].compareTo(segmentEnd) >= 0) { // if the largest tail so far is greater or equal, then it's a duplicate
+                    return false;
                 }
             }
         }
         return true;
-    }
+}
 
     // resizing the segments array
     private void resize(int capacity) {
@@ -160,7 +168,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input8.txt");
+        In in = new In("collinear-testing/input56.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -213,10 +221,5 @@ public class FastCollinearPoints {
             StdOut.println(segment);
         }
 
-        points = null;
-
-        StdOut.println("3nd call");
-        StdOut.println(collinear.segments()[0]);
-        StdOut.println(collinear.segments()[1]);
     }
 }
