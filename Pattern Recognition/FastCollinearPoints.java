@@ -11,8 +11,7 @@ import java.util.InputMismatchException;
 public class FastCollinearPoints {
 
     private int numberOfSegments;
-    private Point[] segmentHeads;
-    private Point[] segmentTails;
+    private Point[] segmentHeads, segmentTails, points, inputArr;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] originalInputArr) {
@@ -24,8 +23,8 @@ public class FastCollinearPoints {
         // Necessary to cover some test corner cases
         if (totalPoints < 1) return;
 
-        Point[] points = new Point[totalPoints];
-        Point[] inputArr = new Point[totalPoints];
+        points = new Point[totalPoints];
+        inputArr = new Point[totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
             if (originalInputArr[i] == null) throw new IllegalArgumentException();
@@ -54,6 +53,9 @@ public class FastCollinearPoints {
 
             // Sort points according to the slopes they make with segmentStart.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
+
+            for (Point p : inputArr)
+                System.out.println(p + " slope to " + targetPoint + " = " + p.slopeTo(targetPoint));
 
             // Sorted array always start with a point that has the lowest slope to segmentStart - itself (NEGATIVE_INFINITY)
             // If there is a duplicate it will appear on the second position in the sorted array
@@ -85,8 +87,10 @@ public class FastCollinearPoints {
                     // Continue inspecting the following adjacent points
                     int k = j;
                     for (; k < totalPoints; k++) {
+
                         // Break out of the loop the moment a mismatching slope is detected
-                        if (Double.compare(inputArr[k].slopeTo(segmentStart), targetSlope) != 0) break;
+                        double currentSlope = inputArr[k].slopeTo(segmentStart);
+                        if (Double.compare(currentSlope, targetSlope) != 0) break;
 
                         // Set to segmentEnd if the encountered matching point is larger
                         if (segmentEnd.compareTo(inputArr[k]) < 0) segmentEnd = inputArr[k];
@@ -131,7 +135,13 @@ public class FastCollinearPoints {
                 return false;
             }
             else if (segmentHeads[last].compareTo(segmentStart) == 0) { // if heads are equal
-                if (segmentTails[last].compareTo(segmentEnd) >= 0) return false;
+                // Traverse back to check it the segment is unique
+                int j = last;
+                while (j >= 0 && segmentHeads[j].compareTo(segmentStart) == 0) {
+                    if (segmentTails[j].compareTo(segmentEnd) == 0) return false;
+                    j--;
+                }
+                return true;
             }
         }
         return true;
@@ -168,7 +178,7 @@ public class FastCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input400.txt");
+        In in = new In("collinear-testing/equidistant.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

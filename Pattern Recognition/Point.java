@@ -63,8 +63,8 @@ public class Point implements Comparable<Point> {
         double dY = that.y - y;
         double dX = that.x - x;
 
-        if (dY == 0) return +0.0; // Vertical
-        if (dX == 0) return Double.POSITIVE_INFINITY; // Horizontal
+        if (dY == 0) return +0.0; // Horizontal
+        if (dX == 0) return Double.POSITIVE_INFINITY; // Vertical
 
         return dY / dX;
     }
