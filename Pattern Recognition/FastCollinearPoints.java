@@ -11,8 +11,7 @@ import java.util.InputMismatchException;
 public class FastCollinearPoints {
 
     private int numberOfSegments;
-    private Point[] segmentHeads, segmentTails, points, inputArr;
-    private LineSegment[] segments;
+    private Point[] segmentHeads, segmentTails;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] originalInputArr) {
@@ -21,8 +20,8 @@ public class FastCollinearPoints {
 
         int totalPoints = originalInputArr.length;
 
-        points = new Point[totalPoints];
-        inputArr = new Point[totalPoints];
+        Point[] points = new Point[totalPoints];
+        Point[] inputArr = new Point[totalPoints];
 
         for (int i = 0; i < totalPoints; i++) {
             if (originalInputArr[i] == null) throw new IllegalArgumentException();
@@ -31,10 +30,11 @@ public class FastCollinearPoints {
             inputArr[i] = originalInputArr[i];
         }
 
-        if (totalPoints == 1) return;
+        // Necessary to cover some test corner cases
+        if (totalPoints < 2) return;
 
         // Sort points by their coordinates
-        // This way all the segment Heads will also be in the natural order
+        // This way all subsequent segments will also be in the natural order
         Arrays.sort(points);
 
         numberOfSegments = 0;
@@ -55,11 +55,9 @@ public class FastCollinearPoints {
 //            for (Point p : inputArr)
 //                System.out.println(p + " slope to " + targetPoint + " = " + p.slopeTo(targetPoint));
 
-            // Sorted array always starts with a point that has the lowest slope to segmentStart - itself (NEGATIVE_INFINITY)
+            // Sorted array always start with a point that has the lowest slope to segmentStart - itself (NEGATIVE_INFINITY)
             // If there is a duplicate it will appear on the second position in the sorted array
             if (inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();
-
-//            if (totalPoints < 4) return;
 
             // Search for a matching slope pair starting from the third position (comparing i[1] and i[2])
             int j = 2;
@@ -168,19 +166,17 @@ public class FastCollinearPoints {
 
     // The method segments() should include each maximal line segment containing 4 (or more) points exactly once.
     public LineSegment[] segments() {
-        if (segments == null) {
-            segments = new LineSegment[numberOfSegments];
-            for (int i = 0; i < numberOfSegments; i++) {
-                segments[i] = new LineSegment(segmentHeads[i], segmentTails[i]);
-            }
+        LineSegment[] returnSegments = new LineSegment[numberOfSegments];
+        for (int i = 0; i < numberOfSegments; i++) {
+            returnSegments[i] = new LineSegment(segmentHeads[i], segmentTails[i]);
         }
-        return segments;
+        return returnSegments;
     }
 
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("collinear-testing/input56.txt");
+        In in = new In("collinear-testing/input1.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
