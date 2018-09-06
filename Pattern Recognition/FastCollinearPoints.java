@@ -12,6 +12,7 @@ public class FastCollinearPoints {
 
     private int numberOfSegments;
     private Point[] segmentHeads, segmentTails, points, inputArr;
+    private LineSegment[] segments;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] originalInputArr) {
@@ -61,21 +62,21 @@ public class FastCollinearPoints {
 //            if (totalPoints < 4) return;
 
             // Search for a matching slope pair starting from the third position (comparing i[1] and i[2])
-            int j = totalPoints - 1;
-            while (j > 0) {
+            int j = 2;
+            while (j < totalPoints) {
                 if (Double.compare(inputArr[j - 1].slopeTo(targetPoint), inputArr[j].slopeTo(targetPoint)) == 0) {
                     // Found two adjacent points with the matching slope.
 
                     Point segmentStart, segmentEnd;
 
                     // Set current segment start and end
-                    if (targetPoint.compareTo(inputArr[j]) > 0) {
-                        segmentStart = inputArr[j];
+                    if (targetPoint.compareTo(inputArr[j - 1]) > 0) {
+                        segmentStart = inputArr[j - 1];
                         segmentEnd = targetPoint;
                     }
                     else {
                         segmentStart = targetPoint;
-                        segmentEnd = inputArr[j];
+                        segmentEnd = inputArr[j - 1];
                     }
 
                     // Increment the counter, since segment now contains segmentStart and inputArr[j-1]
@@ -84,8 +85,8 @@ public class FastCollinearPoints {
                     double targetSlope = segmentStart.slopeTo(segmentEnd);
 
                     // Continue inspecting the following adjacent points
-                    int k = j - 1;
-                    for (; k >= 0; k--) {
+                    int k = j;
+                    for (; k < totalPoints; k++) {
 
                         // Break out of the loop the moment a mismatching slope is detected
                         double currentSlope = inputArr[k].slopeTo(segmentStart);
@@ -119,7 +120,7 @@ public class FastCollinearPoints {
                     count = 0;
                 }
                 else {
-                    j--;
+                    j++;
                 }
             }
         }
@@ -167,11 +168,13 @@ public class FastCollinearPoints {
 
     // The method segments() should include each maximal line segment containing 4 (or more) points exactly once.
     public LineSegment[] segments() {
-        LineSegment[] returnSegments = new LineSegment[numberOfSegments];
-        for (int i = 0; i < numberOfSegments; i++) {
-            returnSegments[i] = new LineSegment(segmentHeads[i], segmentTails[i]);
+        if (segments == null) {
+            segments = new LineSegment[numberOfSegments];
+            for (int i = 0; i < numberOfSegments; i++) {
+                segments[i] = new LineSegment(segmentHeads[i], segmentTails[i]);
+            }
         }
-        return returnSegments;
+        return segments;
     }
 
     public static void main(String[] args) {
@@ -218,6 +221,5 @@ public class FastCollinearPoints {
             }
             StdDraw.show();
         }
-
     }
 }
