@@ -9,7 +9,13 @@ public class Board {
     public Board(int[][] blocks){
 
     }
+    public int dimension() { // board dimension n
 
+    }
+
+    public int hamming() { // number of blocks out of place
+
+    }
     public static void main(String[] args) {
 
     }
