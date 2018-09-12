@@ -16,6 +16,17 @@ public class Board {
     public int hamming() { // number of blocks out of place
 
     }
+
+    public int manhattan(){
+
+    }                 // sum of Manhattan distances between blocks and goal
+    public boolean isGoal() {
+
+    }                // is this board the goal board?
+    public Board twin() {
+
+    }                   // a board that is obtained by exchanging any pair of blocks
+
     public static void main(String[] args) {
 
     }
