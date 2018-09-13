@@ -17,15 +17,15 @@ public class Board {
 
     }
 
-    public int manhattan(){
+    public int manhattan(){ // sum of Manhattan distances between blocks and goal
 
-    }                 // sum of Manhattan distances between blocks and goal
-    public boolean isGoal() {
+    }
+    public boolean isGoal() { // is this board the goal board?
 
-    }                // is this board the goal board?
-    public Board twin() {
+    }
+    public Board twin() { // a board that is obtained by exchanging any pair of blocks
 
-    }                   // a board that is obtained by exchanging any pair of blocks
+    }
 
     public static void main(String[] args) {
 
