@@ -27,6 +27,14 @@ public class Board {
 
     }
 
+    public boolean equals(Object y) {      // does this board equal y?
+
+    }
+
+    public Iterable<Board> neighbors() {   // all neighboring boards
+
+    }
+
     public static void main(String[] args) {
 
     }
