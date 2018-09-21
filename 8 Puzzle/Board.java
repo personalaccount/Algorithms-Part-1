@@ -45,8 +45,8 @@ public class Board {
     public static void main(String[] args) {
 //        int[] a = new int[]{0, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10};
 //        int[] a = new int[]{0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-        int[] a = new int[]{0, 34, 30, 29, 27, 25, 17, 16, 19, 22, 24};
-//        int[] a = new int[]{0, 30, 27, 23, 17, 16, 15, 13, 14, 18, 11};
+//        int[] a = new int[]{0, 34, 30, 29, 27, 25, 17, 16, 19, 22, 24};
+        int[] a = new int[]{0, 30, 27, 23, 17, 16, 15, 13, 14, 18, 11};
 
 
         for (int i = 1; i < a.length / 2; i++) {
