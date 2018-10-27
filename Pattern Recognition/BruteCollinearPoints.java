@@ -5,13 +5,14 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.InputMismatchException;
 
 /**
+ * Created by Philip Ivanov (https://github.com/personalaccount)
+ *
  * Examines 4 points at a time and checks whether they all lie on the same line segment,
  * returning all such line segments.
- * <p>
+ *
  * The 4 points p, q, r, and s are collinear if three slopes
  * between p and q, between p and r, and between p and s are all equal.
- * <p>
- * Created by Philip Ivanov (https://github.com/personalaccount)
+ *
  */
 
 
