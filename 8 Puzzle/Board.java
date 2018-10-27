@@ -22,9 +22,19 @@ public final class Board {
         this.blocks = new int[n][n];
         totalBlocks = this.n * this.n;
 
+        // Keep track of the number of spaces, there should be no more than 1
+        int spaceCount = 0;
+
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
-                this.blocks[row][col] = blocks[row][col];
+                int block = blocks[row][col];
+
+                if (block == 0) {
+                    spaceCount++;
+                    if (spaceCount > 1) throw new IllegalArgumentException();
+                }
+
+                this.blocks[row][col] = block;
             }
         }
 
@@ -33,6 +43,33 @@ public final class Board {
     // board dimension n
     public int dimension() {
         return this.n;
+    }
+
+    // returns the value inside the block given a consecutive block count
+    private int getBlockValue(int count) {
+
+        int row = getBlockRow(count);
+        int col = getBlockCol(count);
+
+        return blocks[row - 1][col - 1];
+    }
+
+    // returns block's row, based on the input value (assuming rows start with 1)
+    private int getBlockRow(int val) {
+        if (val < 1 || val > totalBlocks) throw new IllegalArgumentException();
+
+        // Determine the row, by rounding up
+        return (int) (Math.ceil(((double) val / this.n)));
+    }
+
+    // returns block's column, based on the input value (assuming columns start with 1)
+    private int getBlockCol(int val) {
+        if (val < 1 || val > totalBlocks) throw new IllegalArgumentException();
+
+        int column = val % this.n;
+        column = (column == 0) ? this.n : column;
+
+        return column;
     }
 
     // number of blocks out of place
@@ -49,35 +86,55 @@ public final class Board {
 
         // Determine the number of blocks in the wrong position
         for (int i = 1; i <= totalBlocks; i++) {
+            if (i == totalBlocks && getBlockValue(i) == 0) continue; // We found a space where it supposed to be
             if (getBlockValue(i) != i) numOfBlocksWPos++;
         }
 
         return numOfBlocksWPos;
     }
 
-    // returns the value of the block given a consequetive count
-    private int getBlockValue(int count) {
-
-        if (count > 0 && count <= totalBlocks) {
-
-            // Determine the row, by rounding up
-            int row = (int) (Math.ceil(((double) count / this.n)));
-
-            // Determine the column; if remainder is 0 then it is the last column
-            int column = count % this.n;
-            column = (column == 0) ? this.n : column;
-
-            return blocks[row - 1][column - 1];
-        }
-        throw new IllegalArgumentException("Count has to be between 1 and " + totalBlocks + ". Your entry is " + count);
-    }
-
     // sum of Manhattan distances between blocks and goal
+
+    /**
+     * Manhattan priority function.
+     * The sum of the Manhattan distances (sum of the vertical and horizontal distance) from the blocks to their goal positions,
+     * plus the number of moves made so far to get to the search node.
+     *
+     * @return integer
+     */
     public int manhattan() {
 
+        int manSum = 0;
+
+        // Go through each block and if it's out of place calculate the distance to put it back
+        for (int i = 1; i <= totalBlocks; i++) {
+
+            int row = getBlockRow(i);
+            int col = getBlockCol(i);
+
+            int blockValue = blocks[row - 1][col - 1];
+
+            // if the block is out of place find it's correct rows and colls
+            if (blockValue != i) {
+                int correctRow = getBlockRow(blockValue);
+                int correctCol = getBlockCol(blockValue);
+
+                // number of rows required to move to the right spot
+                int sumRows = (row < correctRow) ? correctRow - row : row - correctRow;
+                int sumCols = (col < correctCol) ? correctCol - col : col - correctCol;
+
+                manSum += (sumRows + sumCols);
+            }
+        }
+
+        return manSum;
     }
-//
-//    public boolean isGoal()                // is this board the goal board?
+
+    // is this board the goal board?
+    public boolean isGoal() {
+        return (hamming() == 0);
+    }
+
 //
 //    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
 //
@@ -90,7 +147,7 @@ public final class Board {
 
     public static void main(String[] args) {
         int col = 4 % 3;
-        col = (col == 0) ? (3) : col;
+//        col = (col == 0) ? (3) : col;
         StdOut.println(col);
     }
 }
