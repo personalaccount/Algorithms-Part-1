@@ -1,5 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.MinPQ;
+
 import java.util.Arrays;
 
 /**
@@ -13,6 +15,7 @@ public final class Board {
     private final int n; // board dimension n
     private final int[][] blocks;
     private final int totalBlocks;
+    private final int[] spaceBlock = new int[2]; // [0] - row, [1] - col
 
     // construct a board from an n-by-n array of blocks
     // (where blocks[i][j] = block in row i, column j)
@@ -33,6 +36,10 @@ public final class Board {
 
                 if (block == 0) {
                     spaceCount++;
+
+                    spaceBlock[0] = row;
+                    spaceBlock[1] = col;
+
                     if (spaceCount > 1) throw new IllegalArgumentException();
                 }
 
@@ -142,23 +149,13 @@ public final class Board {
     // the blank square is not a block
     public Board twin() {
 
-        // Holds space location [0] row [1] col
-        int[] spaceBlock = new int[2];
-
         // Holds a copy of the blocks array
         int[][] duplicateBlocks = new int[n][n];
 
         // Make a copy of the blocks array
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
-                int block = this.blocks[row][col];
-
-                if (block == 0) {
-                    spaceBlock[0] = row;
-                    spaceBlock[1] = col;
-                }
-
-                duplicateBlocks[row][col] = block;
+                duplicateBlocks[row][col] = this.blocks[row][col];
             }
         }
 
@@ -196,7 +193,19 @@ public final class Board {
         return Arrays.equals(this.blocks, that.blocks);
     }
 
-//    public Iterable<Board> neighbors()     // all neighboring boards
+    // all neighboring boards
+    public Iterable<Board> neighbors() {
+
+        // Start by inspecting the row location of the space
+        if (spaceBlock[0] == 0) {
+            // There's no way to move blocks from the top
+        }
+
+        MinPQ<Board> pq = new MinPQ<Board>();
+        pq.insert(this);
+
+        return pq;
+    }
 //
 //    public String toString()               // string representation of this board (in the output format specified below)
 
