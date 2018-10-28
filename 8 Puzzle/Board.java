@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
@@ -135,8 +136,55 @@ public final class Board {
         return (hamming() == 0);
     }
 
-//
-//    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
+
+    // a board that is obtained by exchanging any pair of blocks
+    // the blank square is not a block
+    public Board twin() {
+
+        // Holds space location [0] row [1] col
+        int[] spaceBlock = new int[2];
+
+        // Holds a copy of the blocks array
+        int[][] duplicateBlocks = new int[n][n];
+
+        // Make a copy of the blocks array
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                int block = this.blocks[row][col];
+
+                if (block == 0) {
+                    spaceBlock[0] = row;
+                    spaceBlock[1] = col;
+                }
+
+                duplicateBlocks[row][col] = block;
+            }
+        }
+
+        // Holds coordinates of blocks to be exchanged
+        int[][] randBlock = new int[2][2];
+
+        // Generate random coordinates for a pair of blocks
+        for (int i = 0; i < 2; i++) {
+            int randomRow;
+            int randomCol;
+
+            do {
+                randomRow = StdRandom.uniform(this.n);
+                randomCol = StdRandom.uniform(this.n);
+            } while (randomRow == spaceBlock[0] && randomCol == spaceBlock[1]);
+
+            randBlock[i][0] = randomRow;
+            randBlock[i][1] = randomCol;
+        }
+
+        // Exchange block values
+        int swap = duplicateBlocks[randBlock[0][0]][randBlock[0][1]];
+        duplicateBlocks[randBlock[0][0]][randBlock[0][1]] = duplicateBlocks[randBlock[1][0]][randBlock[1][1]];
+        duplicateBlocks[randBlock[1][0]][randBlock[1][1]] = swap;
+
+        return new Board(duplicateBlocks);
+    }
 //
 //    public boolean equals(Object y)        // does this board equal y?
 //
