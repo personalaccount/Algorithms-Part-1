@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
+import java.util.Arrays;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
@@ -185,9 +186,16 @@ public final class Board {
 
         return new Board(duplicateBlocks);
     }
-//
-//    public boolean equals(Object y)        // does this board equal y?
-//
+
+    public boolean equals(Object y) {
+        if (y == this) return true;
+        if (y == null) return false;
+        if (y.getClass() != this.getClass()) return false;
+        Board that = (Board) y;
+//        return this.manhattan() == ((Board) y).manhattan();
+        return Arrays.equals(this.blocks, that.blocks);
+    }
+
 //    public Iterable<Board> neighbors()     // all neighboring boards
 //
 //    public String toString()               // string representation of this board (in the output format specified below)
