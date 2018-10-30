@@ -3,6 +3,8 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.Arrays;
+import java.util.IllegalFormatException;
+import java.util.Random;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
@@ -40,12 +42,14 @@ public final class Board {
                     spaceBlock[0] = row;
                     spaceBlock[1] = col;
 
-                    if (spaceCount > 1) throw new IllegalArgumentException();
+                    if (spaceCount > 1) throw new IllegalArgumentException("There is more than one space");
                 }
 
                 this.blocks[row][col] = block;
             }
         }
+
+        if (spaceCount == 0) throw new IllegalArgumentException("There are no spaces");
 
     }
 
@@ -177,15 +181,8 @@ public final class Board {
         }
 
         swapBlockValues(duplicateBlocks,
-                new int[]{randBlock[0][0], randBlock[0][1]},
-                new int[]{randBlock[1][0], randBlock[1][1]}
-        );
-
-        // Exchange block values
-//        int swap = duplicateBlocks[randBlock[0][0]][randBlock[0][1]];
-//        duplicateBlocks[randBlock[0][0]][randBlock[0][1]] = duplicateBlocks[randBlock[1][0]][randBlock[1][1]];
-//        duplicateBlocks[randBlock[1][0]][randBlock[1][1]] = swap;
-
+                randBlock[0][0], randBlock[0][1],
+                randBlock[1][0], randBlock[1][1]);
 
         return new Board(duplicateBlocks);
     }
@@ -199,14 +196,17 @@ public final class Board {
         return Arrays.equals(this.blocks, that.blocks);
     }
 
-    private void swapBlockValues(int[][] targetArray, int[] thisBlock, int[] thatBlock) {
-        int tempSwap = targetArray[thisBlock[0]][thisBlock[1]];
-        targetArray[thisBlock[0]][thisBlock[1]] = targetArray[thatBlock[0]][thatBlock[1]];
-        targetArray[thatBlock[0]][thatBlock[1]] = tempSwap;
+    private void swapBlockValues(int[][] targetArray, int blockARow, int blockACol, int blockBRow, int blockBCol) {
+
+        int tempSwap = targetArray[blockARow][blockACol];
+        targetArray[blockARow][blockACol] = targetArray[blockBRow][blockBCol];
+        targetArray[blockBRow][blockBCol] = tempSwap;
     }
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
+
+        MinPQ<Board> pq = new MinPQ<Board>();
 
         // Create a blueprint array that will be used to fill out the baords
         int[][] boardBlueprint = new int[n][n];
@@ -217,49 +217,75 @@ public final class Board {
             }
         }
 
-
-        // Continue to create neighboring boards
-
-        // Inspect space locations for block movement opportunities
-        // starting from the top left corner and going clockwise
+        /**
+         * Continue to create neighboring boards
+         *
+         * Inspect space locations for block movement opportunities,
+         * starting from the top left corner and going clockwise.
+         *
+         */
 
         if (spaceBlock[1] > 0) {
-            // space is NOT in the first column - move block from left
+            // space is NOT in the first column - swap it with a block on the left
 
+            int lBlockRow = spaceBlock[0]; // Block is on the same row
+            int lBlockCol = spaceBlock[1] - 1; // Block is one column back
+
+            swapBlockValues(boardBlueprint,
+                    lBlockRow, lBlockCol,
+                    spaceBlock[0], spaceBlock[1]);
+
+            // Create a new board and add it to the Queue
+            pq.insert(new Board(boardBlueprint));
+
+            // swap the block back
+            swapBlockValues(boardBlueprint,
+                    spaceBlock[0], spaceBlock[1],
+                    lBlockRow, lBlockCol);
         }
-
-
-        MinPQ<Board> pq = new MinPQ<Board>();
-        pq.insert(this);
 
         return pq;
     }
-//
-//    public String toString()               // string representation of this board (in the output format specified below)
+
+    // string representation of this board
+    public String toString() {
+
+        StringBuilder s = new StringBuilder();
+        s.append(n + "\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                s.append(String.format("%2d ", this.blocks[i][j]));
+            }
+            s.append("\n");
+        }
+        return s.toString();
+    }
 
 
     public static void main(String[] args) {
-        int[][] testA = new int[3][3];
 
-        for (int i = 1; i < 4; i++) {
-            for (int j = 1; j < 4; j++) {
-                testA[i-1][j-1] = i;
-                StdOut.print(i + " ");
+        int n = 3;
+
+        int[][] testA = new int[n][n];
+
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < n + 1; j++) {
+                testA[i - 1][j - 1] = (i == 1 && j == 1) ? 0 : i;
             }
-            StdOut.println();
         }
 
         Board tb = new Board(testA);
+        StdOut.println(tb.toString());
 
-        StdOut.println("Swap ");
-        tb.swapBlockValues(testA,new int[]{0,0}, new int[]{1,0});
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                StdOut.print(testA[i][j] + " ");
-            }
-            StdOut.println();
-        }
+//        StdOut.println("Swap ");
+//        tb.swapBlockValues(testA, 0, 0, 1, 0);
+//
+//        for (int i = 0; i < 3; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                StdOut.print(testA[i][j] + " ");
+//            }
+//            StdOut.println();
+//        }
 
     }
 }
