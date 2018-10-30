@@ -176,6 +176,11 @@ public final class Board {
             randBlock[i][1] = randomCol;
         }
 
+        swapBlockValues(duplicateBlocks,
+                new int[]{randBlock[0][0], randBlock[0][1]},
+                new int[]{randBlock[1][0], randBlock[1][1]}
+        );
+
         // Exchange block values
 //        int swap = duplicateBlocks[randBlock[0][0]][randBlock[0][1]];
 //        duplicateBlocks[randBlock[0][0]][randBlock[0][1]] = duplicateBlocks[randBlock[1][0]][randBlock[1][1]];
