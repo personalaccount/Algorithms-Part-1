@@ -3,8 +3,6 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.Arrays;
-import java.util.IllegalFormatException;
-import java.util.Random;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
@@ -276,16 +274,6 @@ public final class Board {
 
         Board tb = new Board(testA);
         StdOut.println(tb.toString());
-
-//        StdOut.println("Swap ");
-//        tb.swapBlockValues(testA, 0, 0, 1, 0);
-//
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                StdOut.print(testA[i][j] + " ");
-//            }
-//            StdOut.println();
-//        }
 
     }
 }
