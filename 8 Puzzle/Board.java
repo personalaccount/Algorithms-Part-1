@@ -177,9 +177,10 @@ public final class Board {
         }
 
         // Exchange block values
-        int swap = duplicateBlocks[randBlock[0][0]][randBlock[0][1]];
-        duplicateBlocks[randBlock[0][0]][randBlock[0][1]] = duplicateBlocks[randBlock[1][0]][randBlock[1][1]];
-        duplicateBlocks[randBlock[1][0]][randBlock[1][1]] = swap;
+//        int swap = duplicateBlocks[randBlock[0][0]][randBlock[0][1]];
+//        duplicateBlocks[randBlock[0][0]][randBlock[0][1]] = duplicateBlocks[randBlock[1][0]][randBlock[1][1]];
+//        duplicateBlocks[randBlock[1][0]][randBlock[1][1]] = swap;
+
 
         return new Board(duplicateBlocks);
     }
@@ -193,13 +194,35 @@ public final class Board {
         return Arrays.equals(this.blocks, that.blocks);
     }
 
+    private void swapBlockValues(int[][] targetArray, int[] thisBlock, int[] thatBlock) {
+        int tempSwap = targetArray[thisBlock[0]][thisBlock[1]];
+        targetArray[thisBlock[0]][thisBlock[1]] = targetArray[thatBlock[0]][thatBlock[1]];
+        targetArray[thatBlock[0]][thatBlock[1]] = tempSwap;
+    }
+
     // all neighboring boards
     public Iterable<Board> neighbors() {
 
-        // Start by inspecting the row location of the space
-        if (spaceBlock[0] == 0) {
-            // There's no way to move blocks from the top
+        // Create a blueprint array that will be used to fill out the baords
+        int[][] boardBlueprint = new int[n][n];
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                boardBlueprint[row][col] = this.blocks[row][col];
+            }
         }
+
+
+        // Continue to create neighboring boards
+
+        // Inspect space locations for block movement opportunities
+        // starting from the top left corner and going clockwise
+
+        if (spaceBlock[1] > 0) {
+            // space is NOT in the first column - move block from left
+
+        }
+
 
         MinPQ<Board> pq = new MinPQ<Board>();
         pq.insert(this);
@@ -211,8 +234,27 @@ public final class Board {
 
 
     public static void main(String[] args) {
-        int col = 4 % 3;
-//        col = (col == 0) ? (3) : col;
-        StdOut.println(col);
+        int[][] testA = new int[3][3];
+
+        for (int i = 1; i < 4; i++) {
+            for (int j = 1; j < 4; j++) {
+                testA[i-1][j-1] = i;
+                StdOut.print(i + " ");
+            }
+            StdOut.println();
+        }
+
+        Board tb = new Board(testA);
+
+        StdOut.println("Swap ");
+        tb.swapBlockValues(testA,new int[]{0,0}, new int[]{1,0});
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                StdOut.print(testA[i][j] + " ");
+            }
+            StdOut.println();
+        }
+
     }
 }
