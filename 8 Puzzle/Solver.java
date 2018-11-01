@@ -1,14 +1,19 @@
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
  */
 
-public class Solver {
+public final class Solver {
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
+
+        MinPQ pq = new MinPQ();
+        pq.insert(null);
+
 
     }
 
@@ -30,11 +35,14 @@ public class Solver {
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
 
+        return null;
+
     }
 
     // solve a slider puzzle (given below)
     public static void main(String[] args) {
 
+        args[0] = "";
         // create initial board from file
         In in = new In(args[0]);
         int n = in.readInt();

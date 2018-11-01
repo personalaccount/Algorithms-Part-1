@@ -67,7 +67,10 @@ public final class Board {
 
     // returns block's row, based on the input value (assuming rows start with 1)
     private int getBlockRow(int val) {
-        if (val < 1 || val > totalBlocks) throw new IllegalArgumentException();
+        if (val < 0 || val > totalBlocks) throw new IllegalArgumentException();
+
+        // 0 is a special case, always the last block
+        if (val == 0) return totalBlocks;
 
         // Determine the row, by rounding up
         return (int) (Math.ceil(((double) val / this.n)));
@@ -75,7 +78,10 @@ public final class Board {
 
     // returns block's column, based on the input value (assuming columns start with 1)
     private int getBlockCol(int val) {
-        if (val < 1 || val > totalBlocks) throw new IllegalArgumentException();
+        if (val < 0 || val > totalBlocks) throw new IllegalArgumentException();
+
+        // 0 is a special case, always the last block
+        if (val == 0) return totalBlocks;
 
         int column = val % this.n;
         column = (column == 0) ? this.n : column;
@@ -190,8 +196,8 @@ public final class Board {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         Board that = (Board) y;
-//        return this.manhattan() == ((Board) y).manhattan();
-        return Arrays.equals(this.blocks, that.blocks);
+        return this.manhattan() == ((Board) y).manhattan();
+//        return Arrays.equals(this.blocks, that.blocks);
     }
 
     private void swapBlockValues(int[][] targetArray, int blockARow, int blockACol, int blockBRow, int blockBCol) {
@@ -273,7 +279,11 @@ public final class Board {
         }
 
         Board tb = new Board(testA);
+        Board tb1 = new Board(testA);
+
+        StdOut.println(tb.equals(tb1));
         StdOut.println(tb.toString());
+
 
     }
 }
