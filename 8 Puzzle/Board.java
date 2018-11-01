@@ -2,8 +2,6 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.MinPQ;
 
-import java.util.Arrays;
-
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
  */
@@ -171,6 +169,11 @@ public final class Board {
         int[][] randBlock = new int[2][2];
 
         // Generate random coordinates for a pair of blocks
+        // Use cached row and col to prevent duplicate randoms
+
+        int cacheRow = spaceBlock[0];
+        int cacheCol = spaceBlock[1];
+
         for (int i = 0; i < 2; i++) {
             int randomRow;
             int randomCol;
@@ -178,10 +181,14 @@ public final class Board {
             do {
                 randomRow = StdRandom.uniform(this.n);
                 randomCol = StdRandom.uniform(this.n);
-            } while (randomRow == spaceBlock[0] && randomCol == spaceBlock[1]);
+            } while (randomRow == spaceBlock[0] && randomCol == spaceBlock[1]
+                    && randomRow == cacheRow && randomCol == cacheCol);
 
             randBlock[i][0] = randomRow;
             randBlock[i][1] = randomCol;
+
+            cacheRow = randomRow;
+            cacheCol = randomCol;
         }
 
         swapBlockValues(duplicateBlocks,
@@ -265,25 +272,39 @@ public final class Board {
         return s.toString();
     }
 
-
     public static void main(String[] args) {
 
         int n = 3;
+        int count = 0;
 
         int[][] testA = new int[n][n];
 
+
         for (int i = 1; i < n + 1; i++) {
             for (int j = 1; j < n + 1; j++) {
-                testA[i - 1][j - 1] = (i == 1 && j == 1) ? 0 : i;
+                //testA[i - 1][j - 1] = (i == 1 && j == 1) ? 0 : i;
+                testA[i - 1][j - 1] = count++;
             }
         }
 
         Board tb = new Board(testA);
         Board tb1 = new Board(testA);
 
+        //@Test
         StdOut.println(tb.equals(tb1));
+
+        //@Test
         StdOut.println(tb.toString());
 
+        //@Test
+        StdOut.println("Manhattan:" + tb.manhattan());
 
+        //@Test
+        StdOut.println("Hamming: " + tb.hamming());
+
+        //@Test
+        //Board twin1 = ;
+        StdOut.println(tb.twin().toString());
     }
+
 }
