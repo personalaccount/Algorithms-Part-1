@@ -231,22 +231,57 @@ public final class Board {
         /**
          * Continue to create neighboring boards
          *
-         * Inspect space locations for block movement opportunities,
-         * starting from the top left corner and going clockwise.
-         *
+         * Inspect space locations for block movement opportunities.
          */
 
-        if (spaceBlock[1] > 0) {
-            // space is NOT in the first column - swap it with a block on the left
+        if (spaceBlock[0] > 0) {
+            // Space block is NOT in the top ROW - swap it with a block on the bottom
 
-            int lBlockRow = spaceBlock[0]; // Block is on the same row
-            int lBlockCol = spaceBlock[1] - 1; // Block is one column back
+            int bBlockRow = spaceBlock[0] + 1; // Block is one row down
+            int bBlockCol = spaceBlock[1]; // Block is in the same column
+
+            swapBlockValues(boardBlueprint, bBlockRow, bBlockCol,
+                    spaceBlock[0], spaceBlock[1]);
+
+            // Create a new board and add it to pq.
+            pq.insert(new Board(boardBlueprint));
+
+            // swap the block back
+            swapBlockValues(boardBlueprint,
+                    spaceBlock[0], spaceBlock[1],
+                    bBlockRow, bBlockCol);
+        }
+
+        if (spaceBlock[0] < n) {
+            // Space block is NOT in the bottom ROW - swap it with a block from the top
+
+            int tBlockRow = spaceBlock[0] - 1; // Block is one row up.
+            int tBlockCol = spaceBlock[1]; // Block is on the same column.
+
+            swapBlockValues(boardBlueprint, tBlockRow, tBlockCol,
+                    spaceBlock[0], spaceBlock[1]);
+
+            // Create a new board and add it to pq.
+            pq.insert(new Board(boardBlueprint));
+
+            // swap the block back
+            swapBlockValues(boardBlueprint,
+                    spaceBlock[0], spaceBlock[1],
+                    tBlockRow, tBlockCol);
+
+        }
+
+        if (spaceBlock[1] > 0) {
+            // space is NOT in the first COLUMN - swap it with a block on the left.
+
+            int lBlockRow = spaceBlock[0]; // Block is on the same row.
+            int lBlockCol = spaceBlock[1] - 1; // Block is one column back.
 
             swapBlockValues(boardBlueprint,
                     lBlockRow, lBlockCol,
                     spaceBlock[0], spaceBlock[1]);
 
-            // Create a new board and add it to the Queue
+            // Create a new board and add it to pq.
             pq.insert(new Board(boardBlueprint));
 
             // swap the block back
@@ -254,6 +289,24 @@ public final class Board {
                     spaceBlock[0], spaceBlock[1],
                     lBlockRow, lBlockCol);
         }
+
+        if (spaceBlock[1] < n) {
+            //space is NOT in the last COLUMN - swap it with a block on the right.
+
+            int rBlockRow = spaceBlock[0]; // Block is on the same row.
+            int rBlockCol = spaceBlock[1] + 1; // Block is one column to the right.
+
+            swapBlockValues(boardBlueprint, rBlockRow, rBlockCol,
+                    spaceBlock[0], spaceBlock[1]);
+
+            // Create a new board and add it to pq.
+            pq.insert(new Board(boardBlueprint));
+
+            // swap the block back
+            swapBlockValues(boardBlueprint, spaceBlock[0], spaceBlock[1],
+                    rBlockRow, rBlockCol);
+        }
+
 
         return pq;
     }
