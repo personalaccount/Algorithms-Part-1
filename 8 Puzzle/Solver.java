@@ -11,9 +11,9 @@ public final class Solver {
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
 
-        MinPQ pq = new MinPQ();
+        MinPQ<Board> pq = new MinPQ<Board>();
         pq.insert(null);
-
+        pq.insert(initial);
 
     }
 

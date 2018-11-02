@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
+
 import java.util.Stack;
 
 /**
@@ -13,7 +14,7 @@ public final class Board {
     private final int n; // board dimension n
     private final int[][] blocks;
     private final int totalBlocks;
-    private final int[] spaceBlock = new int[2]; // [0] - row, [1] - col
+    private int spaceBlockRow, spaceBlockCol;
 
     // construct a board from an n-by-n array of blocks
     // (where blocks[i][j] = block in row i, column j)
@@ -34,11 +35,9 @@ public final class Board {
 
                 if (block == 0) {
                     spaceCount++;
-
-                    spaceBlock[0] = row;
-                    spaceBlock[1] = col;
-
                     if (spaceCount > 1) throw new IllegalArgumentException("There is more than one space");
+                    spaceBlockRow = row;
+                    spaceBlockCol = col;
                 }
 
                 this.blocks[row][col] = block;
@@ -82,7 +81,11 @@ public final class Board {
         if (val == 0) return totalBlocks;
 
         int column = val % this.n;
-        column = (column == 0) ? this.n : column;
+        if (column == 0) {
+            column = this.n;
+        }
+
+//        column = (column == 0) ? this.n : column;
 
         return column;
     }
@@ -135,8 +138,28 @@ public final class Board {
                 int correctCol = getBlockCol(blockValue);
 
                 // number of rows required to move to the right spot
-                int sumRows = (row < correctRow) ? correctRow - row : row - correctRow;
-                int sumCols = (col < correctCol) ? correctCol - col : col - correctCol;
+
+                int sumRows;
+                int sumCols;
+
+                if (row < correctRow) {
+                    sumRows = correctRow - row;
+                }
+                else {
+                    sumRows = row - correctRow;
+                }
+
+
+                if (col < correctCol) {
+                    sumCols = correctCol - col;
+                }
+                else {
+                    sumCols = col - correctCol;
+                }
+
+//                int sumRows = (row < correctRow) ? correctRow - row : row - correctRow;
+//                int sumCols = (col < correctCol) ? correctCol - col : col - correctCol;
+
 
                 manSum += (sumRows + sumCols);
             }
@@ -171,18 +194,18 @@ public final class Board {
         // Generate random coordinates for a pair of blocks
         // Use cached row and col to prevent duplicate randoms
 
-        int cacheRow = spaceBlock[0];
-        int cacheCol = spaceBlock[1];
+        int cacheRow = spaceBlockRow;
+        int cacheCol = spaceBlockCol;
 
         for (int i = 0; i < 2; i++) {
             int randomRow;
             int randomCol;
 
             do {
-                randomRow = StdRandom.uniform(this.n);
-                randomCol = StdRandom.uniform(this.n);
-            } while (randomRow == spaceBlock[0] && randomCol == spaceBlock[1]
-                    && randomRow == cacheRow && randomCol == cacheCol);
+                randomRow = StdRandom.uniform(this.n - 1);
+                randomCol = StdRandom.uniform(this.n - 1);
+            } while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol)
+                    || (randomRow == cacheRow && randomCol == cacheCol));
 
             randBlock[i][0] = randomRow;
             randBlock[i][1] = randomCol;
@@ -202,9 +225,7 @@ public final class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        Board that = (Board) y;
         return this.manhattan() == ((Board) y).manhattan();
-//        return Arrays.equals(this.blocks, that.blocks);
     }
 
     private void swapBlockValues(int[][] targetArray, int blockARow, int blockACol, int blockBRow, int blockBCol) {
@@ -234,15 +255,15 @@ public final class Board {
          * Inspect space locations for block movement opportunities.
          */
 
-        if (spaceBlock[0] > 0) {
+        if (spaceBlockRow > 0) {
             // There are rows above this block - swap it with the one above
 
-            int tBlockRow = spaceBlock[0] - 1; // Block is one row down
-            int tBlockCol = spaceBlock[1]; // Block is in the same column
+            int tBlockRow = spaceBlockRow - 1; // Block is one row down
+            int tBlockCol = spaceBlockCol; // Block is in the same column
 
             swapBlockValues(boardBlueprint,
                     tBlockRow, tBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
 
             // Create a new board and add it to pq.
             boardStack.push(new Board(boardBlueprint));
@@ -250,18 +271,18 @@ public final class Board {
             // swap the block back
             swapBlockValues(boardBlueprint,
                     tBlockRow, tBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
         }
 
-        if (spaceBlock[0] < n - 1) {
+        if (spaceBlockRow < n - 1) {
             // There are rows below this block - swap it with a one below
 
-            int bBlockRow = spaceBlock[0] + 1; // Block is one row up.
-            int bBlockCol = spaceBlock[1]; // Block is on the same column.
+            int bBlockRow = spaceBlockRow + 1; // Block is one row up.
+            int bBlockCol = spaceBlockCol; // Block is on the same column.
 
             swapBlockValues(boardBlueprint,
                     bBlockRow, bBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
 
             // Create a new board and add it to pq.
             boardStack.push(new Board(boardBlueprint));
@@ -269,19 +290,19 @@ public final class Board {
             // swap the block back
             swapBlockValues(boardBlueprint,
                     bBlockRow, bBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
 
         }
 
-        if (spaceBlock[1] > 0) {
+        if (spaceBlockCol > 0) {
             // There are columns to the left of this block  - swap it with the one on the left.
 
-            int lBlockRow = spaceBlock[0]; // Block is on the same row.
-            int lBlockCol = spaceBlock[1] - 1; // Block is one column back.
+            int lBlockRow = spaceBlockRow; // Block is on the same row.
+            int lBlockCol = spaceBlockCol - 1; // Block is one column back.
 
             swapBlockValues(boardBlueprint,
                     lBlockRow, lBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
 
             // Create a new board and add it to pq.
             boardStack.push(new Board(boardBlueprint));
@@ -289,18 +310,18 @@ public final class Board {
             // swap the block back
             swapBlockValues(boardBlueprint,
                     lBlockRow, lBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
         }
 
-        if (spaceBlock[1] < n - 1) {
-            //space is NOT in the last COLUMN - swap it with a block on the right.
+        if (spaceBlockCol < n - 1) {
+            // Space is NOT in the last COLUMN - swap it with a block on the right.
 
-            int rBlockRow = spaceBlock[0]; // Block is on the same row.
-            int rBlockCol = spaceBlock[1] + 1; // Block is one column to the right.
+            int rBlockRow = spaceBlockRow; // Block is on the same row.
+            int rBlockCol = spaceBlockCol + 1; // Block is one column to the right.
 
             swapBlockValues(boardBlueprint,
                     rBlockRow, rBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
 
             // Create a new board and add it to pq.
             boardStack.push(new Board(boardBlueprint));
@@ -308,7 +329,7 @@ public final class Board {
             // swap the block back
             swapBlockValues(boardBlueprint,
                     rBlockRow, rBlockCol,
-                    spaceBlock[0], spaceBlock[1]);
+                    spaceBlockRow, spaceBlockCol);
         }
 
 
@@ -339,8 +360,12 @@ public final class Board {
 
         for (int i = 1; i < n + 1; i++) {
             for (int j = 1; j < n + 1; j++) {
-                testA[i - 1][j - 1] = (i == 2 && j == 2) ? 0 : count++;
-                //testA[i - 1][j - 1] = count++;
+                if (i == 2 && j == 2) {
+                    testA[i - 1][j - 1] = 0;
+                }
+                else {
+                    testA[i - 1][j - 1] = count++;
+                }
             }
         }
 
@@ -352,7 +377,7 @@ public final class Board {
         StdOut.println("Print board 2: \n" + tb1.toString());
 
         //@Test
-        StdOut.println("Space coordinates: " + tb.spaceBlock[0] + ":" + tb.spaceBlock[1]);
+        StdOut.println("Space coordinates: " + tb.spaceBlockRow + ":" + tb.spaceBlockCol);
 
         //@Test
         StdOut.println("Boards are equal: " + tb.equals(tb1));
