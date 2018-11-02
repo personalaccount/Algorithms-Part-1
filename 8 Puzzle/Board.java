@@ -1,10 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.MinPQ;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -337,15 +332,15 @@ public final class Board {
     public static void main(String[] args) {
 
         int n = 3;
-        int count = 0;
+        int count = 1;
 
         int[][] testA = new int[n][n];
 
 
         for (int i = 1; i < n + 1; i++) {
             for (int j = 1; j < n + 1; j++) {
-                //testA[i - 1][j - 1] = (i == 1 && j == 1) ? 0 : i;
-                testA[i - 1][j - 1] = count++;
+                testA[i - 1][j - 1] = (i == 2 && j == 2) ? 0 : count++;
+                //testA[i - 1][j - 1] = count++;
             }
         }
 
@@ -353,13 +348,15 @@ public final class Board {
         Board tb1 = new Board(testA);
 
         //@Test
+        StdOut.println("Print board 1: \n" + tb.toString());
+        StdOut.println("Print board 2: \n" + tb1.toString());
+
+        //@Test
         StdOut.println("Space coordinates: " + tb.spaceBlock[0] + ":" + tb.spaceBlock[1]);
 
         //@Test
         StdOut.println("Boards are equal: " + tb.equals(tb1));
 
-        //@Test
-        StdOut.println("Print board: " + tb.toString());
 
         //@Test
         StdOut.println("Manhattan:" + tb.manhattan());
@@ -368,7 +365,11 @@ public final class Board {
         StdOut.println("Hamming: " + tb.hamming());
 
         //@Test
-        StdOut.println("Print twin board: " + tb.twin().toString());
+        Board twinBoard = tb.twin();
+        StdOut.println("Create twin board: \n" + twinBoard.toString());
+
+        //@Test
+        StdOut.println("Boards are equal: " + tb.equals(twinBoard));
 
         StdOut.println("Printing neighbors: ");
         for (Board b : tb.neighbors()) {
