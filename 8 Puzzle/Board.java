@@ -51,8 +51,8 @@ public final class Board implements Comparable<Board> {
     public int compareTo(Board that) {
         int m1 = this.manhattan();
         int m2 = that.manhattan();
-        if (m1 < m2) return 1;
-        if (m2 < m1) return -1;
+        if (m1 > m2) return 1;
+        if (m2 > m1) return -1;
         return 0;
     }
 

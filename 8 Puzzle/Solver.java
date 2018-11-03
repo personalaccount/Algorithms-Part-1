@@ -2,6 +2,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.io.File;
+
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
  */
@@ -21,26 +23,33 @@ public final class Solver {
 
         if (initial == null) throw new IllegalArgumentException();
 
-        SearchNode pointer = new SearchNode();
-        pointer.previous = null;
-        pointer.numMoves = 0;
-        pointer.board = initial;
+        SearchNode initialNode = new SearchNode();
+        initialNode.previous = null;
+        initialNode.numMoves = 0;
+        initialNode.board = initial;
+
+        SearchNode pointer = initialNode;
 
         MinPQ<Board> pq = new MinPQ<Board>();
 
-        int currentHamming = pointer.board.hamming();
-
         // Until we reach the final board, generate neighbors and add them to pq
-        while(currentHamming != 0){
-            for(Board b : pointer.board.neighbors()){
-                // Exclude the neighbor which is identical to the previous board.
-                if(pointer.previous != null && !b.equals(pointer.previous.board)){
+        while (!pointer.board.isGoal()) {
+            for (Board b : pointer.board.neighbors()) {
+                // Exclude the neighbor which equals the previous board
+                if (pointer.previous != null && !b.equals(pointer.previous.board)) {
                     pq.insert(b);
                 }
             }
+            // remove the board with the minimum score
+            if (!pq.isEmpty()) {
+                // Create a new node and add it to the queue of nodes
+                SearchNode newNode = new SearchNode();
+                newNode.previous = pointer;
+                newNode.numMoves = pointer.numMoves++;
+                newNode.board = pq.delMin();
+                pointer = newNode;
+            }
         }
-
-
 
 
 //        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
@@ -95,26 +104,27 @@ public final class Solver {
     // solve a slider puzzle (given below)
     public static void main(String[] args) {
 
-        args[0] = "";
         // create initial board from file
-        In in = new In(args[0]);
+        In in = new In(new File("8puzzle-tests/puzzle01.txt"));
+//        In in = new In(args[0]);
         int n = in.readInt();
         int[][] blocks = new int[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 blocks[i][j] = in.readInt();
         Board initial = new Board(blocks);
+        StdOut.println(initial.toString());
 
         // solve the puzzle
-        Solver solver = new Solver(initial);
-
-        // print solution to standard output
-        if (!solver.isSolvable())
-            StdOut.println("No solution possible");
-        else {
-            StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution())
-                StdOut.println(board);
-        }
+//        Solver solver = new Solver(initial);
+//
+//        // print solution to standard output
+//        if (!solver.isSolvable())
+//            StdOut.println("No solution possible");
+//        else {
+//            StdOut.println("Minimum number of moves = " + solver.moves());
+//            for (Board board : solver.solution())
+//                StdOut.println(board);
+//        }
     }
 }
