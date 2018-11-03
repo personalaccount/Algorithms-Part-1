@@ -145,7 +145,7 @@ public final class Board implements Comparable<Board> {
             int blockValue = blocks[row - 1][col - 1];
 
             // if the block is out of place find it's correct rows and colls
-            if (blockValue != i) {
+            if (blockValue != i && blockValue != 0) {
                 int correctRow = getBlockRow(blockValue);
                 int correctCol = getBlockCol(blockValue);
 
@@ -168,10 +168,6 @@ public final class Board implements Comparable<Board> {
                 else {
                     sumCols = col - correctCol;
                 }
-
-//                int sumRows = (row < correctRow) ? correctRow - row : row - correctRow;
-//                int sumCols = (col < correctCol) ? correctCol - col : col - correctCol;
-
 
                 manSum += (sumRows + sumCols);
             }
