@@ -9,11 +9,44 @@ import edu.princeton.cs.algs4.StdOut;
 public final class Solver {
 
     // find a solution to the initial board (using the A* algorithm)
+
+    private class SearchNode {
+
+        private SearchNode previous; // points to the previous node
+        private int numMoves; // number of moves to reach the board
+        private Board board;
+
+    }
+
     public Solver(Board initial) {
 
-        MinPQ<Board> pq = new MinPQ<Board>();
-        pq.insert(null);
-        pq.insert(initial);
+        if (initial == null) throw new IllegalArgumentException();
+
+        int numMoves = 0;
+
+//        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
+//
+//        // Points to the current node
+//        SearchNode pointer = new SearchNode(null, initial, numMoves);
+//
+//        pq.insert(pointer);
+//
+//        // Continue until the goal board is reached
+//        while (!pointer.board.isGoal()) {
+//
+//            numMoves++; // if not increment the number of moves
+//
+//            // For each neighbor check if it is the previous board
+//            // if it is not, then insert it into the priority queue
+//
+//            for (Board b : pointer.board.neighbors()) {
+//                if (!b.equals(pointer.previousNode.board)) {
+//                    pq.insert(new SearchNode(pointer, b, numMoves));
+//                }
+//            }
+//
+//            pointer = new SearchNode();
+//        }
 
     }
 
@@ -21,6 +54,7 @@ public final class Solver {
     public boolean isSolvable() {
 
         return true;
+
     }
 
 
@@ -28,7 +62,7 @@ public final class Solver {
 
     public int moves() {
 
-        return 0;
+        return -1;
 
     }
 

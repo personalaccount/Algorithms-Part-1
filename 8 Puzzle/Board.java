@@ -9,7 +9,7 @@ import java.util.Stack;
 
 // immutable data type Board
 
-public final class Board {
+public final class Board implements Comparable<Board> {
 
     private final int n; // board dimension n
     private final int[][] blocks;
@@ -46,6 +46,14 @@ public final class Board {
 
         if (spaceCount == 0) throw new IllegalArgumentException("There are no spaces");
 
+    }
+
+    public int compareTo(Board that) {
+        int m1 = this.manhattan();
+        int m2 = that.manhattan();
+        if (m1 < m2) return 1;
+        if (m2 < m1) return -1;
+        return 0;
     }
 
     // board dimension n
@@ -104,8 +112,12 @@ public final class Board {
 
         // Determine the number of blocks in the wrong position
         for (int i = 1; i <= totalBlocks; i++) {
-            if (i == totalBlocks && getBlockValue(i) == 0) continue; // We found a space where it supposed to be
-            if (getBlockValue(i) != i) numOfBlocksWPos++;
+            int blockValue = getBlockValue(i);
+            if (blockValue != i) {
+                if (blockValue != 0) {
+                    numOfBlocksWPos++;
+                }
+            }
         }
 
         return numOfBlocksWPos;
@@ -352,15 +364,20 @@ public final class Board {
 
     public static void main(String[] args) {
 
+        // <settings>
         int n = 3;
-        int count = 1;
+        int spaceRow = 3;
+        int spaceCol = 3;
+        // </settings>
+
+        int count = 1; // counter for the blocks
 
         int[][] testA = new int[n][n];
 
 
         for (int i = 1; i < n + 1; i++) {
             for (int j = 1; j < n + 1; j++) {
-                if (i == 2 && j == 2) {
+                if (i == spaceRow && j == spaceCol) {
                     testA[i - 1][j - 1] = 0;
                 }
                 else {
