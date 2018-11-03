@@ -233,7 +233,8 @@ public final class Board implements Comparable<Board> {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        return this.manhattan() == ((Board) y).manhattan();
+        if (this.toString().equals(y.toString())) return true;
+        return false;
     }
 
     private void swapBlockValues(int[][] targetArray, int blockARow, int blockACol, int blockBRow, int blockBCol) {
@@ -363,7 +364,7 @@ public final class Board implements Comparable<Board> {
         // <settings>
         int n = 3;
         int spaceRow = 3;
-        int spaceCol = 3;
+        int spaceCol = 2;
         // </settings>
 
         int count = 1; // counter for the blocks

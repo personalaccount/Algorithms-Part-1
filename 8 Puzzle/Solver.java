@@ -15,14 +15,33 @@ public final class Solver {
         private SearchNode previous; // points to the previous node
         private int numMoves; // number of moves to reach the board
         private Board board;
-
     }
 
     public Solver(Board initial) {
 
         if (initial == null) throw new IllegalArgumentException();
 
-        int numMoves = 0;
+        SearchNode pointer = new SearchNode();
+        pointer.previous = null;
+        pointer.numMoves = 0;
+        pointer.board = initial;
+
+        MinPQ<Board> pq = new MinPQ<Board>();
+
+        int currentHamming = pointer.board.hamming();
+
+        // Until we reach the final board, generate neighbors and add them to pq
+        while(currentHamming != 0){
+            for(Board b : pointer.board.neighbors()){
+                // Exclude the neighbor which is identical to the previous board.
+                if(pointer.previous != null && !b.equals(pointer.previous.board)){
+                    pq.insert(b);
+                }
+            }
+        }
+
+
+
 
 //        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
 //
