@@ -9,7 +9,7 @@ import java.util.Stack;
 
 // immutable data type Board
 
-public final class Board implements Comparable<Board> {
+public final class Board {
 
     private final int n; // board dimension n
     private final int[][] blocks;
@@ -46,14 +46,6 @@ public final class Board implements Comparable<Board> {
 
         if (spaceCount == 0) throw new IllegalArgumentException("There are no spaces");
 
-    }
-
-    public int compareTo(Board that) {
-        int m1 = this.manhattan();
-        int m2 = that.manhattan();
-        if (m1 > m2) return 1;
-        if (m2 > m1) return -1;
-        return 0;
     }
 
     // board dimension n
