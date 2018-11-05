@@ -13,13 +13,21 @@ import java.util.Stack;
 public final class Solver {
 
     // min number of moves to solve initial board; -1 if unsolvable
-    private int minMoves;
+    private SearchNode currentMinNode;
+    private boolean isSolvable = false;
 
     // aux. object to hold and compare searchnodes
     private class SearchNode implements Comparable<SearchNode> {
+        private Board board; // board itself
         private int numMoves; // number of moves to reach the board
-        private SearchNode previous; // points to the previous node
-        private Board board;
+        private SearchNode previous; // points to the predecessor search node
+
+
+        public SearchNode(Board b, int n, SearchNode p) {
+            board = b;
+            numMoves = n;
+            previous = p;
+        }
 
         public int compareTo(SearchNode that) {
             int thisPriority = board.hamming() + numMoves;
@@ -31,25 +39,47 @@ public final class Solver {
         }
     }
 
-    // find a solution to the initial board (using the A* algorithm)
+    // Find a solution to the initial board (using the A* algorithm).
     public Solver(Board initial) {
 
         if (initial == null) throw new IllegalArgumentException();
 
-        SearchNode initNode = new SearchNode();
+        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
 
-        initNode.previous = null;
-        initNode.numMoves = 0;
-        initNode.board = initial;
+        // First, insert the initial search node.
+        SearchNode initNode = new SearchNode(initial, 0, null);
 
-        SearchNode pointer = initNode;
+
+        pq.insert(initNode);
+
+        // Delete from the priority queue the search node with the minimum priority
+        currentMinNode = pq.delMin();
+
+        while (!currentMinNode.board.isGoal()) {
+            // Insert onto the priority queue all neighboring search nodes
+            for (Board neighborBoard : currentMinNode.board.neighbors()) {
+                // If the predecessor is not null, make sure that it's board is not included as a neighbor
+                if (currentMinNode.previous != null && neighborBoard.equals(currentMinNode.previous.board)) {
+                    continue;
+                }
+                pq.insert(new SearchNode(neighborBoard, currentMinNode.numMoves + 1, currentMinNode));
+            }
+            currentMinNode = pq.delMin();
+        }
+
+        // Update solvable marker
+        isSolvable = true;
+
+        StdOut.println(currentMinNode.board.toString());
+
+        StdOut.println("Done");
 
     }
 
     // is the initial board solvable?
     public boolean isSolvable() {
 
-        return true;
+        return isSolvable;
 
     }
 
@@ -58,6 +88,10 @@ public final class Solver {
 
     public int moves() {
 
+        if (isSolvable) {
+            return currentMinNode.numMoves;
+        }
+
         return -1;
 
     }
@@ -65,7 +99,25 @@ public final class Solver {
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
 
-        return null;
+        // Fill in the stack of boards that lead to the solution
+        Stack<Board> sb = new Stack<Board>();
+
+        // If the initial board was the solution all along, simply push it down the stack
+        if (moves() == 0) {
+            sb.push(currentMinNode.board);
+        }
+        else {
+            // Retraces the steps from the solution node to the initial
+            SearchNode pointer = currentMinNode;
+
+            while (pointer.previous != null) {
+                sb.push(pointer.board);
+                pointer = pointer.previous;
+            }
+
+        }
+
+        return sb;
 
     }
 
