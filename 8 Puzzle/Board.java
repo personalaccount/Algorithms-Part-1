@@ -14,7 +14,9 @@ public final class Board {
     private final int n; // board dimension n
     private final int[][] blocks;
     private final int totalBlocks;
+    private final int[][] randBlock = new int[2][2]; // Holds coordinates of blocks to be exchanged.
     private int spaceBlockRow, spaceBlockCol;
+
 
     // construct a board from an n-by-n array of blocks
     // (where blocks[i][j] = block in row i, column j)
@@ -25,6 +27,7 @@ public final class Board {
         n = blocks.length;
         this.blocks = new int[n][n];
         totalBlocks = this.n * this.n;
+
 
         // Keep track of the number of spaces, there should be no more than 1
         int spaceCount = 0;
@@ -45,6 +48,31 @@ public final class Board {
         }
 
         if (spaceCount == 0) throw new IllegalArgumentException("There are no spaces");
+
+        // Create a twin board.
+
+        // Generate random coordinates for a pair of blocks.
+        // Use cached row and col to prevent duplicate randoms.
+
+        int cacheRow = spaceBlockRow;
+        int cacheCol = spaceBlockCol;
+
+        for (int i = 0; i < 2; i++) {
+            int randomRow;
+            int randomCol;
+
+            do {
+                randomRow = StdRandom.uniform(n);
+                randomCol = StdRandom.uniform(n);
+            }
+            while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol) || (randomRow == cacheRow && randomCol == cacheCol));
+
+            randBlock[i][0] = randomRow;
+            randBlock[i][1] = randomCol;
+
+            cacheRow = randomRow;
+            cacheCol = randomCol;
+        }
 
     }
 
@@ -178,45 +206,19 @@ public final class Board {
     // the blank square is not a block
     public Board twin() {
 
-        // Holds a copy of the blocks array
+        // Holds a copy of the blocks array.
         int[][] duplicateBlocks = new int[n][n];
-
-        // Make a copy of the blocks array
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
-                duplicateBlocks[row][col] = this.blocks[row][col];
+                duplicateBlocks[row][col] = blocks[row][col];
             }
-        }
-
-        // Holds coordinates of blocks to be exchanged
-        int[][] randBlock = new int[2][2];
-
-        // Generate random coordinates for a pair of blocks
-        // Use cached row and col to prevent duplicate randoms
-
-        int cacheRow = spaceBlockRow;
-        int cacheCol = spaceBlockCol;
-
-        for (int i = 0; i < 2; i++) {
-            int randomRow;
-            int randomCol;
-
-            do {
-                randomRow = StdRandom.uniform(this.n);
-                randomCol = StdRandom.uniform(this.n);
-            }
-            while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol) || (randomRow == cacheRow && randomCol == cacheCol));
-
-            randBlock[i][0] = randomRow;
-            randBlock[i][1] = randomCol;
-
-            cacheRow = randomRow;
-            cacheCol = randomCol;
         }
 
         swapBlockValues(duplicateBlocks, randBlock[0][0], randBlock[0][1], randBlock[1][0], randBlock[1][1]);
 
-        return new Board(duplicateBlocks);
+        Board twin = new Board(duplicateBlocks);
+
+        return twin;
     }
 
     public boolean equals(Object y) {
