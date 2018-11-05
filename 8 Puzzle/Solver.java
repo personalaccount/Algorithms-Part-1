@@ -1,8 +1,6 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.io.File;
 import java.util.Stack;
 
 /**
@@ -11,11 +9,12 @@ import java.util.Stack;
 
 public final class Solver {
 
-    // min number of moves to solve initial board; -1 if unsolvable
-    private SearchNode currentMinNode;
-    private boolean isSolvable;
+    private final SearchNode solutionNode; // Node holding the solution board.
+    private Board solutionSourceBoard; // The first starting board in the solution trace.
+    private final boolean isSolvable;
 
-    // aux. object to hold and compare searchnodes
+    // Auxiliary object used to represent and compare search Nodes
+
     private final class SearchNode implements Comparable<SearchNode> {
         private final int manhattanSum;
         private final Board board; // board itself
@@ -45,16 +44,14 @@ public final class Solver {
 
         if (initial == null) throw new IllegalArgumentException();
 
-        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
+        MinPQ<SearchNode> pq = new MinPQ<>();
 
-        // First, insert the initial search node.
-        SearchNode initNode = new SearchNode(initial, 0, null);
-
-
-        pq.insert(initNode);
+        // First, insert the initial search node and it's twin.
+        pq.insert(new SearchNode(initial, 0, null));
+        pq.insert(new SearchNode(initial.twin(), 0, null));
 
         // Delete from the priority queue the search node with the minimum priority
-        currentMinNode = pq.delMin();
+        SearchNode currentMinNode = pq.delMin();
 
         while (!currentMinNode.board.isGoal()) {
             // Insert onto the priority queue all neighboring search nodes
@@ -68,8 +65,18 @@ public final class Solver {
             currentMinNode = pq.delMin();
         }
 
-        // Update solvable marker
-        isSolvable = true;
+        solutionNode = currentMinNode;
+
+        // Compare the source board and solution boards
+
+        solution();
+
+        if (solutionSourceBoard.equals(initial)) {
+            isSolvable = true;
+        }
+        else {
+            isSolvable = false;
+        }
     }
 
     // is the initial board solvable?
@@ -85,7 +92,7 @@ public final class Solver {
     public int moves() {
 
         if (isSolvable) {
-            return currentMinNode.numMoves;
+            return solutionNode.numMoves;
         }
 
         return -1;
@@ -100,16 +107,23 @@ public final class Solver {
 
         // If the initial board was the solution all along, simply push it down the stack
         if (moves() == 0) {
-            sb.push(currentMinNode.board);
+            sb.push(solutionNode.board);
         }
         else {
             // Retraces the steps from the solution node to the initial
-            SearchNode pointer = currentMinNode;
+            SearchNode pointer = solutionNode;
 
             while (pointer.previous != null) {
                 sb.push(pointer.board);
                 pointer = pointer.previous;
             }
+
+            // Pointer is currently pointing to the strating searchNode.
+            // Add sourceBoard and push the searchnode to the stack.
+
+            solutionSourceBoard = pointer.board;
+            sb.push(pointer.board);
+
 
         }
 
@@ -121,8 +135,7 @@ public final class Solver {
     public static void main(String[] args) {
 
         // create initial board from file
-        In in = new In(new File("8puzzle-tests/puzzle01.txt"));
-//        In in = new In(args[0]);
+        In in = new In(args[0]);
         int n = in.readInt();
         int[][] blocks = new int[n][n];
         for (int i = 0; i < n; i++)

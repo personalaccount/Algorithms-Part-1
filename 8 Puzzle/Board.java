@@ -202,10 +202,10 @@ public final class Board {
             int randomCol;
 
             do {
-                randomRow = StdRandom.uniform(this.n - 1);
-                randomCol = StdRandom.uniform(this.n - 1);
-            } while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol)
-                    || (randomRow == cacheRow && randomCol == cacheCol));
+                randomRow = StdRandom.uniform(this.n);
+                randomCol = StdRandom.uniform(this.n);
+            }
+            while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol) || (randomRow == cacheRow && randomCol == cacheCol));
 
             randBlock[i][0] = randomRow;
             randBlock[i][1] = randomCol;
@@ -214,9 +214,7 @@ public final class Board {
             cacheCol = randomCol;
         }
 
-        swapBlockValues(duplicateBlocks,
-                randBlock[0][0], randBlock[0][1],
-                randBlock[1][0], randBlock[1][1]);
+        swapBlockValues(duplicateBlocks, randBlock[0][0], randBlock[0][1], randBlock[1][0], randBlock[1][1]);
 
         return new Board(duplicateBlocks);
     }
@@ -226,8 +224,14 @@ public final class Board {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         Board that = (Board) y;
-        if (this.hamming() != that.hamming()) return false;
-        if (this.manhattan() != that.manhattan()) return false;
+
+        if (n != that.n) return false;
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                if (blocks[row][col] != that.blocks[row][col]) return false;
+            }
+        }
         return true;
     }
 
