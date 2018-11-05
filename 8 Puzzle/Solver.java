@@ -3,7 +3,6 @@ import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.io.File;
-import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -14,27 +13,29 @@ public final class Solver {
 
     // min number of moves to solve initial board; -1 if unsolvable
     private SearchNode currentMinNode;
-    private boolean isSolvable = false;
+    private boolean isSolvable;
 
     // aux. object to hold and compare searchnodes
-    private class SearchNode implements Comparable<SearchNode> {
-        private Board board; // board itself
-        private int numMoves; // number of moves to reach the board
-        private SearchNode previous; // points to the predecessor search node
-
+    private final class SearchNode implements Comparable<SearchNode> {
+        private final int manhattanSum;
+        private final Board board; // board itself
+        private final int numMoves; // number of moves to reach the board
+        private final SearchNode previous; // points to the predecessor search node
 
         public SearchNode(Board b, int n, SearchNode p) {
             board = b;
             numMoves = n;
             previous = p;
+            manhattanSum = board.manhattan();
+        }
+
+        public int ms() {
+            return manhattanSum;
         }
 
         public int compareTo(SearchNode that) {
-            int thisPriority = board.hamming() + numMoves;
-            int thatPriority = that.board.hamming() + that.numMoves;
-
-            if (thisPriority < thatPriority) return -1;
-            if (thisPriority > thatPriority) return 1;
+            if (manhattanSum < that.ms()) return -1;
+            if (manhattanSum > that.ms()) return 1;
             return 0;
         }
     }
@@ -69,11 +70,6 @@ public final class Solver {
 
         // Update solvable marker
         isSolvable = true;
-
-        StdOut.println(currentMinNode.board.toString());
-
-        StdOut.println("Done");
-
     }
 
     // is the initial board solvable?
@@ -136,7 +132,7 @@ public final class Solver {
 
         // solve the puzzle
         Solver solver = new Solver(initial);
-//
+
         // print solution to standard output
         if (!solver.isSolvable())
             StdOut.println("No solution possible");

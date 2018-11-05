@@ -225,8 +225,10 @@ public final class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        if (this.toString().equals(y.toString())) return true;
-        return false;
+        Board that = (Board) y;
+        if (this.hamming() != that.hamming()) return false;
+        if (this.manhattan() != that.manhattan()) return false;
+        return true;
     }
 
     private void swapBlockValues(int[][] targetArray, int blockARow, int blockACol, int blockBRow, int blockBCol) {
