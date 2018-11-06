@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Stack;
 
 /**
@@ -9,15 +10,13 @@ import java.util.Stack;
 
 public final class Solver {
 
-    private final SearchNode solutionNode; // Node holding the solution board.
-    private Board solutionSourceBoard; // The first starting board in the solution trace.
     private final boolean isSolvable;
+    private final Board[] solutions;
 
     // Auxiliary object used to represent and compare search Nodes
-
     private final class SearchNode implements Comparable<SearchNode> {
         private final int manhattanSum;
-        private final Board board; // board itself
+        private final Board board; // Game board
         private final int numMoves; // number of moves to reach the board
         private final SearchNode previous; // points to the predecessor search node
 
@@ -60,18 +59,28 @@ public final class Solver {
                 if (currentMinNode.previous != null && neighborBoard.equals(currentMinNode.previous.board)) {
                     continue;
                 }
+                // Add a new search node to the priority queue.
                 pq.insert(new SearchNode(neighborBoard, currentMinNode.numMoves + 1, currentMinNode));
             }
+            // Remove the node with the smallest priority.
             currentMinNode = pq.delMin();
+        } // When the while() is done currentMinNode contains the goal board
+
+        // For the sake of convenience create a pointer variable for the solution trace.
+        SearchNode pointer = currentMinNode;
+
+        // Create a solution trace.
+        short numberOfMoves = (short) currentMinNode.numMoves;
+
+        solutions = new Board[numberOfMoves];
+
+        for (int i = 0; i < pointer.numMoves + 1; i++) {
+            solutions[i] = pointer.board;
+            pointer = pointer.previous;
         }
 
-        solutionNode = currentMinNode;
-
         // Compare the source board and solution boards
-
-        solution();
-
-        if (solutionSourceBoard.equals(initial)) {
+        if (solutions[0].equals(initial)) {
             isSolvable = true;
         }
         else {
@@ -81,9 +90,7 @@ public final class Solver {
 
     // is the initial board solvable?
     public boolean isSolvable() {
-
         return isSolvable;
-
     }
 
 
@@ -92,7 +99,7 @@ public final class Solver {
     public int moves() {
 
         if (isSolvable) {
-            return solutionNode.numMoves;
+            return solutions.length;
         }
 
         return -1;
@@ -105,30 +112,13 @@ public final class Solver {
         // Fill in the stack of boards that lead to the solution
         Stack<Board> sb = new Stack<Board>();
 
-        // If the initial board was the solution all along, simply push it down the stack
-        if (moves() == 0) {
-            sb.push(solutionNode.board);
-        }
-        else {
-            // Retraces the steps from the solution node to the initial
-            SearchNode pointer = solutionNode;
+        short numMoves = (short) solutions.length;
 
-            while (pointer.previous != null) {
-                sb.push(pointer.board);
-                pointer = pointer.previous;
-            }
-
-            // Pointer is currently pointing to the strating searchNode.
-            // Add sourceBoard and push the searchnode to the stack.
-
-            solutionSourceBoard = pointer.board;
-            sb.push(pointer.board);
-
-
+        for (short i = 0; i < numMoves; i++) {
+            sb.push(solutions[i]);
         }
 
         return sb;
-
     }
 
     // solve a slider puzzle (given below)

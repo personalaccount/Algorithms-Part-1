@@ -11,11 +11,11 @@ import java.util.Stack;
 
 public final class Board {
 
-    private final int n; // board dimension n
-    private final int[][] blocks;
+    private final short n; // board dimension n
+    private final short[][] blocks;
     private final int totalBlocks;
-    private final int[][] randBlock = new int[2][2]; // Holds coordinates of blocks to be exchanged.
-    private int spaceBlockRow, spaceBlockCol;
+    private final short rBlock1Row, rBlock1Col, rBlock2Row, rBlock2Col; // Coordinates of blocks to be exchanged to generate a twin
+    private short spaceBlockRow, spaceBlockCol;
 
 
     // construct a board from an n-by-n array of blocks
@@ -24,8 +24,8 @@ public final class Board {
     public Board(int[][] blocks) {
         if (blocks == null || blocks.length < 1) throw new IllegalArgumentException();
 
-        n = blocks.length;
-        this.blocks = new int[n][n];
+        n = (short) blocks.length;
+        this.blocks = new short[n][n];
         totalBlocks = this.n * this.n;
 
 
@@ -39,20 +39,20 @@ public final class Board {
                 if (block == 0) {
                     spaceCount++;
                     if (spaceCount > 1) throw new IllegalArgumentException("There is more than one space");
-                    spaceBlockRow = row;
-                    spaceBlockCol = col;
+                    spaceBlockRow = (short) row;
+                    spaceBlockCol = (short) col;
                 }
 
-                this.blocks[row][col] = block;
+                this.blocks[row][col] = (short) block;
             }
         }
 
         if (spaceCount == 0) throw new IllegalArgumentException("There are no spaces");
 
-        // Create a twin board.
-
-        // Generate random coordinates for a pair of blocks.
+        // Generate random coordinates for a pair of blocks to generate a twin.
         // Use cached row and col to prevent duplicate randoms.
+
+        int[][] randBlock = new int[2][2];
 
         int cacheRow = spaceBlockRow;
         int cacheCol = spaceBlockCol;
@@ -61,9 +61,11 @@ public final class Board {
             int randomRow;
             int randomCol;
 
+            int intN = (int) n;
+
             do {
-                randomRow = StdRandom.uniform(n);
-                randomCol = StdRandom.uniform(n);
+                randomRow = StdRandom.uniform(intN);
+                randomCol = StdRandom.uniform(intN);
             }
             while ((randomRow == spaceBlockRow && randomCol == spaceBlockCol) || (randomRow == cacheRow && randomCol == cacheCol));
 
@@ -74,6 +76,10 @@ public final class Board {
             cacheCol = randomCol;
         }
 
+        rBlock1Row = (short) randBlock[0][0];
+        rBlock1Col = (short) randBlock[0][1];
+        rBlock2Row = (short) randBlock[1][0];
+        rBlock2Col = (short) randBlock[1][1];
     }
 
     // board dimension n
@@ -214,7 +220,7 @@ public final class Board {
             }
         }
 
-        swapBlockValues(duplicateBlocks, randBlock[0][0], randBlock[0][1], randBlock[1][0], randBlock[1][1]);
+        swapBlockValues(duplicateBlocks, rBlock1Row, rBlock1Col, rBlock2Row, rBlock2Col);
 
         Board twin = new Board(duplicateBlocks);
 
@@ -405,7 +411,7 @@ public final class Board {
 
         //@Test
         Board twinBoard = tb.twin();
-        StdOut.println("Create twin board: \n" + twinBoard.toString());
+        StdOut.println("Create a twin board: \n" + twinBoard.toString());
 
         //@Test
         StdOut.println("Boards are equal: " + tb.equals(twinBoard));
