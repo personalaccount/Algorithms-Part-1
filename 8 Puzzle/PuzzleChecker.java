@@ -33,7 +33,7 @@ public class PuzzleChecker {
 
     public static void main(String[] args) {
 
-        String filename = "puzzle00.txt";
+        String filename = "puzzle01.txt";
         In in = new In(new File("8puzzle-tests/" + filename));
         int n = in.readInt();
         int[][] tiles = new int[n][n];
