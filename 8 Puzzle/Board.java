@@ -119,8 +119,6 @@ public final class Board {
             column = this.n;
         }
 
-//        column = (column == 0) ? this.n : column;
-
         return column;
     }
 

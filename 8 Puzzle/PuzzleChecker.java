@@ -33,7 +33,7 @@ public class PuzzleChecker {
 
     public static void main(String[] args) {
 
-        String filename = "puzzle01.txt";
+        String filename = "puzzle2x2-unsolvable1.txt";
         In in = new In(new File("8puzzle-tests/" + filename));
         int n = in.readInt();
         int[][] tiles = new int[n][n];
@@ -48,7 +48,7 @@ public class PuzzleChecker {
         Board initial = new Board(tiles);
         Solver solver = new Solver(initial);
         StdOut.println(filename + ": " + solver.moves());
-
+        StdOut.println("Solvable: " + solver.isSolvable());
         for (Board b : solver.solution()) {
             StdOut.println(b);
         }
