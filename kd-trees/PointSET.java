@@ -1,12 +1,49 @@
-public class PointSET {
-    public         PointSET()                               // construct an empty set of points
-    public           boolean isEmpty()                      // is the set empty?
-    public               int size()                         // number of points in the set
-    public              void insert(Point2D p)              // add the point to the set (if it is not already in the set)
-    public           boolean contains(Point2D p)            // does the set contain point p?
-    public              void draw()                         // draw all points to standard draw
-    public Iterable<Point2D> range(RectHV rect)             // all points that are inside the rectangle (or on the boundary)
-    public           Point2D nearest(Point2D p)             // a nearest neighbor in the set to point p; null if the set is empty
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
 
-    public static void main(String[] args)                  // unit testing of the methods (optional)
+public class PointSET {
+    // construct an empty set of points
+    public PointSET() {
+
+    }
+
+    // is the set empty?
+    public boolean isEmpty() {
+
+    }
+
+    // number of points in the set
+    public int size() {
+
+    }
+
+    // add the point to the set (if it is not already in the set)
+    public void insert(Point2D p) {
+
+    }
+
+    // does the set contain point p?
+    public boolean contains(Point2D p) {
+
+    }
+
+    // draw all points to standard draw
+    public void draw() {
+
+    }
+
+    // all points that are inside the rectangle (or on the boundary)
+    public Iterable<Point2D> range(RectHV rect) {
+
+    }
+
+    // a nearest neighbor in the set to point p; null if the set is empty
+    public Point2D nearest(Point2D p) {
+
+    }
+
+    // unit testing of the methods (optional)
+    public static void main(String[] args) {
+
+    }
 }
