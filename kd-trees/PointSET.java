@@ -9,7 +9,7 @@ public class PointSET {
 
     // is the set empty?
     public boolean isEmpty() {
-
+        return true;
     }
 
     // number of points in the set
