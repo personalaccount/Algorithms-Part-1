@@ -1,6 +1,14 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+
 import java.util.TreeSet;
+
+/**
+ * Created by Philip Ivanov (https://github.com/personalaccount)
+ *
+ * Mutable data type that represents a set of points in the unit square
+ *
+ */
 
 public class PointSET {
 
@@ -8,7 +16,7 @@ public class PointSET {
 
     // construct an empty set of points
     public PointSET() {
-
+        points = new TreeSet<Point2D>();
     }
 
     // is the set empty?
