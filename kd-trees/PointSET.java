@@ -9,7 +9,6 @@ public class PointSET {
     // construct an empty set of points
     public PointSET() {
 
-
     }
 
     // is the set empty?
