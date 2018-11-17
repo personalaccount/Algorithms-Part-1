@@ -43,6 +43,7 @@ public class PointSET {
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
+    // find a closest point to a query point
     public Point2D nearest(Point2D p) {
 
     }
