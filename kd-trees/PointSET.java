@@ -1,23 +1,25 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import java.util.TreeSet;
 
 public class PointSET {
 
-    private Point2D[] points;
+    private TreeSet<Point2D> points;
 
     // construct an empty set of points
     public PointSET() {
+
 
     }
 
     // is the set empty?
     public boolean isEmpty() {
-        return (points.length == 0);
+        return points.isEmpty();
     }
 
     // number of points in the set
     public int size() {
-
+        return points.size();
     }
 
     // add the point to the set (if it is not already in the set)
