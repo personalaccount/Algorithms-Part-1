@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.TreeSet;
 
@@ -57,6 +58,9 @@ public class PointSET {
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
-
+        // draw the points
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        StdDraw.show();
     }
 }
