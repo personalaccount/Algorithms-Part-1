@@ -43,7 +43,7 @@ public class PointSET {
 
     // draw all points to standard draw
     public void draw() {
-        for (Point2D p: points) {
+        for (Point2D p : points) {
             p.draw();
         }
     }
@@ -80,5 +80,8 @@ public class PointSET {
         StdDraw.setYscale(0, 1);
 
         ps.draw();
+
+        RectHV rh = new RectHV(0.4, 0.4, 0.6, 0.6);
+        rh.draw();
     }
 }
