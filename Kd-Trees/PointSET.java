@@ -62,26 +62,26 @@ public class PointSET {
     // unit testing of the methods (optional)
     public static void main(String[] args) {
         PointSET ps = new PointSET();
-        Point2D a = new Point2D(0.1, 0.1);
-        Point2D b = new Point2D(0.1, 0.2);
-        Point2D c = new Point2D(0.1, 0.3);
+        Point2D a = new Point2D(0.0, 0.0);
+        Point2D b = new Point2D(0.1, 0.4);
+        Point2D b = new Point2D(0.6, 0.5);
 
         ps.insert(a);
         ps.insert(b);
+        ps.insert(c);
 
         StdOut.println(ps.isEmpty());
         StdOut.println(ps.contains(a));
-        ps.insert(c);
 
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
 
-        StdDraw.setXscale(0, 1);
-        StdDraw.setYscale(0, 1);
+        StdDraw.setXscale(-0.4, 1.2);
+        StdDraw.setYscale(-0.4, 1.2);
 
         ps.draw();
 
-        RectHV rh = new RectHV(0.4, 0.4, 0.6, 0.6);
+        RectHV rh = new RectHV(0.4, 0.3, 0.8, 0.6);
         rh.draw();
     }
 }
