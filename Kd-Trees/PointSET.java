@@ -33,12 +33,13 @@ public class PointSET {
 
     // Add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
+        exceptionIfNull(p);
         if (!contains(p)) points.add(p);
     }
 
     // Does the set contain point p?
     public boolean contains(Point2D p) {
-        if (p == null) throw new IllegalArgumentException();
+        exceptionIfNull(p);
         return points.contains(p);
     }
 
@@ -54,6 +55,7 @@ public class PointSET {
 
         if (rect == null) throw new IllegalArgumentException();
 
+        // Iterable Stack object to hold matching points
         Stack<Point2D> pointsInside = new Stack<>();
 
         for (Point2D p : points) {
@@ -64,12 +66,31 @@ public class PointSET {
 
         return pointsInside;
     }
-//
-//    // a nearest neighbor in the set to point p; null if the set is empty
-//    // find a closest point to a query point
-//    public Point2D nearest(Point2D p) {
-//
-//    }
+
+    private void exceptionIfNull(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
+    }
+
+    // a nearest neighbor in the set to point p; null if the set is empty
+    // find a closest point to a query point
+    public Point2D nearest(Point2D p) {
+        exceptionIfNull(p);
+        if (points.isEmpty()) return null;
+
+        // Holds the closest point
+        Point2D closestPoint = points.first();
+        double closestDistance = closestPoint.distanceTo(p);
+
+        // Loop through the points and find the closest
+        for (Point2D setPoint : points) {
+            double currentDistance = setPoint.distanceTo(p);
+            if (currentDistance < closestDistance) {
+                closestDistance = currentDistance;
+                closestPoint = p;
+            }
+        }
+        return closestPoint;
+    }
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
@@ -78,6 +99,7 @@ public class PointSET {
         Point2D b = new Point2D(0.1, 0.4);
         Point2D c = new Point2D(0.6, 0.5);
 
+        // Insert test
         ps.insert(a);
         ps.insert(b);
         ps.insert(c);
@@ -86,12 +108,18 @@ public class PointSET {
         StdOut.println(ps.contains(a));
         StdOut.println(ps.size());
 
+        // Rectangle test
         RectHV r = new RectHV(0.4, 0.3, 0.8, 0.6);
 
+        // Range() test
         StdOut.println("Points inside: ");
-        for (Point2D p: ps.range(r)) {
-            StdOut.print(p.toString() + " ");
+        for (Point2D p : ps.range(r)) {
+            StdOut.print(p.toString() + "; ");
         }
+
+        // Closest points test
+        StdOut.println("Nearest point to " + a.toString() + " is " + ps.nearest(a).toString());
+        StdOut.println("Nearest point to " + b.toString() + " is " + ps.nearest(b).toString());
 
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
