@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Stack;
 import java.util.TreeSet;
 
 /**
@@ -15,27 +16,27 @@ public class PointSET {
 
     private TreeSet<Point2D> points;
 
-    // construct an empty set of points
+    // Construct an empty set of points
     public PointSET() {
         points = new TreeSet<Point2D>();
     }
 
-    // is the set empty?
+    // Is the set empty?
     public boolean isEmpty() {
         return points.isEmpty();
     }
 
-    // number of points in the set
+    // Number of points in the set
     public int size() {
         return points.size();
     }
 
-    // add the point to the set (if it is not already in the set)
+    // Add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (!contains(p)) points.add(p);
     }
 
-    // does the set contain point p?
+    // Does the set contain point p?
     public boolean contains(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
         return points.contains(p);
@@ -48,10 +49,21 @@ public class PointSET {
         }
     }
 
-//    // all points that are inside the rectangle (or on the boundary)
-//    public Iterable<Point2D> range(RectHV rect) {
-//
-//    }
+    // All points that are inside the rectangle (or on the boundary)
+    public Iterable<Point2D> range(RectHV rect) {
+
+        if (rect == null) throw new IllegalArgumentException();
+
+        Stack<Point2D> pointsInside = new Stack<>();
+
+        for (Point2D p : points) {
+            if (rect.contains(p)) {
+                pointsInside.push(p);
+            }
+        }
+
+        return pointsInside;
+    }
 //
 //    // a nearest neighbor in the set to point p; null if the set is empty
 //    // find a closest point to a query point
@@ -72,6 +84,14 @@ public class PointSET {
 
         StdOut.println(ps.isEmpty());
         StdOut.println(ps.contains(a));
+        StdOut.println(ps.size());
+
+        RectHV r = new RectHV(0.4, 0.3, 0.8, 0.6);
+
+        StdOut.println("Points inside: ");
+        for (Point2D p: ps.range(r)) {
+            StdOut.print(p.toString() + " ");
+        }
 
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
@@ -80,8 +100,6 @@ public class PointSET {
         StdDraw.setYscale(-0.4, 1.2);
 
         ps.draw();
-
-        RectHV rh = new RectHV(0.4, 0.3, 0.8, 0.6);
-        rh.draw();
+        r.draw();
     }
 }
