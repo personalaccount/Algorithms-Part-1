@@ -64,7 +64,7 @@ public class PointSET {
         PointSET ps = new PointSET();
         Point2D a = new Point2D(0.0, 0.0);
         Point2D b = new Point2D(0.1, 0.4);
-        Point2D b = new Point2D(0.6, 0.5);
+        Point2D c = new Point2D(0.6, 0.5);
 
         ps.insert(a);
         ps.insert(b);
