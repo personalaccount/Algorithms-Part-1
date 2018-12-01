@@ -77,13 +77,25 @@ public class PointSET {
         exceptionIfNull(p);
         if (points.isEmpty()) return null;
 
+        // Variable used as a switch
+        boolean firstPass = true;
+
         // Holds the closest point
-        Point2D closestPoint = points.first();
-        double closestDistance = closestPoint.distanceTo(p);
+        Point2D closestPoint = null;
+        double closestDistance = 0;
 
         // Loop through the points and find the closest
         for (Point2D setPoint : points) {
+            if (setPoint.equals(p)) continue;
+
+            if (firstPass) {
+                closestPoint = setPoint;
+                closestDistance = setPoint.distanceTo(p);
+                firstPass = false;
+            }
+
             double currentDistance = setPoint.distanceTo(p);
+
             if (currentDistance < closestDistance) {
                 closestDistance = currentDistance;
                 closestPoint = p;
@@ -112,14 +124,14 @@ public class PointSET {
         RectHV r = new RectHV(0.4, 0.3, 0.8, 0.6);
 
         // Range() test
-        StdOut.println("Points inside: ");
+        StdOut.print("Points inside: ");
         for (Point2D p : ps.range(r)) {
             StdOut.print(p.toString() + "; ");
         }
 
         // Closest points test
-        StdOut.println("Nearest point to " + a.toString() + " is " + ps.nearest(a).toString());
-        StdOut.println("Nearest point to " + b.toString() + " is " + ps.nearest(b).toString());
+        StdOut.println("\nNearest point to " + a.toString() + " is " + ps.nearest(a).toString());
+        StdOut.println("Nearest point to " + c.toString() + " is " + ps.nearest(c).toString());
 
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
