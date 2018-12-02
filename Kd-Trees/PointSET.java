@@ -85,24 +85,25 @@ public class PointSET {
         double closestDistance = 0;
 
         // Loop through the points and find the closest
-        for (Point2D setPoint : points) {
-            if (setPoint.equals(p)) continue;
+        for (Point2D currentPoint : points) {
+            if (currentPoint.equals(p)) continue;
 
             if (firstPass) {
-                closestPoint = setPoint;
-                closestDistance = setPoint.distanceTo(p);
+                closestPoint = currentPoint;
+                closestDistance = currentPoint.distanceTo(p);
                 firstPass = false;
             }
 
-            double currentDistance = setPoint.distanceTo(p);
+            double currentDistance = currentPoint.distanceTo(p);
 
             if (currentDistance < closestDistance) {
                 closestDistance = currentDistance;
-                closestPoint = p;
+                closestPoint = currentPoint;
             }
         }
-        return closestPoint;
-    }
+
+    return closestPoint;
+}
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
