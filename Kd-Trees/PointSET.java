@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 /**
  * Created by Philip Ivanov (https://github.com/personalaccount)
- * <p>
+ *
  * Mutable data type that represents a set of points in the unit square
  */
 
@@ -71,8 +71,7 @@ public class PointSET {
         if (p == null) throw new IllegalArgumentException();
     }
 
-    // a nearest neighbor in the set to point p; null if the set is empty
-    // find a closest point to a query point
+    // Closest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
         if (points.isEmpty()) return null;
@@ -86,8 +85,11 @@ public class PointSET {
 
         // Loop through the points and find the closest
         for (Point2D currentPoint : points) {
+
+            // Skip if the point is itself
             if (currentPoint.equals(p)) continue;
 
+            // Update placeholders on first pass
             if (firstPass) {
                 closestPoint = currentPoint;
                 closestDistance = currentPoint.distanceTo(p);
