@@ -11,7 +11,14 @@ import java.util.Stack;
 
 public class KdTree {
 
-    KdTree points;
+    // Nested inner class that defines a node.
+    private class Node {
+        private Node root;
+        private Node leftChild;
+        private Node rightChild;
+        private double x;
+        private double y;
+    }
 
     // construct an empty set of points
     public KdTree() {
@@ -28,7 +35,7 @@ public class KdTree {
 
     // Number of points in the set
     public int size() {
-        return points.size();
+
     }
 
     // Add the point to the set (if it is not already in the set)
