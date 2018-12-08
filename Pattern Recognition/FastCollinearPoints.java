@@ -51,10 +51,7 @@ public class FastCollinearPoints {
 
             // Sort points according to the slopes they make with segmentStart.
             Arrays.sort(inputArr, targetPoint.slopeOrder());
-
-//            for (Point p : inputArr)
-//                System.out.println(p + " slope to " + targetPoint + " = " + p.slopeTo(targetPoint));
-
+            
             // Sorted array always start with a point that has the lowest slope to segmentStart - itself (NEGATIVE_INFINITY)
             // If there is a duplicate it will appear on the second position in the sorted array
             if (inputArr[1].compareTo(targetPoint) == 0) throw new IllegalArgumentException();

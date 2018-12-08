@@ -11,18 +11,14 @@ import java.util.Stack;
 
 public class KdTree {
 
-    // Nested inner class that defines a node.
-    private class Node {
-        private Node root;
-        private Node leftChild;
-        private Node rightChild;
-        private double x;
-        private double y;
-    }
+    // Array holding a bst
+    private double[] tree;
 
     // construct an empty set of points
     public KdTree() {
 
+        // Empty array of size 3
+        tree = new double[3];
     }
 
     private void exceptionIfNull(Point2D p) {
@@ -56,6 +52,19 @@ public class KdTree {
             p.draw();
         }
     }
+
+    // Resize bst array
+    private void resize(int capacity) {
+        double[] treeCopy = new double[capacity];
+
+        for (int i = 0; i < tree.length; i++) {
+            treeCopy[i] = tree[i];
+        }
+
+        tree = treeCopy;
+        treeCopy = null;
+    }
+
 
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
