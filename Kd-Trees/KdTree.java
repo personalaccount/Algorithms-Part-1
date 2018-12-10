@@ -13,7 +13,7 @@ public class KdTree {
 
     // Array holding a bst of points.
     private Point2D[] tree;
-    private int numberOfPoints;
+    private int numberOfPoints = 0;
 
     // Construct an empty set of points
     public KdTree() {
@@ -32,25 +32,27 @@ public class KdTree {
 
     // Number of points in the set
     public int size() {
-        return tree.length;
+        return numberOfPoints;
     }
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
         exceptionIfNull(p);
+        if (isEmpty()) {
+            resizeTree(5);
+            tree[0] = p;
+        } else{
+            tree[findIndex(p)] = p;
+        }
+
         //        if (!contains(p)) add(p);
-        tree[findIndex(p)] = p;
         numberOfPoints++;
     }
 
     // Auxilliary method used to find correct array index
     private int findIndex(Point2D p) {
         // If this is the first insert increase array size to 5 and insert the point at the root
-        if (isEmpty()) {
-            resizeTree(5);
-            return 0;
-        }
-        else if (tree.length == numberOfPoints - 2 ) {
+        if (tree.length == numberOfPoints - 2) {
             resizeTree(numberOfPoints * 2);
         }
 
@@ -65,12 +67,12 @@ public class KdTree {
 
         // Determine whether we're doing X or Y comparison
         if (k % 2 == 0) {
-            // Check by X to see if the point is to the right and adjust accordingly.
-            if (Double.compare(p.x(), tree[k].x()) >= 0) nextK++;
+            // Check by Y to see if the point is to the right and adjust accordingly.
+            if (Double.compare(p.y(), tree[k].y()) >= 0) nextK++;
         }
         else {
-            // Check by Y to see if the point is on top and adjust accordingly.
-            if (Double.compare(p.y(), tree[k].y()) >= 0) nextK++;
+            // Check by X to see if the point is on top and adjust accordingly.
+            if (Double.compare(p.x(), tree[k].x()) >= 0) nextK++;
         }
         if (tree[nextK] == null) return nextK;
         return findIndex(p, nextK);
@@ -79,6 +81,7 @@ public class KdTree {
     // Does the set contain point p?
     public boolean contains(Point2D p) {
         exceptionIfNull(p);
+        return false;
     }
 
     // draw all points to standard draw
@@ -90,14 +93,14 @@ public class KdTree {
 
     // Resize bst array
     private void resizeTree(int capacity) {
-        Point2D[] treeCopy = new Point2D[][ capacity];
+        Point2D[] treeCopy = new Point2D[capacity];
 
-        for (int i = 0; i < tree.length; i++) {
+        for (int i = 0; i < size(); i++) {
             treeCopy[i] = tree[i];
         }
 
         tree = treeCopy;
-        treeCopy = null;
+//        treeCopy = null;
     }
 
 
@@ -112,6 +115,24 @@ public class KdTree {
 
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
+        return p;
+
+    }
+
+    public static void main(String args[]) {
+
+        //@Test Create a KdTree object
+        KdTree kdt = new KdTree();
+
+        Point2D a = new Point2D(0.4, 0.4);
+        Point2D b = new Point2D(0.1, 0.2);
+        Point2D c = new Point2D(0.5, 0.2);
+        Point2D d = new Point2D(0.6, 0.5);
+
+        kdt.insert(a);
+        kdt.insert(b);
+        kdt.insert(c);
+        kdt.insert(d);
 
     }
 
