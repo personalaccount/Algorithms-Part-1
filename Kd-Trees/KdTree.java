@@ -11,8 +11,7 @@ import java.util.Stack;
 
 public class KdTree {
 
-    // Array holding a bst of points.
-    private Point2D[] tree;
+    private Node root;
     private int numberOfPoints = 0;
 
     // 2d Tree node
@@ -28,7 +27,6 @@ public class KdTree {
     // Construct an empty set of points
     public KdTree() {
         // Empty array of size 0
-        tree = new Point2D[0];
     }
 
     // Auxiliary method to check if the point is null
@@ -37,7 +35,7 @@ public class KdTree {
     }
 
     public boolean isEmpty() {
-        return (tree.length == 0);
+        return (numberOfPoints == 0);
     }
 
     // Number of points in the set
@@ -47,27 +45,7 @@ public class KdTree {
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
-        exceptionIfNull(p);
-        if (isEmpty()) {
-            resizeTree(5);
-            tree[0] = p;
-        } else{
-            tree[findIndex(p)] = p;
-        }
-
-        //        if (!contains(p)) add(p);
         numberOfPoints++;
-    }
-
-    // Auxilliary method used to find correct array index
-    private int findIndex(Point2D p) {
-        // If this is the first insert increase array size to 5 and insert the point at the root
-        if (tree.length == numberOfPoints - 2) {
-            resizeTree(numberOfPoints * 2);
-        }
-
-        // Start by comparing with the root [0] element
-        return findIndex(p, 0);
     }
 
     // Method overloaded for recursion (k is the current position in the array)
