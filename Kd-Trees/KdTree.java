@@ -48,24 +48,6 @@ public class KdTree {
         numberOfPoints++;
     }
 
-    // Method overloaded for recursion (k is the current position in the array)
-    private int findIndex(Point2D p, int k) {
-        // Default value for the next index to be returned
-        int nextK = 2 * k;
-
-        // Determine whether we're doing X or Y comparison
-        if (k % 2 == 0) {
-            // Check by Y to see if the point is to the right and adjust accordingly.
-            if (Double.compare(p.y(), tree[k].y()) >= 0) nextK++;
-        }
-        else {
-            // Check by X to see if the point is on top and adjust accordingly.
-            if (Double.compare(p.x(), tree[k].x()) >= 0) nextK++;
-        }
-        if (tree[nextK] == null) return nextK;
-        return findIndex(p, nextK);
-    }
-
     // Does the set contain point p?
     public boolean contains(Point2D p) {
         exceptionIfNull(p);
@@ -74,9 +56,7 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
-        for (Point2D p : tree) {
-            p.draw();
-        }
+
     }
 
     // Resize bst array
