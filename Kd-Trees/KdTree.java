@@ -59,18 +59,6 @@ public class KdTree {
 
     }
 
-    // Resize bst array
-    private void resizeTree(int capacity) {
-        Point2D[] treeCopy = new Point2D[capacity];
-
-        for (int i = 0; i < size(); i++) {
-            treeCopy[i] = tree[i];
-        }
-
-        tree = treeCopy;
-//        treeCopy = null;
-    }
-
 
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
