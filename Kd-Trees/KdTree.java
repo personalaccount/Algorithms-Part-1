@@ -11,16 +11,15 @@ import java.util.Stack;
 
 public class KdTree {
 
-    private Node root = null; // Points to the root of KdTree
+    private Node root; // Points to the root of KdTree
     private int numberOfPoints = 0;
-
-    // 2d Tree node
 
     private static class Node {
         private Point2D p;      // the point
         private RectHV rect;    // the axis-aligned rectangle corresponding to this node
         private Node lb;        // the left/bottom subtree
         private Node rt;        // the right/top subtree
+        private Node parent; // parent of the node
     }
 
 
@@ -46,29 +45,48 @@ public class KdTree {
             root.rect = new RectHV(0, 0, 1, 1);
         }
         else {
-            Node traverser = root; // Pointer for traversing.
+            Node pointer = root; // Pointer for traversing.
+            Node parent = root; // To keep track
+            Boolean leftInsert = true; // Helps determine where to insert the new node
+
             int i = 0; // Node level.
 
-            while (traverser != null) {
-                if (i % 2 == 0) { // Compare x coordinates; if smaller go left, else go right
-                    if (p.x() < traverser.p.x()) {
-                        traverser = traverser.lb;
+            while (pointer != null) {
+                parent = pointer;
+                leftInsert = true;
+
+                if (i % 2 == 0) {
+                    // Compare x coordinates; if smaller go left, else go right
+                    if (p.x() < pointer.p.x()) {
+                        pointer = pointer.lb;
                     }
                     else {
-                        traverser = traverser.rt;
+                        pointer = pointer.rt;
+                        leftInsert = false;
                     }
                 }
-                else { // Compare y coordinates; if below go left, else go right
-                    if (p.y() < traverser.p.y()) {
-                        traverser = traverser.lb;
+                else {
+                    // Compare y coordinates; if below go left, else go right
+                    if (p.y() < pointer.p.y()) {
+                        pointer = pointer.lb;
                     }
                     else {
-                        traverser = traverser.rt;
+                        pointer = pointer.rt;
+                        leftInsert = false;
                     }
                 }
+                i++; // Increment node level after each iteration
             }
             // Found an empty spot to make an insert
-            traverser.p = p;
+            Node n = new Node();
+            n.p = p;
+            if (leftInsert) {
+                parent.lb = n;
+            }
+            else {
+                parent.rt = n;
+            }
+
         }
 
         numberOfPoints++;
@@ -77,6 +95,14 @@ public class KdTree {
     // Does the set contain point p?
     public boolean contains(Point2D p) {
         exceptionIfNull(p);
+        // Recursively go through each node, comparing each point
+        return contains(p, root, 0);
+    }
+
+    // Overload to allow recursion
+    private boolean contains(Point2D p, Node n, int level) {
+        if (n == null) return false;
+        if (p.equals(n.p)) return true;
         return false;
     }
 
