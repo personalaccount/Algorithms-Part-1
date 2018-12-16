@@ -11,7 +11,7 @@ import java.util.Stack;
 
 public class KdTree {
 
-    private Node root;
+    private Node root = null; // Points to the root of KdTree
     private int numberOfPoints = 0;
 
     // 2d Tree node
@@ -26,12 +26,7 @@ public class KdTree {
 
     // Construct an empty set of points
     public KdTree() {
-        // Empty array of size 0
-    }
-
-    // Auxiliary method to check if the point is null
-    private void exceptionIfNull(Point2D p) {
-        if (p == null) throw new IllegalArgumentException();
+        root = new Node();
     }
 
     public boolean isEmpty() {
@@ -45,6 +40,37 @@ public class KdTree {
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
+        // Special case for an empty tree
+        if (isEmpty()) {
+            root.p = p;
+            root.rect = new RectHV(0, 0, 1, 1);
+        }
+        else {
+            Node traverser = root; // Pointer for traversing.
+            int i = 0; // Node level.
+
+            while (traverser != null) {
+                if (i % 2 == 0) { // Compare x coordinates; if smaller go left, else go right
+                    if (p.x() < traverser.p.x()) {
+                        traverser = traverser.lb;
+                    }
+                    else {
+                        traverser = traverser.rt;
+                    }
+                }
+                else { // Compare y coordinates; if below go left, else go right
+                    if (p.y() < traverser.p.y()) {
+                        traverser = traverser.lb;
+                    }
+                    else {
+                        traverser = traverser.rt;
+                    }
+                }
+            }
+            // Found an empty spot to make an insert
+            traverser.p = p;
+        }
+
         numberOfPoints++;
     }
 
@@ -75,20 +101,29 @@ public class KdTree {
 
     }
 
+    // Auxiliary method to check if the point is null
+    private void exceptionIfNull(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
+    }
+
     public static void main(String args[]) {
 
         //@Test Create a KdTree object
         KdTree kdt = new KdTree();
 
-        Point2D a = new Point2D(0.4, 0.4);
-        Point2D b = new Point2D(0.1, 0.2);
-        Point2D c = new Point2D(0.5, 0.2);
-        Point2D d = new Point2D(0.6, 0.5);
+//        Point2D a = new Point2D(0.7, 0.2);
+//        Point2D b = new Point2D(0.1, 0.2);
+//        Point2D c = new Point2D(0.5, 0.2);
+//        Point2D d = new Point2D(0.6, 0.5);
 
-        kdt.insert(a);
-        kdt.insert(b);
-        kdt.insert(c);
-        kdt.insert(d);
+        kdt.insert(new Point2D(0.7, 0.2));
+        kdt.insert(new Point2D(0.5, 0.4));
+        kdt.insert(new Point2D(0.2, 0.3));
+        kdt.insert(new Point2D(0.4, 0.7));
+        kdt.insert(new Point2D(0.9, 0.6));
+//        kdt.insert(b);
+//        kdt.insert(c);
+//        kdt.insert(d);
 
     }
 
