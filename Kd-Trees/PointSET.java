@@ -137,12 +137,14 @@ public class PointSET {
         StdOut.println("Nearest point to " + c.toString() + " is " + ps.nearest(c).toString());
 
         StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.01);
 
         StdDraw.setXscale(-0.4, 1.2);
         StdDraw.setYscale(-0.4, 1.2);
 
-        ps.draw();
         r.draw();
+
+        StdDraw.setPenRadius(0.01);
+        ps.draw();
+
     }
 }
