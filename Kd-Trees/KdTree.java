@@ -1,5 +1,5 @@
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Stack;
 
@@ -45,8 +45,8 @@ public class KdTree {
             root.rect = new RectHV(0, 0, 1, 1);
         }
         else {
-            Node pointer = root; // Pointer for traversing.
-            Node parent = root; // To keep track
+            Node pointer = root; // Pointer for traversing down the tree.
+            Node parent = root; // To keep track of the parent.
             Boolean leftInsert = true; // Helps determine where to insert the new node
 
             int i = 0; // Node level.
@@ -78,8 +78,11 @@ public class KdTree {
                 i++; // Increment node level after each iteration
             }
             // Found an empty spot to make an insert
+
+            // Create new node and make an insert
             Node n = new Node();
             n.p = p;
+
             if (leftInsert) {
                 parent.lb = n;
             }
@@ -103,7 +106,13 @@ public class KdTree {
     private boolean contains(Point2D p, Node n, int level) {
         if (n == null) return false;
         if (p.equals(n.p)) return true;
-        return false;
+        if (level % 2 == 0) {
+            //Compare by x; Move left if less and right otherwise
+            return contains(p, n.lb, level++);
+        }
+        else {
+            return contains(p, n.rt, level++);
+        }
     }
 
     // draw all points to standard draw
@@ -137,20 +146,22 @@ public class KdTree {
         //@Test Create a KdTree object
         KdTree kdt = new KdTree();
 
-//        Point2D a = new Point2D(0.7, 0.2);
 //        Point2D b = new Point2D(0.1, 0.2);
 //        Point2D c = new Point2D(0.5, 0.2);
 //        Point2D d = new Point2D(0.6, 0.5);
 
+        //@Test Insert points
         kdt.insert(new Point2D(0.7, 0.2));
         kdt.insert(new Point2D(0.5, 0.4));
         kdt.insert(new Point2D(0.2, 0.3));
         kdt.insert(new Point2D(0.4, 0.7));
         kdt.insert(new Point2D(0.9, 0.6));
-//        kdt.insert(b);
-//        kdt.insert(c);
-//        kdt.insert(d);
 
+        //@Test Contains
+        Point2D a = new Point2D(0.7, 0.2);
+        Point2D b = new Point2D(0.7, 0.3);
+        StdOut.println(kdt.contains(a));
+        StdOut.println(kdt.contains(b));
     }
 
 }
