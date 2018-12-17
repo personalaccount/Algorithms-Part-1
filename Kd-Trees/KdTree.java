@@ -1,6 +1,6 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdOut;
-
+import edu.princeton.cs.algs4.Point2D;
 import java.util.Stack;
 
 /**
@@ -117,9 +117,15 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
-
+        if (!isEmpty()) draw(root);
     }
 
+    // Recursevely go through each branch until null
+    private void draw(Node root) {
+        if (root.lb != null) draw(root.lb);
+        if (root.rt != null) draw(root.rt);
+        root.p.draw();
+    }
 
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
@@ -162,6 +168,10 @@ public class KdTree {
         Point2D b = new Point2D(0.7, 0.3);
         StdOut.println(kdt.contains(a));
         StdOut.println(kdt.contains(b));
+
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+        kdt.draw();
     }
 
 }
