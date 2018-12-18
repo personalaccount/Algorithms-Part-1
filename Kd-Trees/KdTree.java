@@ -154,10 +154,6 @@ public class KdTree {
         //@Test Create a KdTree object
         KdTree kdt = new KdTree();
 
-//        Point2D b = new Point2D(0.1, 0.2);
-//        Point2D c = new Point2D(0.5, 0.2);
-//        Point2D d = new Point2D(0.6, 0.5);
-
         //@Test Insert points
         kdt.insert(new Point2D(0.7, 0.2));
         kdt.insert(new Point2D(0.5, 0.4));
