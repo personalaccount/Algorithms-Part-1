@@ -84,12 +84,33 @@ public class KdTree {
             // Create new node and make an insert
             Node n = new Node();
             n.p = p;
+            n.parent = parent;
 
             if (leftInsert) {
                 parent.lb = n;
+
+                // Construct an enclosing rectangle on leftInsert
+                if (i % 2 == 0) {
+                    // Vertical line
+                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), p.x(), parent.rect.ymax());
+                }
+                else {
+                    // Horizontal line
+                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), p.y());
+                }
             }
             else {
                 parent.rt = n;
+
+                // Construct an enclosing rectangle on rightInsert
+                if (i % 2 == 0) {
+                    // Vertical line
+                    n.rect = new RectHV(p.x(), parent.rect.ymax(), parent.rect.xmax(), parent.parent.rect.ymax());
+                }
+                else {
+                    // Horizontal line
+                    n.rect = new RectHV(parent.p.x(), p.y(), parent.rect.xmax(), parent.rect.ymax());
+                }
             }
 
         }
@@ -127,6 +148,7 @@ public class KdTree {
         if (root.lb != null) draw(root.lb);
         if (root.rt != null) draw(root.rt);
         root.p.draw();
+        root.rect.draw();
     }
 
     public Iterable<Point2D> range(RectHV rect) {
