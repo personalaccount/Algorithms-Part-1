@@ -54,6 +54,10 @@ public class KdTree {
             int i = 0; // Node level.
 
             while (pointer != null) {
+
+                // Check for duplicates
+                if (pointer.p.equals(p)) return;
+
                 parent = pointer;
                 leftInsert = true;
 
@@ -82,35 +86,54 @@ public class KdTree {
             // Found an empty spot to make an insert
 
             // Create new node and make an insert
+
             Node n = new Node();
             n.p = p;
-            n.parent = parent;
 
             if (leftInsert) {
+
+                if (i % 2 == 0) {
+                    // Bottom of the parent
+                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.rect.xmax(), parent.p.y());
+                }
+                else {
+                    // Left of the parent point)
+                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), parent.rect.ymax());
+                }
+
+//                // Construct an enclosing rectangle on leftInsert
+//                if (i % 2 == 0) {
+//                    // Vertical line
+//                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), p.x(), parent.rect.ymax());
+//                }
+//                else {
+//                    // Horizontal line
+//                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), p.y());
+//                }
                 parent.lb = n;
 
-                // Construct an enclosing rectangle on leftInsert
-                if (i % 2 == 0) {
-                    // Vertical line
-                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), p.x(), parent.rect.ymax());
-                }
-                else {
-                    // Horizontal line
-                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), p.y());
-                }
             }
             else {
-                parent.rt = n;
 
-                // Construct an enclosing rectangle on rightInsert
                 if (i % 2 == 0) {
-                    // Vertical line
-                    n.rect = new RectHV(p.x(), parent.rect.ymax(), parent.rect.xmax(), parent.parent.rect.ymax());
+                    // Top of the parent
+                    n.rect = new RectHV(parent.rect.xmin(), parent.p.y(), parent.rect.xmax(), parent.rect.ymax());
                 }
                 else {
-                    // Horizontal line
-                    n.rect = new RectHV(parent.p.x(), p.y(), parent.rect.xmax(), parent.rect.ymax());
+                    // Right of the parent
+                    n.rect = new RectHV(parent.p.x(), parent.rect.ymin(), parent.rect.xmax(), parent.rect.ymax());
                 }
+//                // Construct an enclosing rectangle on rightInsert
+//                if (i % 2 == 0) {
+//                    // Vertical line
+//                    n.rect = new RectHV(p.x(), parent.rect.ymax(), parent.rect.xmax(), parent.parent.rect.ymax());
+//                }
+//                else {
+//                    // Horizontal line
+//                    n.rect = new RectHV(parent.p.x(), p.y(), parent.rect.xmax(), parent.rect.ymax());
+//                }
+                parent.rt = n;
+
             }
 
         }
@@ -140,15 +163,37 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
-        if (!isEmpty()) draw(root);
+        if (!isEmpty()) draw(root, 0);
     }
 
     // Recursevely go through each branch until null
-    private void draw(Node root) {
-        if (root.lb != null) draw(root.lb);
-        if (root.rt != null) draw(root.rt);
+    private void draw(Node root, int level) {
+
+        // Draw a point
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
         root.p.draw();
-        root.rect.draw();
+
+        // Draw subdivisions
+
+        StdDraw.setPenRadius();
+        if (level % 2 == 0) {
+            // Vertical
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(root.p.x(), root.rect.ymin(), root.p.x(), root.rect.ymax());
+        }
+        else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(root.rect.xmin(), root.p.y(), root.rect.xmax(), root.p.y());
+        }
+
+        // Increment level
+        level++;
+
+        if (root.lb != null) draw(root.lb, level);
+        if (root.rt != null) draw(root.rt, level);
+
+//        root.rect.draw();
     }
 
     public Iterable<Point2D> range(RectHV rect) {
@@ -178,6 +223,9 @@ public class KdTree {
 
         //@Test Insert points
         kdt.insert(new Point2D(0.7, 0.2));
+        kdt.insert(new Point2D(0.7, 0.2));
+        kdt.insert(new Point2D(0.7, 0.2));
+        kdt.insert(new Point2D(0.7, 0.2));
         kdt.insert(new Point2D(0.5, 0.4));
         kdt.insert(new Point2D(0.2, 0.3));
         kdt.insert(new Point2D(0.4, 0.7));
@@ -189,8 +237,6 @@ public class KdTree {
         StdOut.println(kdt.contains(a));
         StdOut.println(kdt.contains(b));
 
-        StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.01);
         kdt.draw();
     }
 
