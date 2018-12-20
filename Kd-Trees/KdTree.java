@@ -1,7 +1,8 @@
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Stack;
 
@@ -21,7 +22,6 @@ public class KdTree {
         private RectHV rect;    // the axis-aligned rectangle corresponding to this node
         private Node lb;        // the left/bottom subtree
         private Node rt;        // the right/top subtree
-        private Node parent; // parent of the node
     }
 
 
@@ -38,6 +38,41 @@ public class KdTree {
     public int size() {
         return numberOfPoints;
     }
+
+//    public void insert(Point2D p) {
+//        exceptionIfNull(p);
+//        Node n = insert(root, root, p, 0);
+//    }
+//
+//    private Node insert(Node parent, Node pointer, Point2D p, int level) {
+//        // Treeset is empty
+//        if (pointer == null) {
+//            pointer = new Node();
+//            pointer.p = p;
+////            pointer.rect = new RectHV(0, 0, 1, 1);
+//
+//            numberOfPoints++;
+//
+//            return pointer;
+//        }
+//
+//        // Check for duplicates
+////        if (pointer.p.equals(p)) throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
+//
+//        boolean leftBottom = true;
+//
+//        if (level % 2 == 0) {
+//            // Compare X coordinates
+//            if (p.x() > pointer.p.x()) leftBottom = false;
+//        }
+//        else {
+//            // Compare Y coordinates
+//            if (p.y() > pointer.p.y()) leftBottom = false;
+//        }
+//
+//    if(leftBottom) return insert(parent, pointer.lb, p, ++level);
+//    return insert(parent, pointer.rt, p, ++level);
+//}
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
@@ -56,7 +91,7 @@ public class KdTree {
             while (pointer != null) {
 
                 // Check for duplicates
-                if (pointer.p.equals(p)) return;
+                if (p.equals(pointer.p)) return;
 
                 parent = pointer;
                 leftInsert = true;
@@ -100,16 +135,6 @@ public class KdTree {
                     // Left of the parent point)
                     n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), parent.rect.ymax());
                 }
-
-//                // Construct an enclosing rectangle on leftInsert
-//                if (i % 2 == 0) {
-//                    // Vertical line
-//                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), p.x(), parent.rect.ymax());
-//                }
-//                else {
-//                    // Horizontal line
-//                    n.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), p.y());
-//                }
                 parent.lb = n;
 
             }
@@ -123,15 +148,6 @@ public class KdTree {
                     // Right of the parent
                     n.rect = new RectHV(parent.p.x(), parent.rect.ymin(), parent.rect.xmax(), parent.rect.ymax());
                 }
-//                // Construct an enclosing rectangle on rightInsert
-//                if (i % 2 == 0) {
-//                    // Vertical line
-//                    n.rect = new RectHV(p.x(), parent.rect.ymax(), parent.rect.xmax(), parent.parent.rect.ymax());
-//                }
-//                else {
-//                    // Horizontal line
-//                    n.rect = new RectHV(parent.p.x(), p.y(), parent.rect.xmax(), parent.rect.ymax());
-//                }
                 parent.rt = n;
 
             }
@@ -154,10 +170,10 @@ public class KdTree {
         if (p.equals(n.p)) return true;
         if (level % 2 == 0) {
             //Compare by x; Move left if less and right otherwise
-            return contains(p, n.lb, level++);
+            return contains(p, n.lb, ++level);
         }
         else {
-            return contains(p, n.rt, level++);
+            return contains(p, n.rt, ++level);
         }
     }
 
@@ -175,7 +191,6 @@ public class KdTree {
         root.p.draw();
 
         // Draw subdivisions
-
         StdDraw.setPenRadius();
         if (level % 2 == 0) {
             // Vertical
@@ -183,6 +198,7 @@ public class KdTree {
             StdDraw.line(root.p.x(), root.rect.ymin(), root.p.x(), root.rect.ymax());
         }
         else {
+            // Horizontal
             StdDraw.setPenColor(StdDraw.BLUE);
             StdDraw.line(root.rect.xmin(), root.p.y(), root.rect.xmax(), root.p.y());
         }
@@ -219,25 +235,28 @@ public class KdTree {
     public static void main(String args[]) {
 
         //@Test Create a KdTree object
-        KdTree kdt = new KdTree();
+        KdTree kdtree = new KdTree();
 
         //@Test Insert points
-        kdt.insert(new Point2D(0.7, 0.2));
-        kdt.insert(new Point2D(0.7, 0.2));
-        kdt.insert(new Point2D(0.7, 0.2));
-        kdt.insert(new Point2D(0.7, 0.2));
-        kdt.insert(new Point2D(0.5, 0.4));
-        kdt.insert(new Point2D(0.2, 0.3));
-        kdt.insert(new Point2D(0.4, 0.7));
-        kdt.insert(new Point2D(0.9, 0.6));
+        String filename = "kdtree-tests/circle10.txt";
+        In in = new In(filename);
 
-        //@Test Contains
-        Point2D a = new Point2D(0.7, 0.2);
-        Point2D b = new Point2D(0.7, 0.3);
-        StdOut.println(kdt.contains(a));
-        StdOut.println(kdt.contains(b));
+        while (!in.isEmpty()) {
+            double x = in.readDouble();
+            double y = in.readDouble();
+            Point2D p = new Point2D(x, y);
+            kdtree.insert(p);
+        }
 
-        kdt.draw();
+        //@Test draw points
+        kdtree.draw();
+
+//        //@Test Contains
+        Point2D a = new Point2D(0.5, 1.0);
+        Point2D b = new Point2D(0.024472, 0.654508);
+        StdOut.println(kdtree.contains(a));
+        StdOut.println(kdtree.contains(b));
+
     }
 
 }
