@@ -173,13 +173,24 @@ public class KdTree {
     // Overload to allow recursion
     private boolean contains(Point2D p, Node n, int level) {
         if (n == null) return false;
-        if (p.equals(n.p)) return true;
-        if (level % 2 == 0) {
+        if (n.p.equals(p)) return true;
+
+        // Target point is not found
+
+        // Set the compare flag
+        Boolean compareByX = (level % 2 == 0);
+
+        // Increment level for the next iteration
+        level++;
+
+        if (compareByX) {
             //Compare by x; Move left if less and right otherwise
-            return contains(p, n.lb, ++level);
+            if (p.x() < n.p.x()) return contains(p, n.lb, level);
+            return contains(p, n.rt, level);
         }
-        else {
-            return contains(p, n.rt, ++level);
+        else{
+            if (p.y() < n.p.y()) return contains(p, n.lb, level);
+            return contains(p, n.rt, level);
         }
     }
 
@@ -241,7 +252,7 @@ public class KdTree {
     // Recursevely add all points
     private void addPointsToRange(RectHV r, Node n) {
         if (n == null) return;
-        if(r.contains(n.p)) pointsInside.push(n.p);
+        if (r.contains(n.p)) pointsInside.push(n.p);
         addPointsToRange(r, n.lb);
         addPointsToRange(r, n.rt);
     }
@@ -261,6 +272,15 @@ public class KdTree {
 
         //@Test Create a KdTree object
         KdTree kdtree = new KdTree();
+        KdTree kdtree2 = new KdTree();
+
+        kdtree2.insert(new Point2D(.7,.2));
+        kdtree2.insert(new Point2D(.5,.4));
+        kdtree2.insert(new Point2D(.2,.3));
+        kdtree2.insert(new Point2D(.4,.7));
+        kdtree2.insert(new Point2D(.9,.6));
+
+        StdOut.println(kdtree2.contains(new Point2D(.4,.7)));
 
         //@Test Insert points
         String filename = "kdtree-tests/circle10.txt";
@@ -277,19 +297,19 @@ public class KdTree {
         kdtree.draw();
 
 //        //@Test Contains
-        Point2D a = new Point2D(0.5, 1.0);
+        Point2D a = new Point2D(0.500000, 1.000000);
         Point2D b = new Point2D(0.024472, 0.654508);
         StdOut.println(kdtree.contains(a));
         StdOut.println(kdtree.contains(b));
 
         //@Test rectangle
-        RectHV testRect = new RectHV(0.02, 0.2, 0.7, 0.7);
+        RectHV testRect = new RectHV(0, 0.2, 0.7, 1);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.005);
 
         testRect.draw();
 
-        for (Point2D p: kdtree.range(testRect)) {
+        for (Point2D p : kdtree.range(testRect)) {
             StdOut.println(p.toString());
         }
     }
