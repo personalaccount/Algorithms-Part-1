@@ -16,6 +16,9 @@ public class KdTree {
 
     private Node root; // Points to the root of KdTree
     private int numberOfPoints = 0;
+    // Iterable Stack object to hold matching points
+    Stack<Point2D> pointsInside = new Stack<>();
+
 
     private static class Node {
         private Point2D p;      // the point
@@ -57,7 +60,7 @@ public class KdTree {
 //        }
 //
 //        // Check for duplicates
-////        if (pointer.p.equals(p)) throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
+//        if (pointer.p.equals(p)) throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
 //
 //        boolean leftBottom = true;
 //
@@ -70,9 +73,10 @@ public class KdTree {
 //            if (p.y() > pointer.p.y()) leftBottom = false;
 //        }
 //
-//    if(leftBottom) return insert(parent, pointer.lb, p, ++level);
-//    return insert(parent, pointer.rt, p, ++level);
-//}
+//        if (leftBottom) pointer.lb = insert(parent, pointer.lb, p, ++level);
+//        pointer.rt = insert(parent, pointer.rt, p, ++level);
+//        return pointer;
+//    }
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
@@ -91,7 +95,9 @@ public class KdTree {
             while (pointer != null) {
 
                 // Check for duplicates
-                if (p.equals(pointer.p)) return;
+                if (p.equals(pointer.p))
+                    throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
+                ;
 
                 parent = pointer;
                 leftInsert = true;
@@ -215,10 +221,29 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
 
-        // Iterable Stack object to hold matching points
-        Stack<Point2D> pointsInside = new Stack<>();
+        findPointsInRange(rect, root);
 
         return pointsInside;
+    }
+
+    private void findPointsInRange(RectHV rect, Node n) {
+        // Check if this rectangle intersects with the one corresponding to the node
+        if (rect.intersects(n.rect)) {
+            addPointsToRange(rect, n);
+        }
+        else {
+            findPointsInRange(rect, n.lb);
+            findPointsInRange(rect, n.rt);
+        }
+
+    }
+
+    // Recursevely add all points
+    private void addPointsToRange(RectHV r, Node n) {
+        if (n == null) return;
+        if(r.contains(n.p)) pointsInside.push(n.p);
+        addPointsToRange(r, n.lb);
+        addPointsToRange(r, n.rt);
     }
 
     public Point2D nearest(Point2D p) {
@@ -257,6 +282,16 @@ public class KdTree {
         StdOut.println(kdtree.contains(a));
         StdOut.println(kdtree.contains(b));
 
+        //@Test rectangle
+        RectHV testRect = new RectHV(0.02, 0.2, 0.7, 0.7);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.005);
+
+        testRect.draw();
+
+        for (Point2D p: kdtree.range(testRect)) {
+            StdOut.println(p.toString());
+        }
     }
 
 }
