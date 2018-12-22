@@ -259,6 +259,7 @@ public class KdTree {
 
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
+
         return p;
 
     }
@@ -277,6 +278,7 @@ public class KdTree {
         kdtree2.insert(new Point2D(.7,.2));
         kdtree2.insert(new Point2D(.5,.4));
         kdtree2.insert(new Point2D(.2,.3));
+        kdtree2.insert(new Point2D(.1,.3));
         kdtree2.insert(new Point2D(.4,.7));
         kdtree2.insert(new Point2D(.9,.6));
 
