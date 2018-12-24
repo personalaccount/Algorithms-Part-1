@@ -17,7 +17,7 @@ public class KdTree {
     private Node root; // Points to the root of KdTree
     private int numberOfPoints = 0;
     // Iterable Stack object to hold matching points
-    Stack<Point2D> pointsInside = new Stack<>();
+    Stack<Point2D> pointsInside;
 
 
     private static class Node {
@@ -188,7 +188,7 @@ public class KdTree {
             if (p.x() < n.p.x()) return contains(p, n.lb, level);
             return contains(p, n.rt, level);
         }
-        else{
+        else {
             if (p.y() < n.p.y()) return contains(p, n.lb, level);
             return contains(p, n.rt, level);
         }
@@ -232,6 +232,10 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
 
+        // Initialize stack
+        pointsInside = new Stack<>();
+
+        // Find all the relevant points
         findPointsInRange(rect, root);
 
         return pointsInside;
@@ -275,14 +279,14 @@ public class KdTree {
         KdTree kdtree = new KdTree();
         KdTree kdtree2 = new KdTree();
 
-        kdtree2.insert(new Point2D(.7,.2));
-        kdtree2.insert(new Point2D(.5,.4));
-        kdtree2.insert(new Point2D(.2,.3));
-        kdtree2.insert(new Point2D(.1,.3));
-        kdtree2.insert(new Point2D(.4,.7));
-        kdtree2.insert(new Point2D(.9,.6));
+        kdtree2.insert(new Point2D(.7, .2));
+        kdtree2.insert(new Point2D(.5, .4));
+        kdtree2.insert(new Point2D(.2, .3));
+        kdtree2.insert(new Point2D(.1, .3));
+        kdtree2.insert(new Point2D(.4, .7));
+        kdtree2.insert(new Point2D(.9, .6));
 
-        StdOut.println(kdtree2.contains(new Point2D(.4,.7)));
+        StdOut.println(kdtree2.contains(new Point2D(.4, .7)));
 
         //@Test Insert points
         String filename = "kdtree-tests/circle10.txt";
