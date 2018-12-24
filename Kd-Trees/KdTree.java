@@ -253,7 +253,7 @@ public class KdTree {
 
     }
 
-    // Recursevely add all points
+    // Recursevely add all relevant points
     private void addPointsToRange(RectHV r, Node n) {
         if (n == null) return;
         if (r.contains(n.p)) pointsInside.push(n.p);
@@ -264,11 +264,64 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
 
-        return p;
-
+        // Closest distance sofar
+        return nearest(p, root, root.rect.distanceSquaredTo(p), root.p);
     }
 
-    // Auxiliary method to check if the point is null
+    /**
+     * Auxiliary method to recursively go through the tree
+     * <p>
+     * If the closest point discovered so far is closer than the distance
+     * between the query point and the rectangle corresponding to a node,
+     * there is no need to explore that node (or its subtrees).
+     * <p>
+     * That is, search a node only only if it might contain a point
+     * that is closer than the best one found so far.
+     */
+
+    private Point2D nearest(Point2D p, Node n, double closestDistanceYet, Point2D closestPointYet) {
+        if (n == null) return closestPointYet;
+        // Using squared distance to compare the squares of the two distances to avoid the expensive operation of taking square roots.
+
+        // Check the distance to the rectangle if it's larger then abort.
+        if (n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
+
+
+        double sqrDistance = p.distanceSquaredTo(n.p); // Distance from query point to node's point
+
+        // If this nodes' point is closer, reassign the values
+        if (sqrDistance < closestDistanceYet) {
+            closestDistanceYet = sqrDistance;
+            closestPointYet = n.p;
+        }
+
+        // Descend down to subtrees and determine the closest points if there are any.
+
+        Point2D lbPoint = nearest(p, n.lb, closestDistanceYet, closestPointYet);
+        Point2D rtPoint = nearest(p, n.rt, closestDistanceYet, closestPointYet);
+
+        // Compare points from each subtree
+        if (lbPoint != null) {
+            double lbPointSqrDistance = lbPoint.distanceSquaredTo(p);
+            if (lbPointSqrDistance < closestDistanceYet) {
+                closestDistanceYet = lbPointSqrDistance;
+                closestPointYet = lbPoint;
+            }
+        }
+
+        if (rtPoint != null) {
+            double rtPointSqrDistance = rtPoint.distanceTo(p);
+            if (rtPointSqrDistance < closestDistanceYet) {
+                return rtPoint;
+            }
+        }
+
+        return closestPointYet;
+    }
+
+
+        // Auxiliary method to check if the point is null.
+
     private void exceptionIfNull(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
     }
