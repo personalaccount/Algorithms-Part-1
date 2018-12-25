@@ -266,7 +266,7 @@ public class KdTree {
         exceptionIfNull(p);
 
         // Closest distance sofar
-        return nearest(p, root, root.rect.distanceSquaredTo(p), root.p);
+        return nearest(p, root, root.p.distanceSquaredTo(p), root.p);
     }
 
     /**
@@ -285,8 +285,9 @@ public class KdTree {
         // Using squared distance to compare the squares of the two distances to avoid the expensive operation of taking square roots.
 
         // Check the distance to the rectangle if it's larger then abort.
-        if (n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
-
+        if (!n.equals(root)) {
+            if(n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
+        }
 
         double sqrDistance = p.distanceSquaredTo(n.p); // Distance from query point to node's point
 
