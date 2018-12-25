@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.awt.*;
 import java.util.Stack;
 
 /**
@@ -320,7 +321,7 @@ public class KdTree {
     }
 
 
-        // Auxiliary method to check if the point is null.
+    // Auxiliary method to check if the point is null.
 
     private void exceptionIfNull(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
@@ -335,7 +336,6 @@ public class KdTree {
         kdtree2.insert(new Point2D(.7, .2));
         kdtree2.insert(new Point2D(.5, .4));
         kdtree2.insert(new Point2D(.2, .3));
-        kdtree2.insert(new Point2D(.1, .3));
         kdtree2.insert(new Point2D(.4, .7));
         kdtree2.insert(new Point2D(.9, .6));
 
@@ -353,11 +353,12 @@ public class KdTree {
         }
 
         //@Test draw points
-        kdtree.draw();
+        kdtree2.draw();
 
-//        //@Test Contains
+        //@Test Contains
         Point2D a = new Point2D(0.500000, 1.000000);
         Point2D b = new Point2D(0.024472, 0.654508);
+
         StdOut.println(kdtree.contains(a));
         StdOut.println(kdtree.contains(b));
 
@@ -365,12 +366,24 @@ public class KdTree {
         RectHV testRect = new RectHV(0, 0.2, 0.7, 1);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.005);
-
-        testRect.draw();
+//        testRect.draw();
 
         for (Point2D p : kdtree.range(testRect)) {
             StdOut.println(p.toString());
         }
+
+        //@Test nearest neighbor
+        Point2D c = new Point2D(0.65, 0.44);
+
+        StdDraw.setPenColor(Color.GREEN);
+        StdDraw.setPenRadius(0.01);
+        c.draw();
+
+        Point2D nearest = kdtree2.nearest(c);
+        StdOut.println(nearest.toString());
+
+        StdDraw.setPenRadius();
+        StdDraw.line(c.x(), c.y(), nearest.x(), nearest.y());
     }
 
 }
