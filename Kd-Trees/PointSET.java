@@ -104,8 +104,8 @@ public class PointSET {
             }
         }
 
-    return closestPoint;
-}
+        return closestPoint;
+    }
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {

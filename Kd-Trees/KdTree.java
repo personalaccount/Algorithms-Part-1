@@ -3,8 +3,6 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.awt.*;
 import java.util.Stack;
 
 /**
@@ -18,8 +16,7 @@ public class KdTree {
     private Node root; // Points to the root of KdTree
     private int numberOfPoints = 0;
     // Iterable Stack object to hold matching points
-    Stack<Point2D> pointsInside;
-
+    private Stack<Point2D> pointsInside;
 
     private static class Node {
         private Point2D p;      // the point
@@ -42,42 +39,6 @@ public class KdTree {
     public int size() {
         return numberOfPoints;
     }
-
-//    public void insert(Point2D p) {
-//        exceptionIfNull(p);
-//        Node n = insert(root, root, p, 0);
-//    }
-//
-//    private Node insert(Node parent, Node pointer, Point2D p, int level) {
-//        // Treeset is empty
-//        if (pointer == null) {
-//            pointer = new Node();
-//            pointer.p = p;
-////            pointer.rect = new RectHV(0, 0, 1, 1);
-//
-//            numberOfPoints++;
-//
-//            return pointer;
-//        }
-//
-//        // Check for duplicates
-//        if (pointer.p.equals(p)) throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
-//
-//        boolean leftBottom = true;
-//
-//        if (level % 2 == 0) {
-//            // Compare X coordinates
-//            if (p.x() > pointer.p.x()) leftBottom = false;
-//        }
-//        else {
-//            // Compare Y coordinates
-//            if (p.y() > pointer.p.y()) leftBottom = false;
-//        }
-//
-//        if (leftBottom) pointer.lb = insert(parent, pointer.lb, p, ++level);
-//        pointer.rt = insert(parent, pointer.rt, p, ++level);
-//        return pointer;
-//    }
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
@@ -380,7 +341,7 @@ public class KdTree {
         //@Test nearest neighbor
         Point2D c = new Point2D(0.65, 0.94);
 
-        StdDraw.setPenColor(Color.GREEN);
+        StdDraw.setPenColor(StdDraw.GREEN);
         StdDraw.setPenRadius(0.01);
         c.draw();
 
