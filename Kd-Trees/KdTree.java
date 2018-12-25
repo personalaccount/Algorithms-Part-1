@@ -284,9 +284,10 @@ public class KdTree {
         if (n == null) return closestPointYet;
         // Using squared distance to compare the squares of the two distances to avoid the expensive operation of taking square roots.
 
-        // Check the distance to the rectangle if it's larger then abort.
+        // Exception for the root node, since distance to root rectangle will always be 0
         if (!n.equals(root)) {
-            if(n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
+            // Check the distance to the rectangle if it's larger then abort.
+            if (n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
         }
 
         double sqrDistance = p.distanceSquaredTo(n.p); // Distance from query point to node's point
@@ -312,7 +313,7 @@ public class KdTree {
         }
 
         if (rtPoint != null) {
-            double rtPointSqrDistance = rtPoint.distanceTo(p);
+            double rtPointSqrDistance = rtPoint.distanceSquaredTo(p);
             if (rtPointSqrDistance < closestDistanceYet) {
                 return rtPoint;
             }
@@ -331,19 +332,22 @@ public class KdTree {
     public static void main(String args[]) {
 
         //@Test Create a KdTree object
-        KdTree kdtree = new KdTree();
         KdTree kdtree2 = new KdTree();
 
+        //@Test insert
         kdtree2.insert(new Point2D(.7, .2));
         kdtree2.insert(new Point2D(.5, .4));
         kdtree2.insert(new Point2D(.2, .3));
         kdtree2.insert(new Point2D(.4, .7));
         kdtree2.insert(new Point2D(.9, .6));
 
+        //@Test contains
         StdOut.println(kdtree2.contains(new Point2D(.4, .7)));
 
-        //@Test Insert points
-        String filename = "kdtree-tests/circle10.txt";
+        //@Test all methods
+        KdTree kdtree = new KdTree();
+
+        String filename = "kdtree-tests/circle100.txt";
         In in = new In(filename);
 
         while (!in.isEmpty()) {
@@ -354,7 +358,7 @@ public class KdTree {
         }
 
         //@Test draw points
-        kdtree2.draw();
+        kdtree.draw();
 
         //@Test Contains
         Point2D a = new Point2D(0.500000, 1.000000);
@@ -374,13 +378,13 @@ public class KdTree {
         }
 
         //@Test nearest neighbor
-        Point2D c = new Point2D(0.65, 0.44);
+        Point2D c = new Point2D(0.65, 0.94);
 
         StdDraw.setPenColor(Color.GREEN);
         StdDraw.setPenRadius(0.01);
         c.draw();
 
-        Point2D nearest = kdtree2.nearest(c);
+        Point2D nearest = kdtree.nearest(c);
         StdOut.println(nearest.toString());
 
         StdDraw.setPenRadius();
