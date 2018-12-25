@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Stack;
 
 /**
@@ -133,6 +134,7 @@ public class KdTree {
 
     // Overload to allow recursion
     private boolean contains(Point2D p, Node n, int level) {
+        if (isEmpty()) return false;
         if (n == null) return false;
         if (n.p.equals(p)) return true;
 
@@ -197,7 +199,7 @@ public class KdTree {
         pointsInside = new Stack<>();
 
         // Find all the relevant points
-        findPointsInRange(rect, root);
+        if (!isEmpty()) findPointsInRange(rect, root);
 
         return pointsInside;
     }
@@ -293,6 +295,7 @@ public class KdTree {
 
         //@Test Create a KdTree object
         KdTree kdtree2 = new KdTree();
+        KdTree kdtree3 = new KdTree();
 
         //@Test insert
         kdtree2.insert(new Point2D(0.7, 0.2));
@@ -321,7 +324,7 @@ public class KdTree {
         //@Test all methods
         KdTree kdtree = new KdTree();
 
-        String filename = "kdtree-tests/circle100.txt";
+        String filename = "kdtree-tests/circle10.txt";
         In in = new In(filename);
 
         while (!in.isEmpty()) {
@@ -338,11 +341,11 @@ public class KdTree {
         Point2D a = new Point2D(0.500000, 1.000000);
         Point2D b = new Point2D(0.024472, 0.654508);
 
-        StdOut.println(kdtree.contains(a));
-        StdOut.println(kdtree.contains(b));
+        StdOut.println(kdtree3.contains(a));
+        StdOut.println(kdtree3.contains(b));
 
         //@Test rectangle
-        RectHV testRect = new RectHV(0.0, 0.2, 0.7, 1.0);
+        RectHV testRect = new RectHV(0.07, 0.17, 0.69, 0.93);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.005);
 //        testRect.draw();

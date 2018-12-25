@@ -14,7 +14,7 @@ import java.util.TreeSet;
 
 public class PointSET {
 
-    private TreeSet<Point2D> points;
+    private final TreeSet<Point2D> points;
 
     // Construct an empty set of points
     public PointSET() {
@@ -76,25 +76,12 @@ public class PointSET {
         exceptionIfNull(p);
         if (points.isEmpty()) return null;
 
-        // Variable used as a switch
-        boolean firstPass = true;
-
         // Holds the closest point
         Point2D closestPoint = points.first();
         double closestDistance = closestPoint.distanceSquaredTo(p);
 
         // Loop through the points and find the closest
         for (Point2D currentPoint : points) {
-
-            // Skip if the point is itself
-            // if (currentPoint.equals(p)) continue;
-
-//            // Update placeholders on first pass
-//            if (firstPass) {
-//                closestPoint = currentPoint;
-//                closestDistance = currentPoint.distanceSquaredTo(p);
-//                firstPass = false;
-//            }
 
             double currentDistance = currentPoint.distanceSquaredTo(p);
 
