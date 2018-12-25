@@ -50,7 +50,7 @@ public class KdTree {
         else {
             Node pointer = root; // Pointer for traversing down the tree.
             Node parent = root; // To keep track of the parent.
-            Boolean leftInsert = true; // Helps determine where to insert the new node
+            boolean leftInsert = true; // Helps determine where to insert the new node
 
             int i = 0; // Node level.
 
@@ -59,7 +59,6 @@ public class KdTree {
                 // Check for duplicates
                 if (p.equals(pointer.p))
                     throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
-                ;
 
                 parent = pointer;
                 leftInsert = true;
@@ -128,7 +127,7 @@ public class KdTree {
     // Does the set contain point p?
     public boolean contains(Point2D p) {
         exceptionIfNull(p);
-        // Recursively go through each node, comparing each point
+        // Recursively go through each node, comparing each point.
         return contains(p, root, 0);
     }
 
@@ -137,16 +136,16 @@ public class KdTree {
         if (n == null) return false;
         if (n.p.equals(p)) return true;
 
-        // Target point is not found
+        // Target point is not found.
 
-        // Set the compare flag
-        Boolean compareByX = (level % 2 == 0);
+        // Set the compare flag.
+        boolean compareByX = (level % 2 == 0);
 
-        // Increment level for the next iteration
+        // Increment level for the next iteration.
         level++;
 
         if (compareByX) {
-            //Compare by x; Move left if less and right otherwise
+            // Compare by x; Move left if less and right otherwise.
             if (p.x() < n.p.x()) return contains(p, n.lb, level);
             return contains(p, n.rt, level);
         }
@@ -162,31 +161,31 @@ public class KdTree {
     }
 
     // Recursevely go through each branch until null
-    private void draw(Node root, int level) {
+    private void draw(Node n, int level) {
 
         // Draw a point
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
-        root.p.draw();
+        n.p.draw();
 
         // Draw subdivisions
         StdDraw.setPenRadius();
         if (level % 2 == 0) {
             // Vertical
             StdDraw.setPenColor(StdDraw.RED);
-            StdDraw.line(root.p.x(), root.rect.ymin(), root.p.x(), root.rect.ymax());
+            StdDraw.line(n.p.x(), n.rect.ymin(), n.p.x(), n.rect.ymax());
         }
         else {
             // Horizontal
             StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.line(root.rect.xmin(), root.p.y(), root.rect.xmax(), root.p.y());
+            StdDraw.line(n.rect.xmin(), n.p.y(), n.rect.xmax(), n.p.y());
         }
 
         // Increment level
         level++;
 
-        if (root.lb != null) draw(root.lb, level);
-        if (root.rt != null) draw(root.rt, level);
+        if (n.lb != null) draw(n.lb, level);
+        if (n.rt != null) draw(n.rt, level);
 
 //        root.rect.draw();
     }
@@ -290,20 +289,20 @@ public class KdTree {
         if (p == null) throw new IllegalArgumentException();
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         //@Test Create a KdTree object
         KdTree kdtree2 = new KdTree();
 
         //@Test insert
-        kdtree2.insert(new Point2D(.7, .2));
-        kdtree2.insert(new Point2D(.5, .4));
-        kdtree2.insert(new Point2D(.2, .3));
-        kdtree2.insert(new Point2D(.4, .7));
-        kdtree2.insert(new Point2D(.9, .6));
+        kdtree2.insert(new Point2D(0.7, 0.2));
+        kdtree2.insert(new Point2D(0.5, 0.4));
+        kdtree2.insert(new Point2D(0.2, 0.3));
+        kdtree2.insert(new Point2D(0.4, 0.7));
+        kdtree2.insert(new Point2D(0.9, 0.6));
 
         //@Test contains
-        StdOut.println(kdtree2.contains(new Point2D(.4, .7)));
+        StdOut.println(kdtree2.contains(new Point2D(0.4, 0.7)));
 
         //@Test all methods
         KdTree kdtree = new KdTree();
@@ -329,7 +328,7 @@ public class KdTree {
         StdOut.println(kdtree.contains(b));
 
         //@Test rectangle
-        RectHV testRect = new RectHV(0, 0.2, 0.7, 1);
+        RectHV testRect = new RectHV(0.0, 0.2, 0.7, 1.0);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.005);
 //        testRect.draw();
