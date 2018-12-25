@@ -13,7 +13,7 @@ import java.util.Stack;
 
 public class KdTree {
 
-    private Node root; // Points to the root of KdTree
+    private final Node root; // Points to the root of KdTree
     private int numberOfPoints = 0;
     // Iterable Stack object to hold matching points
     private Stack<Point2D> pointsInside;
@@ -57,8 +57,8 @@ public class KdTree {
             while (pointer != null) {
 
                 // Check for duplicates
-                if (p.equals(pointer.p))
-                    throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
+                if (p.equals(pointer.p)) return;
+//                    throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
 
                 parent = pointer;
                 leftInsert = true;
@@ -300,6 +300,20 @@ public class KdTree {
         kdtree2.insert(new Point2D(0.2, 0.3));
         kdtree2.insert(new Point2D(0.4, 0.7));
         kdtree2.insert(new Point2D(0.9, 0.6));
+
+        //@Test duplicate insert
+        kdtree2.insert(new Point2D(0.7, 0.2));
+        kdtree2.insert(new Point2D(0.5, 0.4));
+        kdtree2.insert(new Point2D(0.5, 0.4));
+        kdtree2.insert(new Point2D(0.5, 0.4));
+        kdtree2.insert(new Point2D(0.2, 0.3));
+        kdtree2.insert(new Point2D(0.2, 0.3));
+        kdtree2.insert(new Point2D(0.2, 0.3));
+        kdtree2.insert(new Point2D(0.4, 0.7));
+        kdtree2.insert(new Point2D(0.4, 0.7));
+        kdtree2.insert(new Point2D(0.4, 0.7));
+        kdtree2.insert(new Point2D(0.9, 0.6));
+
 
         //@Test contains
         StdOut.println(kdtree2.contains(new Point2D(0.4, 0.7)));
