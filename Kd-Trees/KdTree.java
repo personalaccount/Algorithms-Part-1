@@ -216,7 +216,7 @@ public class KdTree {
     }
 
     private void findPointsInRange(RectHV r, Node n, int level) {
-        if(n == null) return;
+        if (n == null) return;
         // Check if this rectangle intersects with the one corresponding to the node
         if (r.contains(n.p)) pointsInside.push(n.p);
 
@@ -235,12 +235,14 @@ public class KdTree {
                 findPointsInRange(r, n.lb, level);
                 findPointsInRange(r, n.rt, level);
             }
-        } else{
+        }
+        else {
             // Compare with the horizontal line
             if (r.ymax() < n.p.y()) {
                 // Continue to the left (bottom) subtree, avoiding the right one
                 findPointsInRange(r, n.lb, level);
-            } else{
+            }
+            else {
                 // Check both subtrees
                 findPointsInRange(r, n.lb, level);
                 findPointsInRange(r, n.rt, level);
@@ -330,7 +332,6 @@ public class KdTree {
         //@Test Create a KdTree object
         KdTree kdtree = new KdTree();
         KdTree kdtree2 = new KdTree();
-        KdTree kdtree3 = new KdTree();
 
         //@Test insert
         kdtree2.insert(new Point2D(0.7, 0.2));
@@ -346,11 +347,7 @@ public class KdTree {
         kdtree2.insert(new Point2D(0.2, 0.3));
         kdtree2.insert(new Point2D(0.9, 0.6));
 
-
-        //@Test contains
-        StdOut.println(kdtree2.contains(new Point2D(0.4, 0.7)));
-
-        //@Test all methods
+        //@Test file insert
         String filename = "kdtree-tests/circle10.txt";
         In in = new In(filename);
 
@@ -361,23 +358,27 @@ public class KdTree {
             kdtree.insert(p);
         }
 
-        //@Test draw points
-        kdtree.draw();
+        KdTree kT = kdtree;
 
         //@Test Contains
         Point2D a = new Point2D(0.500000, 1.000000);
-        Point2D b = new Point2D(0.024472, 0.654508);
+        Point2D b = new Point2D(0.7, 0.2);
 
-        StdOut.println(kdtree2.contains(a));
-        StdOut.println(kdtree3.contains(b));
+        StdOut.println("Tree contains: " + a.toString() + " - " + kT.contains(a));
+        StdOut.println("Tree contains: " + a.toString() + " - " + kT.contains(b));
+
+
+        //@Test draw points
+        kT.draw();
 
         //@Test rectangle
         RectHV testRect = new RectHV(0.07, 0.17, 0.69, 0.93);
         StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.005);
+        StdDraw.setPenRadius();
         testRect.draw();
 
-        for (Point2D p : kdtree.range(testRect)) {
+        StdOut.println("\nPoints in range:");
+        for (Point2D p : kT.range(testRect)) {
             StdOut.println(p.toString());
         }
 
@@ -388,8 +389,8 @@ public class KdTree {
         StdDraw.setPenRadius(0.01);
         c.draw();
 
-        Point2D nearest = kdtree.nearest(c);
-        StdOut.println(nearest.toString());
+        Point2D nearest = kT.nearest(c);
+        StdOut.println("\nNearest point to: " + c.toString() + " is " + nearest.toString());
 
         StdDraw.setPenRadius();
         StdDraw.line(c.x(), c.y(), nearest.x(), nearest.y());
