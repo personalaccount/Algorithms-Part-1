@@ -161,7 +161,7 @@ public class KdTree {
         if (!isEmpty()) draw(root, 0);
     }
 
-    // Recursevely go through each branch until null
+    // Recursively go through each branch until null
     private void draw(Node n, int level) {
 
         // Draw a point
@@ -203,35 +203,30 @@ public class KdTree {
         return pointsInside;
     }
 
-    private void findPointsInRange2(RectHV rect, Node n) {
-        // Check if this rectangle intersects with the one corresponding to the node
-        if (rect.intersects(n.rect)) {
-            addPointsToRange(rect, n);
-        }
-        else {
-            findPointsInRange2(rect, n.lb);
-            findPointsInRange2(rect, n.rt);
-        }
-
-    }
-
     private void findPointsInRange(RectHV r, Node n, int level) {
         if (n == null) return;
-        // Check if this rectangle intersects with the one corresponding to the node
-        if (r.contains(n.p)) pointsInside.push(n.p);
+
+//        StdOut.println("Checking node: " + n.p.toString());
 
         boolean compareByX = (level % 2 == 0);
         level++; // Increment level for future use
 
-        // Check if r intersects with the splitting line, going through Node's point
+        // Check if r intersects with the splitting line, going through the Node's point
         if (compareByX) {
             // Compare with the vertical line
             if (r.xmax() < n.p.x()) {
                 // Check the left subtree and avoid the right, since there are no intersections
                 findPointsInRange(r, n.lb, level);
             }
+            else if (r.xmin() > n.p.x()) {
+                // Check the right subtree and avoid the left, since there are no intersections
+                findPointsInRange(r, n.rt, level);
+            }
             else {
-                // Check bot subtrees
+                // Check if this rectangle contains the point of the node
+                if (r.contains(n.p)) pointsInside.push(n.p);
+
+                // Check both subtrees
                 findPointsInRange(r, n.lb, level);
                 findPointsInRange(r, n.rt, level);
             }
@@ -242,7 +237,12 @@ public class KdTree {
                 // Continue to the left (bottom) subtree, avoiding the right one
                 findPointsInRange(r, n.lb, level);
             }
+            else if (r.ymin() > n.p.y()) {
+                findPointsInRange(r, n.rt, level);
+            }
             else {
+                if (r.contains(n.p)) pointsInside.push(n.p);
+
                 // Check both subtrees
                 findPointsInRange(r, n.lb, level);
                 findPointsInRange(r, n.rt, level);
@@ -250,7 +250,7 @@ public class KdTree {
         }
     }
 
-    // Recursevely add all relevant points
+    // Recursively add all relevant points
     private void addPointsToRange(RectHV r, Node n) {
         if (n == null) return;
         if (r.contains(n.p)) pointsInside.push(n.p);
@@ -260,7 +260,8 @@ public class KdTree {
 
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
-        if (!isEmpty()) return nearest(p, root, root.p.distanceSquaredTo(p), root.p);
+//        if (!isEmpty()) return nearest(p, root, root.p.distanceSquaredTo(p), root.p);
+        if (!isEmpty()) return nearest(p, root, 0, root.p.distanceSquaredTo(p), root.p);
         return null;
     }
 
@@ -271,58 +272,71 @@ public class KdTree {
      * between the query point and the rectangle corresponding to a node,
      * there is no need to explore that node (or its subtrees).
      * <p>
-     * That is, search a node only only if it might contain a point
+     * That is, search a node only if it might contain a point
      * that is closer than the best one found so far.
+     * <p>
+     * Compare the squares of the two distances to avoid the expensive
+     * operation of taking square roots.
      */
 
-    private Point2D nearest(Point2D p, Node n, double closestDistanceYet, Point2D closestPointYet) {
-        if (n == null) return closestPointYet;
-        // Using squared distance to compare the squares of the two distances to avoid the expensive operation of taking square roots.
+    private Point2D nearest(Point2D p, Node n, int level, double shortestDistanceSoFar, Point2D closesPointSoFar) {
+        if (n == null) return closesPointSoFar;
 
-        // Exception for the root node, since distance to root rectangle will always be 0
-        if (!n.equals(root)) {
-            // Check the distance to the rectangle if it's larger then abort.
-            if (n.rect.distanceSquaredTo(p) > closestDistanceYet) return closestPointYet;
-        }
+        boolean compareByX = (level % 2 == 0);
+        level++; // Increment level for subsequent nodes
 
         double sqrDistance = p.distanceSquaredTo(n.p); // Distance from query point to node's point
 
         // If this nodes' point is closer, reassign the values
-        if (sqrDistance < closestDistanceYet) {
-            closestDistanceYet = sqrDistance;
-            closestPointYet = n.p;
-        }
-        else if (sqrDistance > closestDistanceYet) {
-            return closestPointYet;
+        if (sqrDistance < shortestDistanceSoFar) {
+            shortestDistanceSoFar = sqrDistance;
+            closesPointSoFar = n.p;
         }
 
-        // Descend down to subtrees and determine the closest points if there are any.
+        // Continue to move down the tree
+        if (compareByX) {
+            // If we re left of the point, go left
+            if (p.x() < n.p.x()) {
+                return nearest(p, n.lb, level, shortestDistanceSoFar, closesPointSoFar);
+            }
+            else if (p.x() > n.p.x()) {
+                return nearest(p, n.rt, level, shortestDistanceSoFar, closesPointSoFar);
+            }
+        }
+        else {
+            // If point is below the node, go left (bottom)
+            if (p.y() < n.p.y()) {
+                return nearest(p, n.lb, level, shortestDistanceSoFar, closesPointSoFar);
+            }
+            else if (p.y() > n.p.y()) {
+                return nearest(p, n.rt, level, shortestDistanceSoFar, closesPointSoFar);
+            }
+        }
 
-        Point2D lbPoint = nearest(p, n.lb, closestDistanceYet, closestPointYet);
-        Point2D rtPoint = nearest(p, n.rt, closestDistanceYet, closestPointYet);
+        Point2D lbPoint = nearest(p, n.lb, level, shortestDistanceSoFar, closesPointSoFar);
+        Point2D rtPoint = nearest(p, n.rt, level, shortestDistanceSoFar, closesPointSoFar);
 
         // Compare points from each subtree
         if (lbPoint != null) {
             double lbPointSqrDistance = lbPoint.distanceSquaredTo(p);
-            if (lbPointSqrDistance < closestDistanceYet) {
-                closestDistanceYet = lbPointSqrDistance;
-                closestPointYet = lbPoint;
+            if (lbPointSqrDistance < shortestDistanceSoFar) {
+                shortestDistanceSoFar = lbPointSqrDistance;
+                closesPointSoFar = lbPoint;
             }
         }
 
         if (rtPoint != null) {
             double rtPointSqrDistance = rtPoint.distanceSquaredTo(p);
-            if (rtPointSqrDistance < closestDistanceYet) {
+            if (rtPointSqrDistance < shortestDistanceSoFar) {
                 return rtPoint;
             }
         }
 
-        return closestPointYet;
+        return closesPointSoFar;
+
     }
 
-
     // Auxiliary method to check if the point is null.
-
     private void exceptionIfNull(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
     }
@@ -348,7 +362,7 @@ public class KdTree {
         kdtree2.insert(new Point2D(0.9, 0.6));
 
         //@Test file insert
-        String filename = "kdtree-tests/circle10.txt";
+        String filename = "kdtree-tests/input5.txt";
         In in = new In(filename);
 
         while (!in.isEmpty()) {
@@ -372,7 +386,7 @@ public class KdTree {
         kT.draw();
 
         //@Test rectangle
-        RectHV testRect = new RectHV(0.07, 0.17, 0.69, 0.93);
+        RectHV testRect = new RectHV(0.63, 0.81, 0.64, 0.82);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius();
         testRect.draw();
@@ -383,7 +397,7 @@ public class KdTree {
         }
 
         //@Test nearest neighbor
-        Point2D c = new Point2D(0.65, 0.94);
+        Point2D c = new Point2D(0.337, 0.008);
 
         StdDraw.setPenColor(StdDraw.GREEN);
         StdDraw.setPenRadius(0.01);
