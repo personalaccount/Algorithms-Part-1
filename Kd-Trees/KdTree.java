@@ -43,6 +43,7 @@ public class KdTree {
 
     // Insert the point into the set (if it is not already in the set)
     public void insert(Point2D p) {
+        exceptionIfNull(p);
         // Special case for an empty tree
         if (isEmpty()) {
             root.p = p;
@@ -273,9 +274,9 @@ public class KdTree {
 
     private Point2D nearest(Point2D p, Node n, int level, double shortestDistanceSoFar, Point2D closestPointSofar) {
         if (n == null) return closestPointSofar;
+        if (shortestDistanceSoFar < n.rect.distanceSquaredTo(p)) return closestPointSofar;
 //        StdOut.println("Checking node: " + n.p.toString());
 
-        level++; // Increment level for subsequent nodes
 
         double sqrDistance = p.distanceSquaredTo(n.p); // Distance from query point to node's point
 
@@ -285,22 +286,63 @@ public class KdTree {
             closestPointSofar = n.p;
         }
 
-        Point2D lbPoint = nearest(p, n.lb, level, shortestDistanceSoFar, closestPointSofar);
-        Point2D rtPoint = nearest(p, n.rt, level, shortestDistanceSoFar, closestPointSofar);
+//      Anticipate which subtree to descend down to first
+        boolean compareByX = (level % 2 == 0);
+        boolean goLB = true;
+        Point2D lbPoint;
+        Point2D rtPoint;
 
-        // Compare points from each subtree
-        if (lbPoint != null) {
-            double lbPointSqrDistance = lbPoint.distanceSquaredTo(p);
-            if (lbPointSqrDistance < shortestDistanceSoFar) {
-                shortestDistanceSoFar = lbPointSqrDistance;
-                closestPointSofar = lbPoint;
-            }
+        level++; // Increment level for subsequent nodes
+
+        if (compareByX) {
+            if (p.x() > n.p.x()) goLB = false;
+        }
+        else {
+            if (p.y() > n.p.y()) goLB = false;
         }
 
-        if (rtPoint != null) {
-            double rtPointSqrDistance = rtPoint.distanceSquaredTo(p);
-            if (rtPointSqrDistance < shortestDistanceSoFar) {
-                return rtPoint;
+        // If point is to the left (or bottom) of the node's point, then start with the left subtree
+        if (goLB) {
+
+            lbPoint = nearest(p, n.lb, level, shortestDistanceSoFar, closestPointSofar);
+
+            if (lbPoint != null) {
+                double lbPointSqrDistance = lbPoint.distanceSquaredTo(p);
+                if (lbPointSqrDistance < shortestDistanceSoFar) {
+                    shortestDistanceSoFar = lbPointSqrDistance;
+                    closestPointSofar = lbPoint;
+                }
+            }
+
+            rtPoint = nearest(p, n.rt, level, shortestDistanceSoFar, closestPointSofar);
+
+            if (rtPoint != null) {
+                double rtPointSqrDistance = rtPoint.distanceSquaredTo(p);
+                if (rtPointSqrDistance < shortestDistanceSoFar) {
+//                    shortestDistanceSoFar = rtPointSqrDistance;
+                    closestPointSofar = rtPoint;
+                }
+            }
+        }
+        else {
+            rtPoint = nearest(p, n.rt, level, shortestDistanceSoFar, closestPointSofar);
+
+            if (rtPoint != null) {
+                double rtPointSqrDistance = rtPoint.distanceSquaredTo(p);
+                if (rtPointSqrDistance < shortestDistanceSoFar) {
+                    shortestDistanceSoFar = rtPointSqrDistance;
+                    closestPointSofar = rtPoint;
+                }
+            }
+
+            lbPoint = nearest(p, n.lb, level, shortestDistanceSoFar, closestPointSofar);
+
+            if (lbPoint != null) {
+                double lbPointSqrDistance = lbPoint.distanceSquaredTo(p);
+                if (lbPointSqrDistance < shortestDistanceSoFar) {
+//                    shortestDistanceSoFar = lbPointSqrDistance;
+                    closestPointSofar = lbPoint;
+                }
             }
         }
 
