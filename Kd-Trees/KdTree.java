@@ -59,7 +59,6 @@ public class KdTree {
 
                 // Check for duplicates
                 if (p.equals(pointer.p)) return;
-//                    throw new IllegalArgumentException(pointer.p.toString() + " == " + p.toString());
 
                 parent = pointer;
                 leftInsert = true;
@@ -84,11 +83,11 @@ public class KdTree {
                         leftInsert = false;
                     }
                 }
-                i++; // Increment node level after each iteration
+                i++; // Increment node level after each iteration.
             }
-            // Found an empty spot to make an insert
+            // Found an empty spot to make an insert.
 
-            // Create new node and make an insert
+            // Create a new node and make an insert.
 
             Node n = new Node();
             n.p = p;
@@ -199,21 +198,54 @@ public class KdTree {
         pointsInside = new Stack<>();
 
         // Find all the relevant points
-        if (!isEmpty()) findPointsInRange(rect, root);
+        if (!isEmpty()) findPointsInRange(rect, root, 0);
 
         return pointsInside;
     }
 
-    private void findPointsInRange(RectHV rect, Node n) {
+    private void findPointsInRange2(RectHV rect, Node n) {
         // Check if this rectangle intersects with the one corresponding to the node
         if (rect.intersects(n.rect)) {
             addPointsToRange(rect, n);
         }
         else {
-            findPointsInRange(rect, n.lb);
-            findPointsInRange(rect, n.rt);
+            findPointsInRange2(rect, n.lb);
+            findPointsInRange2(rect, n.rt);
         }
 
+    }
+
+    private void findPointsInRange(RectHV r, Node n, int level) {
+        if(n == null) return;
+        // Check if this rectangle intersects with the one corresponding to the node
+        if (r.contains(n.p)) pointsInside.push(n.p);
+
+        boolean compareByX = (level % 2 == 0);
+        level++; // Increment level for future use
+
+        // Check if r intersects with the splitting line, going through Node's point
+        if (compareByX) {
+            // Compare with the vertical line
+            if (r.xmax() < n.p.x()) {
+                // Check the left subtree and avoid the right, since there are no intersections
+                findPointsInRange(r, n.lb, level);
+            }
+            else {
+                // Check bot subtrees
+                findPointsInRange(r, n.lb, level);
+                findPointsInRange(r, n.rt, level);
+            }
+        } else{
+            // Compare with the horizontal line
+            if (r.ymax() < n.p.y()) {
+                // Continue to the left (bottom) subtree, avoiding the right one
+                findPointsInRange(r, n.lb, level);
+            } else{
+                // Check both subtrees
+                findPointsInRange(r, n.lb, level);
+                findPointsInRange(r, n.rt, level);
+            }
+        }
     }
 
     // Recursevely add all relevant points
@@ -226,9 +258,8 @@ public class KdTree {
 
     public Point2D nearest(Point2D p) {
         exceptionIfNull(p);
-
-        // Closest distance sofar
-        return nearest(p, root, root.p.distanceSquaredTo(p), root.p);
+        if (!isEmpty()) return nearest(p, root, root.p.distanceSquaredTo(p), root.p);
+        return null;
     }
 
     /**
@@ -258,6 +289,9 @@ public class KdTree {
         if (sqrDistance < closestDistanceYet) {
             closestDistanceYet = sqrDistance;
             closestPointYet = n.p;
+        }
+        else if (sqrDistance > closestDistanceYet) {
+            return closestPointYet;
         }
 
         // Descend down to subtrees and determine the closest points if there are any.
@@ -294,6 +328,7 @@ public class KdTree {
     public static void main(String[] args) {
 
         //@Test Create a KdTree object
+        KdTree kdtree = new KdTree();
         KdTree kdtree2 = new KdTree();
         KdTree kdtree3 = new KdTree();
 
@@ -306,15 +341,9 @@ public class KdTree {
 
         //@Test duplicate insert
         kdtree2.insert(new Point2D(0.7, 0.2));
-        kdtree2.insert(new Point2D(0.5, 0.4));
-        kdtree2.insert(new Point2D(0.5, 0.4));
-        kdtree2.insert(new Point2D(0.5, 0.4));
         kdtree2.insert(new Point2D(0.2, 0.3));
         kdtree2.insert(new Point2D(0.2, 0.3));
         kdtree2.insert(new Point2D(0.2, 0.3));
-        kdtree2.insert(new Point2D(0.4, 0.7));
-        kdtree2.insert(new Point2D(0.4, 0.7));
-        kdtree2.insert(new Point2D(0.4, 0.7));
         kdtree2.insert(new Point2D(0.9, 0.6));
 
 
@@ -322,8 +351,6 @@ public class KdTree {
         StdOut.println(kdtree2.contains(new Point2D(0.4, 0.7)));
 
         //@Test all methods
-        KdTree kdtree = new KdTree();
-
         String filename = "kdtree-tests/circle10.txt";
         In in = new In(filename);
 
@@ -341,14 +368,14 @@ public class KdTree {
         Point2D a = new Point2D(0.500000, 1.000000);
         Point2D b = new Point2D(0.024472, 0.654508);
 
-        StdOut.println(kdtree3.contains(a));
+        StdOut.println(kdtree2.contains(a));
         StdOut.println(kdtree3.contains(b));
 
         //@Test rectangle
         RectHV testRect = new RectHV(0.07, 0.17, 0.69, 0.93);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.005);
-//        testRect.draw();
+        testRect.draw();
 
         for (Point2D p : kdtree.range(testRect)) {
             StdOut.println(p.toString());
